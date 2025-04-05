@@ -1,89 +1,219 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row">
-    <!-- Sidebar Navigation -->
-    <div class="col-md-3">
-        <div class="card border-gold">
-            <div class="card-header bg-dark text-gold">
-                <h5>Master Class</h5>
-            </div>
-            <div class="list-group list-group-flush">
-                <a href="{% url 'master_class_list' %}" class="list-group-item list-group-item-action bg-dark text-gold">
-                    All Categories
-                </a>
-                {% for cat in categories %}
-                <a href="{% url 'master_class_detail' cat.id %}" 
-                   class="list-group-item list-group-item-action {% if cat.id == category.id %}active bg-gold text-dark{% else %}bg-dark text-white{% endif %}">
-                    {{ cat.title }}
-                    <span class="badge {% if cat.id == category.id %}bg-dark text-gold{% else %}bg-gold text-dark{% endif %}">
-                        {{ cat.videos.count }}
-                    </span>
-                </a>
-                {% endfor %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar Navigation with Search -->
+        <div class="col-md-3">
+            <div class="card border-gold mb-4" style="height: 80vh; display: flex; flex-direction: column;">
+                <div class="card-header bg-dark text-gold">
+                    <h5>Master Class</h5>
+                    <div class="input-group mt-2">
+                        <input type="text" class="form-control bg-darker text-white border-gold" 
+                               placeholder="Search categories..." id="contentSearch"
+                               oninput="sortCategories()">
+                        <button class="btn btn-gold" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="list-group list-group-flush flex-grow-1 overflow-auto">
+                    <a href="{% url 'master_class_list' %}" 
+                       class="list-group-item list-group-item-action bg-dark text-gold d-flex justify-content-between align-items-center search-item static-item" 
+                       data-search-content="All Categories">
+                        All Categories
+                        <span class="badge bg-gold text-dark">{{ total_videos }}</span>
+                    </a>
+                    {% for cat in categories %}
+                    <a href="{% url 'master_class_detail' cat.id %}" 
+                       class="list-group-item list-group-item-action {% if cat.id == category.id %}active bg-gold text-dark{% else %}bg-dark text-white{% endif %} d-flex justify-content-between align-items-center search-item"
+                       data-search-content="{{ cat.title }}">
+                        {{ cat.title }}
+                        <span class="badge {% if cat.id == category.id %}bg-dark text-gold{% else %}bg-gold text-dark{% endif %}">
+                            {{ cat.videos.count }}
+                        </span>
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="card-footer bg-dark border-gold">
+                    <small class="text-gold">{{ categories.count }} categories available</small>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Main Content -->
-    <div class="col-md-9">
-        <div class="card border-gold">
-            <div class="card-header bg-dark text-gold">
-                <h4>{{ category.title }}</h4>
-            </div>
-            <div class="card-body bg-darker">
-                {% if category.description %}
-                <p class="lead">{{ category.description }}</p>
-                <hr class="border-gold">
-                {% endif %}
-                
-                <div class="row row-cols-1 g-4">
-                    {% for video in videos %}
-                    <div class="col">
-                        <div class="card border-gold bg-dark">
-                            <div class="card-body">
-                                <h5 class="card-title text-gold">{{ video.title }}</h5>
-                                <div class="ratio ratio-16x9 mb-3">
-                                    <iframe src="https://www.youtube.com/embed/{{ video.youtube_id }}" 
-                                            frameborder="0" 
-                                            allowfullscreen
-                                            class="rounded"></iframe>
+        <!-- Main Content with Centered Videos -->
+        <div class="col-md-9">
+            <div class="card border-gold">
+                <div class="card-header bg-dark text-gold d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'master_class_list' %}" class="btn btn-sm btn-gold me-3">
+                            <i class="fas fa-arrow-left me-1"></i> Back to All
+                        </a>
+                        <h4 class="mb-0">{{ category.title }}</h4>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-gold dropdown-toggle" type="button" id="filterDropdown" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <ul class="dropdown-menu bg-dark border-gold" aria-labelledby="filterDropdown">
+                            <li><a class="dropdown-item text-white" href="#">Most Recent</a></li>
+                            <li><a class="dropdown-item text-white" href="#">Most Popular</a></li>
+                            <li><a class="dropdown-item text-white" href="#">Alphabetical</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body bg-darker">
+                    {% if category.description %}
+                    <div class="text-center mb-4">
+                        <p class="lead text-gold">{{ category.description }}</p>
+                        <hr class="border-gold">
+                    </div>
+                    {% endif %}
+                    
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            {% for video in videos %}
+                            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                                <div class="card h-100 border-gold bg-dark hover-gold mx-auto" style="max-width: 360px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-gold">{{ video.title }}</h5>
+                                        <div class="ratio ratio-16x9 mb-3">
+                                            <iframe src="https://www.youtube.com/embed/{{ video.youtube_id }}" 
+                                                    frameborder="0" 
+                                                    allowfullscreen
+                                                    class="rounded"></iframe>
+                                        </div>
+                                        {% if video.description %}
+                                        <p class="card-text small text-white-50">{{ video.description }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-footer bg-darker border-gold d-flex justify-content-between align-items-center">
+                                        {% if video.duration %}
+                                        <small class="text-gold">{{ video.duration }}</small>
+                                        {% endif %}
+                                        <span class="badge bg-gold text-dark">
+                                            <i class="fas fa-eye me-1"></i> {{ video.views|default:"0" }}
+                                        </span>
+                                    </div>
                                 </div>
-                                {% if video.description %}
-                                <p class="card-text">{{ video.description }}</p>
-                                {% endif %}
-                                {% if video.duration %}
-                                <p class="text-muted">Duration: {{ video.duration }}</p>
-                                {% endif %}
                             </div>
+                            {% endfor %}
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <style>
-    /* Add these to your existing gold/black theme */
-.bg-darker {
-    background-color: #1a1a1a;
-}
-.border-gold {
-    border-color: #D4AF37 !important;
-}
-.text-gold {
-    color: #D4AF37 !important;
-}
-.btn-gold {
-    background-color: #D4AF37;
-    color: #121212;
-    border-color: #D4AF37;
-}
-.btn-gold:hover {
-    background-color: #B7950B;
-    border-color: #B7950B;
-    color: #121212;
-}
+    /* Enhanced Gold/Black Theme */
+    .bg-darker {
+        background-color: #1a1a1a;
+    }
+    .border-gold {
+        border-color: #D4AF37 !important;
+    }
+    .text-gold {
+        color: #D4AF37 !important;
+    }
+    .btn-gold {
+        background-color: #D4AF37;
+        color: #121212;
+        border-color: #D4AF37;
+    }
+    .btn-gold:hover {
+        background-color: #B7950B;
+        border-color: #B7950B;
+        color: #121212;
+    }
+    .bg-gold {
+        background-color: #D4AF37 !important;
+    }
+    .hover-gold:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        transition: all 0.3s ease;
+    }
+    .dropdown-menu {
+        --bs-dropdown-bg: #1a1a1a;
+        --bs-dropdown-link-color: white;
+        --bs-dropdown-link-hover-bg: #D4AF37;
+        --bs-dropdown-link-hover-color: #121212;
+    }
+    .list-group-item-action:hover {
+        background-color: #2a2a2a !important;
+    }
+    /* Scrollable sidebar */
+    .overflow-auto {
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #D4AF37 #1a1a1a;
+    }
+    .overflow-auto::-webkit-scrollbar {
+        width: 8px;
+    }
+    .overflow-auto::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+    .overflow-auto::-webkit-scrollbar-thumb {
+        background-color: #D4AF37;
+        border-radius: 4px;
+    }
+    /* Highlight for search */
+    .highlight {
+        background-color: rgba(212, 175, 55, 0.3);
+        font-weight: bold;
+        border-radius: 3px;
+        padding: 0 2px;
+    }
+    #contentSearch:focus {
+        border-color: #D4AF37;
+        box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+    }
 </style>
+
+<script>
+    function sortCategories() {
+        const searchTerm = document.getElementById('contentSearch').value.toLowerCase();
+        const listGroup = document.querySelector('.list-group');
+        const categoryItems = Array.from(document.querySelectorAll('.list-group-item:not(.static-item)'));
+        
+        // Sort items based on match
+        categoryItems.sort((a, b) => {
+            const aText = a.textContent.toLowerCase();
+            const bText = b.textContent.toLowerCase();
+            
+            const aMatches = aText.includes(searchTerm);
+            const bMatches = bText.includes(searchTerm);
+            
+            if (aMatches && !bMatches) return -1;
+            if (!aMatches && bMatches) return 1;
+            return aText.localeCompare(bText);
+        });
+        
+        // Re-append items in new order (keeping "All Categories" first)
+        const staticItem = document.querySelector('.list-group-item.static-item');
+        listGroup.innerHTML = '';
+        listGroup.appendChild(staticItem);
+        categoryItems.forEach(item => listGroup.appendChild(item));
+        
+        // Highlight matches
+        categoryItems.forEach(item => {
+            const text = item.textContent;
+            const html = text.replace(
+                new RegExp(searchTerm, 'gi'),
+                match => `<span class="highlight">${match}</span>`
+            );
+            item.innerHTML = html;
+            
+            // Restore badge if it exists
+            const badge = item.querySelector('.badge');
+            if (badge) {
+                item.innerHTML += ` ${badge.outerHTML}`;
+            }
+        });
+    }
+</script>
 {% endblock %}

@@ -17,6 +17,9 @@
         body {
             background-color: var(--black);
             color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .navbar {
             background-color: var(--black) !important;
@@ -24,11 +27,40 @@
         }
         .navbar-brand, .nav-link {
             color: var(--gold) !important;
+            position: relative;
+            padding-bottom: 0.25rem !important;
+            transition: color 0.3s ease;
+        }
+        /* Default state - no underline */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; /* Position directly below text */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; /* Start with no width */
+            height: 2px;
+            background-color: var(--gold);
+            transition: width 0.3s ease;
+        }
+        
+        /* Hover state - animate underline */
+        .nav-link:hover::after {
+            width: 70%; /* Smaller underline on hover */
+        }
+        
+        /* Active state - smaller underline */
+        .nav-link.active::after {
+            width: 70%; /* Smaller underline for active links */
+        }
+        
+        .nav-link.active {
+            font-weight: 500;
         }
         .card {
             background-color: var(--dark-gray);
             border: 1px solid var(--gold);
-            transition: transform 0.3s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             color: white;
         }
         .card:hover {
@@ -43,10 +75,16 @@
             border-color: var(--gold);
             color: var(--black);
             font-weight: bold;
+            transition: all 0.3s ease;
         }
         .btn-primary:hover {
             background-color: var(--dark-gold);
             border-color: var(--dark-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(183, 149, 11, 0.3);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
         }
         .breadcrumb {
             background-color: var(--dark-gray);
@@ -69,6 +107,51 @@
             font-size: 0.8rem;
             color: var(--gold);
         }
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 500px;
+        }
+        .form-control {
+            background-color: var(--light-gray);
+            border-color: var(--gold);
+            color: white;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-control:focus {
+            background-color: var(--light-gray);
+            border-color: var(--dark-gold);
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+            color: white;
+        }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .form-check-input {
+            background-color: var(--light-gray);
+            border-color: var(--gold);
+        }
+        .form-check-input:checked {
+            background-color: var(--gold);
+            border-color: var(--gold);
+        }
+        .form-label {
+            color: var(--gold);
+        }
+        a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: var(--dark-gold);
+        }
+
     </style>
 </head>
 <body>
@@ -80,9 +163,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
+                    {% comment %} <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">Home</a>
-                    </li>
+                    </li> {% endcomment %}
                     
                     {% if user.is_authenticated %}
                         {% if user.is_student %}
@@ -155,13 +238,27 @@
         {% block content %}{% endblock %}
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-    document.querySelectorAll('.nav-link').forEach(link => {
-        if(link.href === window.location.href) {
-            link.classList.add('active');
-            link.setAttribute('aria-current', 'page');
-        }
-    });
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get current page URL path
+        const currentPath = window.location.pathname;
+        
+        // Get all nav links
+        const navLinks = document.querySelectorAll('.navbar .nav-link');
+        
+        // Check each link against current URL path
+        navLinks.forEach(link => {
+            // Get href attribute and extract the path
+            const href = link.getAttribute('href');
+            const hrefPath = href.replace(/https?:\/\/[^\/]+/, '');
+            
+            // If the current path exactly matches or starts with the link path 
+            // (for paths like /dashboard/something)
+            if (currentPath === hrefPath || 
+                (hrefPath !== '/' && currentPath.startsWith(hrefPath))) {
+                link.classList.add('active');
+            }
+        });
     </script>
     {% block scripts %}{% endblock %}
 </body>
