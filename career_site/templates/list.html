@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar Navigation -->
+    <div class="col-md-3">
+        <div class="card border-gold">
+            <div class="card-header bg-dark text-gold">
+                <h5>Master Class</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'master_class_list' %}" class="list-group-item list-group-item-action bg-dark text-gold">
+                    All Categories
+                </a>
+                {% for cat in categories %}
+                <a href="{% url 'master_class_detail' cat.id %}" 
+                   class="list-group-item list-group-item-action bg-dark text-white d-flex justify-content-between align-items-center">
+                    {{ cat.title }}
+                    <span class="badge bg-gold text-dark">{{ cat.videos.count }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9">
+        <div class="card border-gold">
+            <div class="card-header bg-dark text-gold">
+                <h4>Master Class Categories</h4>
+            </div>
+            <div class="card-body bg-darker">
+                {% for category in categories %}
+                <div class="mb-4">
+                    <h5 class="text-gold">{{ category.title }}</h5>
+                    <p>{{ category.description }}</p>
+                    
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        {% for video in category.preview_videos %}
+                        <div class="col">
+                            <div class="card h-100 border-gold bg-dark">
+                                <div class="ratio ratio-16x9">
+                                    <iframe src="https://www.youtube.com/embed/{{ video.youtube_id }}" 
+                                            frameborder="0" 
+                                            allowfullscreen
+                                            class="rounded-top"></iframe>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title text-gold">{{ video.title }}</h6>
+                                    <p class="card-text small">{{ video.description|truncatewords:15 }}</p>
+                                </div>
+                                <div class="card-footer bg-darker border-gold">
+                                    <small class="text-muted">{{ video.duration }}</small>
+                                    <a href="{% url 'master_class_detail' category.id %}" class="btn btn-sm btn-gold float-end">
+                                        View All
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* Add these to your existing gold/black theme */
+.bg-darker {
+    background-color: #1a1a1a;
+}
+.border-gold {
+    border-color: #D4AF37 !important;
+}
+.text-gold {
+    color: #D4AF37 !important;
+}
+.btn-gold {
+    background-color: #D4AF37;
+    color: #121212;
+    border-color: #D4AF37;
+}
+.btn-gold:hover {
+    background-color: #B7950B;
+    border-color: #B7950B;
+    color: #121212;
+}
+</style>
+{% endblock %}

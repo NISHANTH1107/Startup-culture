@@ -14,4 +14,6 @@ urlpatterns = [
     path('/library', views.career_library, name='career_library'),
     path('library/<int:library_id>/', views.category_list, name='category_list'),
     path('career/<int:subcategory_id>/', views.career_detail, name='career_detail'),
+    path('master-class/', views.master_class_list, name='master_class_list'),
+    path('master-class/<int:category_id>/', views.master_class_detail, name='master_class_detail'),
 ]

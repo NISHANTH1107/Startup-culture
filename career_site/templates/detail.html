@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar Navigation -->
+    <div class="col-md-3">
+        <div class="card border-gold">
+            <div class="card-header bg-dark text-gold">
+                <h5>Master Class</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'master_class_list' %}" class="list-group-item list-group-item-action bg-dark text-gold">
+                    All Categories
+                </a>
+                {% for cat in categories %}
+                <a href="{% url 'master_class_detail' cat.id %}" 
+                   class="list-group-item list-group-item-action {% if cat.id == category.id %}active bg-gold text-dark{% else %}bg-dark text-white{% endif %}">
+                    {{ cat.title }}
+                    <span class="badge {% if cat.id == category.id %}bg-dark text-gold{% else %}bg-gold text-dark{% endif %}">
+                        {{ cat.videos.count }}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9">
+        <div class="card border-gold">
+            <div class="card-header bg-dark text-gold">
+                <h4>{{ category.title }}</h4>
+            </div>
+            <div class="card-body bg-darker">
+                {% if category.description %}
+                <p class="lead">{{ category.description }}</p>
+                <hr class="border-gold">
+                {% endif %}
+                
+                <div class="row row-cols-1 g-4">
+                    {% for video in videos %}
+                    <div class="col">
+                        <div class="card border-gold bg-dark">
+                            <div class="card-body">
+                                <h5 class="card-title text-gold">{{ video.title }}</h5>
+                                <div class="ratio ratio-16x9 mb-3">
+                                    <iframe src="https://www.youtube.com/embed/{{ video.youtube_id }}" 
+                                            frameborder="0" 
+                                            allowfullscreen
+                                            class="rounded"></iframe>
+                                </div>
+                                {% if video.description %}
+                                <p class="card-text">{{ video.description }}</p>
+                                {% endif %}
+                                {% if video.duration %}
+                                <p class="text-muted">Duration: {{ video.duration }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* Add these to your existing gold/black theme */
+.bg-darker {
+    background-color: #1a1a1a;
+}
+.border-gold {
+    border-color: #D4AF37 !important;
+}
+.text-gold {
+    color: #D4AF37 !important;
+}
+.btn-gold {
+    background-color: #D4AF37;
+    color: #121212;
+    border-color: #D4AF37;
+}
+.btn-gold:hover {
+    background-color: #B7950B;
+    border-color: #B7950B;
+    color: #121212;
+}
+</style>
+{% endblock %}

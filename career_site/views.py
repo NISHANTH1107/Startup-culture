@@ -127,3 +127,23 @@ def career_detail(request, subcategory_id):
             'Medium', 'High', 'Very High', 'Extremely High'
         ]
     })
+    
+from django.shortcuts import render, get_object_or_404
+from .models import MasterClassCategory
+
+def master_class_list(request):
+    categories = MasterClassCategory.objects.all()
+    # Get first 2 videos from each category for the overview
+    for category in categories:
+        category.preview_videos = category.videos.all()[:2]
+    return render(request, 'list.html', {'categories': categories})
+
+def master_class_detail(request, category_id):
+    category = get_object_or_404(MasterClassCategory, pk=category_id)
+    videos = category.videos.all()
+    all_categories = MasterClassCategory.objects.all()  # For sidebar
+    return render(request, 'detail.html', {
+        'category': category,
+        'videos': videos,
+        'categories': all_categories
+    })
