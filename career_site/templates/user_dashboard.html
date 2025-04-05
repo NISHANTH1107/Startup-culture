@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>Menu</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active">Dashboard</a>
+                    <a href="#" class="list-group-item list-group-item-action">Career Assessment</a>
+                    <a href="#" class="list-group-item list-group-item-action">Recommended Careers</a>
+                    <a href="#" class="list-group-item list-group-item-action">Skill Development</a>
+                    <a href="{% url 'profile' %}" class="list-group-item list-group-item-action">My Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header">
+                <h4>Student Dashboard</h4>
+            </div>
+            <div class="card-body">
+                <h5>Welcome, {{ user.username }}!</h5>
+                <p>Here you can explore career options, take assessments, and find resources to develop your skills.</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Career Assessment</h5>
+                                <p class="card-text">Take our assessment to discover careers that match your profile.</p>
+                                <a href="#" class="btn btn-primary">Start Assessment</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Recommended Careers</h5>
+                                <p class="card-text">View careers recommended based on your profile.</p>
+                                <a href="#" class="btn btn-primary">View Recommendations</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

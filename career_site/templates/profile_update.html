@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Update Your Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- User Fields -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">Basic Information</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="id_username">Username</label>
+                                        <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="id_email">Email</label>
+                                        <input type="email" class="form-control" id="id_email" name="email" 
+                                               value="{{ user.email }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="id_phone">Phone</label>
+                                        <input type="text" class="form-control" id="id_phone" name="phone" 
+                                               value="{{ user.phone }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="id_date_of_birth">Date of Birth</label>
+                                        <input type="date" class="form-control" id="id_date_of_birth" 
+                                               name="date_of_birth" value="{{ user.date_of_birth|date:'Y-m-d' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profile Specific Fields -->
+                        <div class="mb-4">
+                            {% if user.is_student %}
+                                <h5 class="border-bottom pb-2">Student Information</h5>
+                                <div class="form-group">
+                                    <label for="id_education_level">Education Level</label>
+                                    <input type="text" class="form-control" id="id_education_level" 
+                                           name="education_level" value="{{ user.studentprofile.education_level }}">
+                                </div>
+                                <div class="form-group mt-3">
+                                    <label for="id_interests">Interests</label>
+                                    <textarea class="form-control" id="id_interests" name="interests" 
+                                              rows="3">{{ user.studentprofile.interests }}</textarea>
+                                </div>
+                                <div class="form-group mt-3">
+                                    <label for="id_skills">Skills</label>
+                                    <textarea class="form-control" id="id_skills" name="skills" 
+                                              rows="3">{{ user.studentprofile.skills }}</textarea>
+                                </div>
+                                <div class="form-group mt-3">
+                                    <label for="id_career_goals">Career Goals</label>
+                                    <textarea class="form-control" id="id_career_goals" name="career_goals" 
+                                              rows="3">{{ user.studentprofile.career_goals }}</textarea>
+                                </div>
+                            
+                            {% elif user.is_admin %}
+                                <h5 class="border-bottom pb-2">Admin Information</h5>
+                                <div class="form-group">
+                                    <label for="id_position">Position</label>
+                                    <input type="text" class="form-control" id="id_position" 
+                                           name="position" value="{{ user.adminprofile.position }}">
+                                </div>
+                                <div class="form-group mt-3">
+                                    <label for="id_department">Department</label>
+                                    <input type="text" class="form-control" id="id_department" 
+                                           name="department" value="{{ user.adminprofile.department }}">
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-lg ml-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
