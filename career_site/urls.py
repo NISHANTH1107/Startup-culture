@@ -1,6 +1,8 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('register/', views.register, name='register'),
@@ -15,5 +17,5 @@ urlpatterns = [
     path('library/<int:library_id>/', views.category_list, name='category_list'),
     path('career/<int:subcategory_id>/', views.career_detail, name='career_detail'),
     path('master-class/', views.master_class_list, name='master_class_list'),
-    path('master-class/<int:category_id>/', views.master_class_detail, name='master_class_detail'),
-]
+    path('master-class/<int:category_id>/', views.master_class_detail, name='master_class_detail')
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
