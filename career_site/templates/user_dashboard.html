@@ -3,48 +3,51 @@
 {% block title %}Student Dashboard{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-header">
-                <h5>Menu</h5>
-            </div>
-            <div class="card-body">
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action ">Dashboard</a>
-                    <a href="#" class="list-group-item list-group-item-action">Career Assessment</a>
-                    <a href="#" class="list-group-item list-group-item-action">Master Class</a>
-                    <a href="{% url 'career_library' %}" class="list-group-item list-group-item-action">Career Library</a>
-                    <a href="{% url 'profile' %}" class="list-group-item list-group-item-action">My Profile</a>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card" style="background-color: #1E1E1E; border-color: #D4AF37;">
+                <div class="card-header" style="border-color: #D4AF37;">
+                    <h4 class="mb-0" style="color: #D4AF37;">Welcome, {{ user.username }}!</h4>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-9">
-        <div class="card">
-            <div class="card-header">
-                <h4>Student Dashboard</h4>
-            </div>
-            <div class="card-body">
-                <h5>Welcome, {{ user.username }}!</h5>
-                <p>Here you can explore career options, take assessments, and find resources to develop your skills.</p>
-                
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Career Assessment</h5>
-                                <p class="card-text">Take our assessment to discover careers that match your profile.</p>
-                                <a href="#" class="btn btn-primary">Start Assessment</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Recommended Careers</h5>
-                                <p class="card-text">View careers recommended based on your profile.</p>
-                                <a href="#" class="btn btn-primary">View Recommendations</a>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Main Content Area -->
+                        <div class="col-12">
+                            <h5 class="text-gold">Your Career Progress</h5>
+                            <div class="row">
+                                <!-- Example Dashboard Card 1 -->
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100" style="background-color: #2E2E2E; border-color: #D4AF37;">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-gold">Career Assessment</h5>
+                                            <p class="card-text">Complete your career assessment to get personalized recommendations.</p>
+                                            <a href="#" class="btn btn-primary">Start Assessment</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Example Dashboard Card 2 -->
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100" style="background-color: #2E2E2E; border-color: #D4AF37;">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-gold">Recommended Careers</h5>
+                                            <p class="card-text">View careers matched to your skills and interests.</p>
+                                            <a href="#" class="btn btn-primary">View Matches</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Example Dashboard Card 3 -->
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100" style="background-color: #2E2E2E; border-color: #D4AF37;">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-gold">Skill Development</h5>
+                                            <p class="card-text">Explore resources to develop in-demand skills.</p>
+                                            <a href="#" class="btn btn-primary">Browse Resources</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -53,4 +56,15 @@
         </div>
     </div>
 </div>
+
+<style>
+    .text-gold {
+        color: #D4AF37;
+    }
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        transition: all 0.3s ease;
+    }
+</style>
 {% endblock %}
