@@ -14,3 +14,16 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(StudentProfile)
 admin.site.register(AdminProfile)
+from django.contrib import admin
+from .models import CareerLibrary, CareerCategory, CareerSubCategory, TopInstitute
+
+class TopInstituteInline(admin.TabularInline):
+    model = TopInstitute
+    extra = 1
+
+class CareerSubCategoryAdmin(admin.ModelAdmin):
+    inlines = [TopInstituteInline]
+
+admin.site.register(CareerLibrary)
+admin.site.register(CareerCategory)
+admin.site.register(CareerSubCategory, CareerSubCategoryAdmin)

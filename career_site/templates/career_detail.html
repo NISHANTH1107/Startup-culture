@@ -1,0 +1,124 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'career_library' %}">Career Library</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'category_list' career.category.library.id %}">{{ career.category.library.title }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ career.name }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title" style="color: var(--gold);">{{ career.name }}</h1>
+                <p class="lead">{{ career.summary }}</p>
+                
+                <h3 class="mt-4" style="color: var(--gold);">Daily Tasks</h3>
+                <ul class="list-group list-group-flush mb-4">
+                    {% for task in career.daily_tasks.splitlines %}
+                        <li class="list-group-item">{{ task }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 style="color: var(--gold);">Career Demand</h3>
+                <div class="demand-scale mb-3">
+                    {% for i in "1234567" %}
+                        <div class="demand-level">{{ demand_labels|slice:i|last }}</div>
+                    {% endfor %}
+                </div>
+                <div class="chart-container" style="position: relative; height:250px;">
+                    <canvas id="demandChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h3 style="color: var(--gold);">Top Institutes</h3>
+                <ul class="list-group list-group-flush">
+                    {% for institute in institutes %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ institute.name }}
+                        <span class="badge bg-gold text-dark">{{ institute.location }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fix typo in element ID ('demandChart' not 'demandChart')
+    const ctx = document.getElementById('demandChart').getContext('2d');
+    
+    // Make sure chart_data is properly formatted
+    const chartConfig = {
+        type: 'bar',
+        data: {{ chart_data|safe }},
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 7,
+                    min: 0,
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(value) {
+                            const labels = {{ demand_labels|safe }};
+                            return labels[value];
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(212, 175, 55, 0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(212, 175, 55, 0.1)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        color: 'white'
+                    }
+                }
+            }
+        }
+    };
+    
+    new Chart(ctx, chartConfig);
+});
+</script>
+<style>
+.demand-scale {
+    display: flex;
+    justify-content: space-between;
+}
+.demand-level {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--gold);
+    flex: 1;
+}
+</style>
+{% endblock %}

@@ -83,3 +83,47 @@ def admin_dashboard(request):
     if not request.user.is_admin:
         return redirect('dashboard')
     return render(request, 'admin_dashboard.html')
+from django.shortcuts import render, get_object_or_404
+from .models import CareerLibrary, CareerCategory, CareerSubCategory
+
+def career_library(request):
+    libraries = CareerLibrary.objects.all()
+    return render(request, 'library.html', {'libraries': libraries})
+
+def category_list(request, library_id):
+    library = get_object_or_404(CareerLibrary, pk=library_id)
+    categories = library.categories.all()
+    return render(request, 'category_list.html', {
+        'library': library,
+        'categories': categories
+    })
+
+def career_detail(request, subcategory_id):
+    career = get_object_or_404(CareerSubCategory, pk=subcategory_id)
+    institutes = career.institutes.all()
+    
+    # Prepare chart data
+    chart_data = {
+        'labels': ['Current', 'Long Term', 'Very Long Term'],
+        'datasets': [{
+            'label': 'Career Demand',
+            'data': [
+                career.current_demand,
+                career.long_term_demand,
+                career.very_long_term_demand
+            ],
+            'backgroundColor': 'rgba(212, 175, 55, 0.5)',
+            'borderColor': 'rgba(212, 175, 55, 1)',
+            'borderWidth': 1
+        }]
+    }
+    
+    return render(request, 'career_detail.html', {
+        'career': career,  # Note: Typo here should be 'career'
+        'institutes': institutes,
+        'chart_data': chart_data,
+        'demand_labels': [  # Typo here - should be 'demand_labels'
+            '', 'Extremely Low', 'Very Low', 'Low', 
+            'Medium', 'High', 'Very High', 'Extremely High'
+        ]
+    })
