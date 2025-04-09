@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Assessment Results - {{ result.personality_type }}</title>
+    <style>
+        :root {
+            --primary-color: #D4AF37;
+            --dark-bg: #121212;
+            --card-bg: #1E1E1E;
+            --secondary-bg: #2E2E2E;
+            --text-color: #ffffff;
+            --text-muted: #aaaaaa;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--dark-bg);
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            border-bottom: 1px solid #D4AF37;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .personality-type {
+            font-size: 56px;
+            font-weight: 700;
+            color: #D4AF37;
+            margin: 20px 0;
+            text-align: center;
+            letter-spacing: 6px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .section-title {
+            background-color: #D4AF37;
+            color: var(--dark-bg);
+            padding: 15px 25px;
+            font-weight: 500;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+        
+        .section-content {
+            padding: 25px;
+        }
+        
+        .chart-container {
+            text-align: center;
+            margin: 30px 0;
+            background-color: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .dimension-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .dimension-group {
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .dimension-pair-title {
+            color: #D4AF37;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        .dimension-score {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .dimension-bar {
+            display: flex;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .dimension-bar-fill {
+            height: 100%;
+            background-color: #D4AF37;
+            transition: width 1s ease;
+        }
+        
+        .dimension-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        
+        .dimension-name {
+            font-weight: 500;
+        }
+        
+        .dimension-value {
+            color: #D4AF37;
+            font-weight: 700;
+        }
+        
+        .dominant {
+            color: #D4AF37;
+        }
+        
+        h3, h4 {
+            color: #D4AF37;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        h4 {
+            font-size: 18px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 8px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .type-description p {
+            text-align: justify;
+        }
+        
+        .footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Personality Assessment Results</h1>
+            <p>Generated on {% now "F j, Y" %} for {{ assessment.user.get_full_name|default:assessment.user.username }}</p>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Your Personality Type</div>
+            <div class="section-content">
+                <div class="personality-type">{{ result.personality_type }}</div>
+                <div class="type-description">
+                    <p>{{ result.get_type_description }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Personality Dimensions</div>
+            <div class="section-content">
+                <div class="chart-container">
+                    <img src="data:image/png;base64,{{ result.get_chart_image }}" alt="Personality Chart" style="max-width: 100%;">
+                </div>
+                
+                <div class="dimension-scores">
+                    <div class="dimension-group">
+                        <div class="dimension-pair-title">Extraversion vs. Introversion</div>
+                        <div class="dimension-score">
+                            <div class="dimension-labels">
+                                <span class="dimension-name {% if result.personality_type.0 == 'E' %}dominant{% endif %}">Extraversion (E)</span>
+                                <span class="dimension-value">{{ result.get_e_score }}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-bar-fill" style="width: {{ result.get_e_score }}%"></div>
+                            </div>
+                        </div>
+                        <div class="dimension-score">
+                            <div class="dimension-labels">
+                                <span class="dimension-name {% if result.personality_type.0 == 'I' %}dominant{% endif %}">Introversion (I)</span>
+                                <span class="dimension-value">{{ result.get_i_score }}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-bar-fill" style="width: {{ result.get_i_score }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dimension-group">
+                        <div class="dimension-pair-title">Sensing vs. Intuition</div>
+                        <div class="dimension-score">
+                            <div class="dimension-labels">
+                                <span class="dimension-name {% if result.personality_type.1 == 'S' %}dominant{% endif %}">Sensing (S)</span>
+                                <span class="dimension-value">{{ result.get_s_score }}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-bar-fill" style="width: {{ result.get_s_score }}%"></div>
+                            </div>
+                        </div>
+                        <div class="dimension-score">
+                            <div class="dimension-labels">
+                                <span class="dimension-name {% if result.personality_type.1 == 'N' %}dominant{% endif %}">Intuition (N)</span>
+                                <span class="dimension-value">{{ result.get_n_score }}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-bar-fill" style="width: {{ result.get_n_score }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dimension-group">
+                        <div class="dimension-pair-title">Thinking vs. Feeling</div>
+                        <div class="dimension-score">
+                            <div class="dimension-labels">
+                                <span class="dimension-name {% if result.personality_type.2 == 'T' %}dominant{% endif %}">Thinking (T)</span>
+                                <span class="dimension-value">{{ result.get_t_score }}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-bar-fill" style="width: {{ result.get_t_score }}%"></div>
+                            </div>
+                        </div>
+                        <div class="dimension-score">
+                            <div class="dimension-labels">
+                                <span class="dimension-name {% if result.personality_type.2 == 'F' %}dominant{% endif %}">Feeling (F)</span>
+                                <span class="dimension-value">{{ result.get_f_score }}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-bar-fill" style="width: {{ result.get_f_score }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dimension-group">
+                        <div class="dimension-pair-title">Judging vs. Perceiving</div>
+                        <div class="dimension-score">
+                            <div class="dimension-labels">
+                                <span class="dimension-name {% if result.personality_type.3 == 'J' %}dominant{% endif %}">Judging (J)</span>
+                                <span class="dimension-value">{{ result.get_j_score }}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-bar-fill" style="width: {{ result.get_j_score }}%"></div>
+                            </div>
+                        </div>
+                        <div class="dimension-score">
+                            <div class="dimension-labels">
+                                <span class="dimension-name {% if result.personality_type.3 == 'P' %}dominant{% endif %}">Perceiving (P)</span>
+                                <span class="dimension-value">{{ result.get_p_score }}%</span>
+                            </div>
+                            <div class="dimension-bar">
+                                <div class="dimension-bar-fill" style="width: {{ result.get_p_score }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Personal Insights</div>
+            <div class="section-content">
+                <h4>Strengths</h4>
+                <p>{{ result.get_strengths }}</p>
+                
+                <h4>Potential Growth Areas</h4>
+                <p>{{ result.get_growth_areas }}</p>
+                
+                <h4>Career Suggestions</h4>
+                <p>{{ result.get_career_suggestions }}</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This personality assessment is based on psychological type theory and is provided for informational purposes only.</p>
+        </div>
+    </div>
+</body>
+</html>

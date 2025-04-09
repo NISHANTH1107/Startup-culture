@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-gold">Student Management</h2>
+    </div>
+
+    <div class="card bg-dark border-gold">
+        <div class="card-header bg-gold text-black">
+            <div class="row font-weight-bold">
+                <div class="col-3">Name</div>
+                <div class="col-3">Email</div>
+                <div class="col-2">Education Level</div>
+                <div class="col-2">Assessment Status</div>
+                <div class="col-2">Actions</div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% if students %}
+                <div class="list-group list-group-flush">
+                    {% for student in students %}
+                        <div class="list-group-item bg-dark text-white border-light">
+                            <div class="row align-items-center">
+                                <div class="col-3">{{ student.user.get_full_name|default:student.user.username }}</div>
+                                <div class="col-3">{{ student.user.email }}</div>
+                                <div class="col-2">{{ student.profile.education_level }}</div>
+                                <div class="col-2">
+                                    {% if student.has_assessment %}
+                                        <span class="badge bg-success text-white">Completed</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-black">Pending</span>
+                                    {% endif %}
+                                </div>
+                                <div class="col-2">
+                                    {% if student.has_assessment %}
+                                    <a href="{% url 'admin_result_detail' student.assessment_id %}" 
+                                       class="btn btn-sm btn-outline-gold">
+                                        <i class="fas fa-file-alt"></i> View
+                                    </a>
+                                    {% else %}
+                                    <span class="text-light">N/A</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="p-4 text-center text-gold">
+                    No students found
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --gold: #D4AF37;
+        --dark-gold: #B7950B;
+        --black: #121212;
+        --dark-gray: #1E1E1E;
+        --light-gray: #2E2E2E;
+    }
+    .text-gold {
+        color: var(--gold);
+    }
+    .text-light {
+        color: #f8f9fa;
+    }
+    .border-gold {
+        border-color: var(--gold) !important;
+    }
+    .border-light {
+        border-color: var(--light-gray) !important;
+    }
+    .bg-gold {
+        background-color: var(--gold) !important;
+    }
+    .bg-dark {
+        background-color: var(--black) !important;
+    }
+    .btn-outline-gold {
+        color: var(--gold);
+        border-color: var(--gold);
+    }
+    .btn-outline-gold:hover {
+        background-color: var(--gold);
+        color: var(--black);
+    }
+    .list-group-item {
+        background-color: var(--dark-gray);
+        color: white;
+    }
+    .badge.bg-success {
+        background-color: #28a745 !important;
+    }
+    .badge.bg-warning {
+        background-color: #ffc107 !important;
+    }
+    .card {
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .col-1, .col-2, .col-3, .col-6 {
+        padding: 12px 15px;
+    }
+</style>
+{% endblock %}

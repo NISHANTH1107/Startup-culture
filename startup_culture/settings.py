@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'career_site',
+    'mathfilters',  # For custom template filters
 ]
 
 MIDDLEWARE = [

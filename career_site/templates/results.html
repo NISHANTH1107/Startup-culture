@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Your Personality Assessment Results</h1>
+            <p class="lead">Assessment completed on {{ assessment.date_taken|date:"F j, Y" }}</p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'download_results' %}" class="btn btn-outline-primary">
+                <i class="bi bi-download"></i> Download PDF
+            </a>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            Your Personality Type
+        </div>
+        <div class="card-body text-center">
+            <h2 class="display-1">{{ result.personality_type }}</h2>
+            <p class="lead">{{ result.get_type_description }}</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Dimension Scores
+                </div>
+                <div class="card-body">
+                    <canvas id="personalityChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Detailed Breakdown
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Extraversion (E) vs Introversion (I)
+                            <span class="badge bg-primary rounded-pill">
+                                E: {{ result.get_e_score }} | I: {{ result.get_i_score }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Sensing (S) vs Intuition (N)
+                            <span class="badge bg-primary rounded-pill">
+                                S: {{ result.get_s_score }} | N: {{ result.get_n_score }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Thinking (T) vs Feeling (F)
+                            <span class="badge bg-primary rounded-pill">
+                                T: {{ result.get_t_score }} | F: {{ result.get_f_score }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Judging (J) vs Perceiving (P)
+                            <span class="badge bg-primary rounded-pill">
+                                J: {{ result.get_j_score }} | P: {{ result.get_p_score }}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            Type Description
+        </div>
+        <div class="card-body">
+            <h4>Strengths</h4>
+            <p>{{ result.get_strengths }}</p>
+            
+            <h4>Potential Growth Areas</h4>
+            <p>{{ result.get_growth_areas }}</p>
+            
+            <h4>Career Suggestions</h4>
+            <p>{{ result.get_career_suggestions }}</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('personalityChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Extraversion', 'Introversion', 'Sensing', 'Intuition', 
+                    'Thinking', 'Feeling', 'Judging', 'Perceiving'],
+            datasets: [{
+                label: 'Your Scores',
+                data: [
+                    {{ result.get_e_score }}, {{ result.get_i_score }},
+                    {{ result.get_s_score }}, {{ result.get_n_score }},
+                    {{ result.get_t_score }}, {{ result.get_f_score }},
+                    {{ result.get_j_score }}, {{ result.get_p_score }}
+                ],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
+            }]
+        },
+        options: {
+            scales: {
+                r: {
+                    angleLines: {
+                        display: true
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Personality Assessment</h1>
+    <p>Please answer all 70 questions honestly. There are no right or wrong answers.</p>
+    
+    <form method="post" action="{% url 'submit_assessment' %}">
+        {% csrf_token %}
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Instructions
+            </div>
+            <div class="card-body">
+                <p>For each question, select the option that best describes you.</p>
+                <p>Answer quickly and don't overthink - your first instinct is usually the most accurate.</p>
+            </div>
+        </div>
+        
+        {% for question in questions %}
+        <div class="card mb-3">
+            <div class="card-header">
+                Question {{ forloop.counter }} of {{ questions|length }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ question.text }}</h5>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" 
+                           name="question_{{ question.id }}" id="q{{ question.id }}_a" value="0" required>
+                    <label class="form-check-label" for="q{{ question.id }}_a">
+                        {{ question.option_a }}
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" 
+                           name="question_{{ question.id }}" id="q{{ question.id }}_b" value="1" required>
+                    <label class="form-check-label" for="q{{ question.id }}_b">
+                        {{ question.option_b }}
+                    </label>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Submit Assessment</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

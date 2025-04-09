@@ -176,7 +176,7 @@
                                 <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Career Assessment</a>
+                                <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
@@ -186,16 +186,14 @@
                                 <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Manage Users</a>
+                                <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Career Paths</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Assessment Questions</a>
-                            </li>
-
-                            
+                                <a class="nav-link" href="{% url 'manage_questions' %}">Assessment Questions</a>
+                            </li>  
                         {% endif %}
                     {% endif %}
                 </ul>

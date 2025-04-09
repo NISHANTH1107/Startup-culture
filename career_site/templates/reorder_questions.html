@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<style>
+    .sortable-item {
+        cursor: move;
+    }
+    .sortable-item.ui-sortable-helper {
+        background-color: #f8f9fa;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .sortable-placeholder {
+        border: 1px dashed #ced4da;
+        background-color: #f8f9fa;
+        height: 58px;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>{{ section_title }}</h2>
+        <a href="{% url 'manage_questions' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Questions
+        </a>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Drag and drop questions to reorder them. Click "Save Order" when finished.
+    </div>
+
+    <form id="reorder-form" method="post">
+        {% csrf_token %}
+        <div id="sortable-questions" class="list-group mb-4">
+            {% for question in questions %}
+                <div class="list-group-item sortable-item" data-id="{{ question.id }}">
+                    <div class="d-flex align-items-center">
+                        <div class="mr-3">
+                            <i class="fas fa-grip-vertical text-muted"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="font-weight-bold">Question #{{ question.order }}</div>
+                            <div>{{ question.text|truncatechars:100 }}</div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="question_ids[]" value="{{ question.id }}">
+                </div>
+            {% endfor %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Order
+        </button>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        $("#sortable-questions").sortable({
+            placeholder: "sortable-placeholder",
+            update: function(event, ui) {
+                // Update hidden input values
+                $('#sortable-questions .sortable-item').each(function(index) {
+                    var questionId = $(this).data('id');
+                    $(this).find('input[name="question_ids[]"]').val(questionId);
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
