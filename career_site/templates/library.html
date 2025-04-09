@@ -4,7 +4,6 @@
 
 {% block content %}
 <!-- Header section moved to top -->
-<!-- Header section moved to top -->
 <div class="text-center mb-5">
     <h1 class="display-4" style="color: var(--gold);">Career Library</h1>
     <p class="lead">Discover your future career path</p>
@@ -18,32 +17,8 @@
             <div class="image-overlay">
                 <h3 id="summaryTitle">Select a category</h3>
                 <p id="summaryText">Hover over any career category to learn more.</p>
-<!-- Main container with image and buttons side by side -->
-<div class="career-container">
-    <div class="image-section">
-        <div class="image-container">
-            <img id="displayImage" src="{% static 'media/images.png' %}" alt="Category Image" class="content-image">
-            <div class="image-overlay">
-                <h3 id="summaryTitle">Select a category</h3>
-                <p id="summaryText">Hover over any career category to learn more.</p>
             </div>
         </div>
-    </div>
-    
-    <div class="buttons-section">
-        <div class="buttons-grid">
-            {% for library in libraries %}
-            <div class="button-wrapper">
-                <button class="career-button {% if forloop.counter == 6 %}active{% endif %}" 
-                       data-image="{% if library.image %}{{ library.image.url }}{% else %}{% static 'path/to/default-image.png' %}{% endif %}" 
-                       data-title="{{ library.title }}" 
-                       data-summary="{{ library.description }}">
-                    {{ library.title }}
-                </button>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
     </div>
     
     <div class="buttons-section">
@@ -241,4 +216,4 @@
         }
     });
 </script>
-{% endblock %}
+{% endblock %}
