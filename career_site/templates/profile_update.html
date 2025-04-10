@@ -6,9 +6,9 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Update Your Profile</h4>
+            <div class="card" style="background-color: #1E1E1E; border-color: #D4AF37;">
+                <div class="card-header" style="border-color: #D4AF37; background-color: #1E1E1E;">
+                    <h4 class="mb-0" style="color: #D4AF37;">Update Your Profile</h4>
                 </div>
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data">
@@ -16,18 +16,18 @@
                         
                         <!-- User Fields -->
                         <div class="mb-4">
-                            <h5 class="border-bottom pb-2">Basic Information</h5>
+                            <h5 class="pb-2" style="color: #D4AF37; border-bottom: 1px solid #D4AF37;">Basic Information</h5>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="id_username">Username</label>
-                                        <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                                        <label for="id_username" style="color: #D4AF37;">Username</label>
+                                        <input type="text" class="form-control bg-dark text-white" value="{{ user.username }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="id_email">Email</label>
-                                        <input type="email" class="form-control" id="id_email" name="email" 
+                                        <label for="id_email" style="color: #D4AF37;">Email</label>
+                                        <input type="email" class="form-control bg-dark text-white" id="id_email" name="email" 
                                                value="{{ user.email }}">
                                     </div>
                                 </div>
@@ -35,16 +35,17 @@
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="id_phone">Phone</label>
-                                        <input type="text" class="form-control" id="id_phone" name="phone" 
+                                        <label for="id_phone" style="color: #D4AF37;">Phone</label>
+                                        <input type="text" class="form-control bg-dark text-white" id="id_phone" name="phone" 
                                                value="{{ user.phone }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="id_date_of_birth">Date of Birth</label>
-                                        <input type="date" class="form-control" id="id_date_of_birth" 
-                                               name="date_of_birth" value="{{ user.date_of_birth|date:'Y-m-d' }}">
+                                        <label for="id_date_of_birth" style="color: #D4AF37;">Date of Birth</label>
+                                        <input type="date" class="form-control bg-dark text-white" id="id_date_of_birth" 
+                                               name="date_of_birth" value="{{ user.date_of_birth|date:'Y-m-d' }}"
+                                               onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'">
                                     </div>
                                 </div>
                             </div>
@@ -53,38 +54,38 @@
                         <!-- Profile Specific Fields -->
                         <div class="mb-4">
                             {% if user.is_student %}
-                                <h5 class="border-bottom pb-2">Student Information</h5>
+                                <h5 class="pb-2" style="color: #D4AF37; border-bottom: 1px solid #D4AF37;">Student Information</h5>
                                 <div class="form-group">
-                                    <label for="id_education_level">Education Level</label>
-                                    <input type="text" class="form-control" id="id_education_level" 
+                                    <label for="id_education_level" style="color: #D4AF37;">Education Level</label>
+                                    <input type="text" class="form-control bg-dark text-white" id="id_education_level" 
                                            name="education_level" value="{{ user.studentprofile.education_level }}">
                                 </div>
                                 <div class="form-group mt-3">
-                                    <label for="id_interests">Interests</label>
-                                    <textarea class="form-control" id="id_interests" name="interests" 
+                                    <label for="id_interests" style="color: #D4AF37;">Interests</label>
+                                    <textarea class="form-control bg-dark text-white" id="id_interests" name="interests" 
                                               rows="3">{{ user.studentprofile.interests }}</textarea>
                                 </div>
                                 <div class="form-group mt-3">
-                                    <label for="id_skills">Skills</label>
-                                    <textarea class="form-control" id="id_skills" name="skills" 
+                                    <label for="id_skills" style="color: #D4AF37;">Skills</label>
+                                    <textarea class="form-control bg-dark text-white" id="id_skills" name="skills" 
                                               rows="3">{{ user.studentprofile.skills }}</textarea>
                                 </div>
                                 <div class="form-group mt-3">
-                                    <label for="id_career_goals">Career Goals</label>
-                                    <textarea class="form-control" id="id_career_goals" name="career_goals" 
+                                    <label for="id_career_goals" style="color: #D4AF37;">Career Goals</label>
+                                    <textarea class="form-control bg-dark text-white" id="id_career_goals" name="career_goals" 
                                               rows="3">{{ user.studentprofile.career_goals }}</textarea>
                                 </div>
                             
                             {% elif user.is_admin %}
-                                <h5 class="border-bottom pb-2">Admin Information</h5>
+                                <h5 class="pb-2" style="color: #D4AF37; border-bottom: 1px solid #D4AF37;">Admin Information</h5>
                                 <div class="form-group">
-                                    <label for="id_position">Position</label>
-                                    <input type="text" class="form-control" id="id_position" 
+                                    <label for="id_position" style="color: #D4AF37;">Position</label>
+                                    <input type="text" class="form-control bg-dark text-white" id="id_position" 
                                            name="position" value="{{ user.adminprofile.position }}">
                                 </div>
                                 <div class="form-group mt-3">
-                                    <label for="id_department">Department</label>
-                                    <input type="text" class="form-control" id="id_department" 
+                                    <label for="id_department" style="color: #D4AF37;">Department</label>
+                                    <input type="text" class="form-control bg-dark text-white" id="id_department" 
                                            name="department" value="{{ user.adminprofile.department }}">
                                 </div>
                             {% endif %}
@@ -92,7 +93,7 @@
 
                         <div class="form-group mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
-                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-lg ml-2">Cancel</a>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-gold btn-lg ml-2">Cancel</a>
                         </div>
                     </form>
                 </div>
@@ -100,4 +101,46 @@
         </div>
     </div>
 </div>
+
+<style>
+    .form-control, .form-select, textarea {
+        background-color: #121212 !important;
+        color: white !important;
+        border-color: #D4AF37 !important;
+    }
+    .form-control:focus, .form-select:focus, textarea:focus {
+        background-color: #121212;
+        color: white;
+        border-color: #D4AF37;
+        box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+    }
+    .btn-outline-gold {
+        color: #D4AF37;
+        border-color: #D4AF37;
+    }
+    .btn-outline-gold:hover {
+        background-color: #D4AF37;
+        color: #121212;
+    }
+    /* Date input placeholder */
+    input[type="date"]::before {
+        color: #6c757d;
+        content: attr(placeholder);
+    }
+    input[type="date"]:focus::before,
+    input[type="date"]:valid::before {
+        content: "" !important;
+    }
+</style>
+
+<script>
+    // Initialize date fields to show placeholder text when empty
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateField = document.getElementById('id_date_of_birth');
+        if (dateField && !dateField.value) {
+            dateField.type = 'text';
+            dateField.placeholder = 'YYYY-MM-DD';
+        }
+    });
+</script>
 {% endblock %}

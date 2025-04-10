@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-gold">{{ section_title }}</h2>
+        <div>
+            <a href="{% url 'add_question' %}" class="btn btn-gold">
+                <i class="fas fa-plus"></i> Add New Question
+            </a>
+            <a href="{% url 'reorder_questions' %}" class="btn btn-secondary-gold ml-2">
+                <i class="fas fa-sort"></i> Reorder Questions
+            </a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} bg-dark text-white border-gold">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card bg-dark border-gold">
+        <div class="card-header bg-gold text-black">
+            <div class="row font-weight-bold">
+                <div class="col-1">Order</div>
+                <div class="col-6">Question Text</div>
+                <div class="col-2">Option A</div>
+                <div class="col-2">Option B</div>
+                <div class="col-1">Actions</div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            {% if questions %}
+                <div class="list-group list-group-flush">
+                    {% for question in questions %}
+                        <div class="list-group-item bg-dark text-white border-light">
+                            <div class="row align-items-center">
+                                <div class="col-1">{{ question.order }}</div>
+                                <div class="col-6">{{ question.text|truncatechars:100 }}</div>
+                                <div class="col-2">{{ question.option_a|truncatechars:30 }}</div>
+                                <div class="col-2">{{ question.option_b|truncatechars:30 }}</div>
+                                <div class="col-1">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'edit_question' question.id %}" class="btn btn-outline-gold">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'delete_question' question.id %}" class="btn btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="p-4 text-center text-gold">
+                    No questions have been added yet. Click "Add New Question" to get started.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <p class="text-gold">
+            <strong>Important:</strong> The personality assessment requires 70 questions 
+            ideally organized in 10 groups of 7 questions for accurate personality profiling.
+        </p>
+        <p class="text-gold">
+            Current Question Count: <strong>{{ questions|length }}/70</strong>
+        </p>
+    </div>
+</div>
+
+<style>
+    .text-gold {
+        color: #D4AF37;
+    }
+    .border-gold {
+        border-color: #D4AF37 !important;
+    }
+    .bg-gold {
+        background-color: #D4AF37 !important;
+    }
+    .btn-gold {
+        background-color: #D4AF37;
+        border-color: #D4AF37;
+        color: #121212;
+    }
+    .btn-gold:hover {
+        background-color: #B7950B;
+        border-color: #B7950B;
+        color: #121212;
+    }
+    .btn-outline-gold {
+        color: #D4AF37;
+        border-color: #D4AF37;
+    }
+    .btn-outline-gold:hover {
+        background-color: #D4AF37;
+        color: #121212;
+    }
+    .btn-secondary-gold {
+        background-color: #2E2E2E;
+        border-color: #D4AF37;
+        color: #D4AF37;
+    }
+    .btn-secondary-gold:hover {
+        background-color: #3E3E3E;
+        border-color: #D4AF37;
+        color: #D4AF37;
+    }
+    .card {
+        background-color: #121212;
+        color: white;
+    }
+    .list-group-item {
+        background-color: #1E1E1E;
+        color: white;
+    }
+    .border-light {
+        border-color: #2E2E2E !important;
+    }
+</style>
+{% endblock %}

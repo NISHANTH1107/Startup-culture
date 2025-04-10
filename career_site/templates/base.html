@@ -3,30 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Guidance - {% block title %}{% endblock %}</title>
+    <title>Career Library</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark-gold: #B7950B;
+            --black: #121212;
+            --dark-gray: #1E1E1E;
+            --light-gray: #2E2E2E;
+        }
+        body {
+            background-color: var(--black);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background-color: var(--black) !important;
+            border-bottom: 2px solid var(--gold);
+        }
+        .navbar-brand, .nav-link {
+            color: var(--gold) !important;
+            position: relative;
+            padding-bottom: 0.25rem !important;
+            transition: color 0.3s ease;
+        }
+        /* Default state - no underline */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; /* Position directly below text */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; /* Start with no width */
+            height: 2px;
+            background-color: var(--gold);
+            transition: width 0.3s ease;
+        }
+        
+        /* Hover state - animate underline */
+        .nav-link:hover::after {
+            width: 70%; /* Smaller underline on hover */
+        }
+        
+        /* Active state - smaller underline */
+        .nav-link.active::after {
+            width: 70%; /* Smaller underline for active links */
+        }
+        
+        .nav-link.active {
+            font-weight: 500;
+        }
+        .card {
+            background-color: var(--dark-gray);
+            border: 1px solid var(--gold);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            color: white;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+        .card-title {
+            color: var(--gold);
+        }
+        .btn-primary {
+            background-color: var(--gold);
+            border-color: var(--gold);
+            color: var(--black);
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--dark-gold);
+            border-color: var(--dark-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(183, 149, 11, 0.3);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .breadcrumb {
+            background-color: var(--dark-gray);
+        }
+        .breadcrumb-item.active {
+            color: var(--gold);
+        }
+        .list-group-item {
+            background-color: var(--light-gray);
+            color: white;
+            border-color: var(--gold);
+        }
+        .demand-scale {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .demand-level {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--gold);
+        }
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 500px;
+        }
+        .form-control {
+            background-color: var(--light-gray);
+            border-color: var(--gold);
+            color: white;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-control:focus {
+            background-color: var(--light-gray);
+            border-color: var(--dark-gold);
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+            color: white;
+        }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .form-check-input {
+            background-color: var(--light-gray);
+            border-color: var(--gold);
+        }
+        .form-check-input:checked {
+            background-color: var(--gold);
+            border-color: var(--gold);
+        }
+        .form-label {
+            color: var(--gold);
+        }
+        a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: var(--dark-gold);
+        }
+
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">StartupCulture</a>
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">SocioPotents</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
+                    {% comment %} <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">Home</a>
-                    </li>
+                    </li> {% endcomment %}
+                    
                     {% if user.is_authenticated %}
                         {% if user.is_student %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
+                            </li>
                         {% elif user.is_admin %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Career Paths</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'manage_questions' %}">Assessment Questions</a>
+                            </li>  
                         {% endif %}
                     {% endif %}
                 </ul>
@@ -59,8 +226,9 @@
     <div class="container mt-4">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
                     {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
         {% endif %}
@@ -69,5 +237,27 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get current page URL path
+        const currentPath = window.location.pathname;
+        
+        // Get all nav links
+        const navLinks = document.querySelectorAll('.navbar .nav-link');
+        
+        // Check each link against current URL path
+        navLinks.forEach(link => {
+            // Get href attribute and extract the path
+            const href = link.getAttribute('href');
+            const hrefPath = href.replace(/https?:\/\/[^\/]+/, '');
+            
+            // If the current path exactly matches or starts with the link path 
+            // (for paths like /dashboard/something)
+            if (currentPath === hrefPath || 
+                (hrefPath !== '/' && currentPath.startsWith(hrefPath))) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

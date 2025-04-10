@@ -1,23 +1,114 @@
-{% extends 'base.html' %}
+{% comment %} {% extends 'base.html' %}
 
 {% block title %}Update Profile{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h4>Update Profile</h4>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Update</button>
-                    <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
-                </form>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card" style="background-color: #1E1E1E; border-color: #D4AF37;">
+                <div class="card-header" style="border-color: #D4AF37; background-color: #1E1E1E;">
+                    <h4 class="mb-0" style="color: #D4AF37;">Update Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Custom form rendering -->
+                        {% for field in form %}
+                        <div class="form-group mb-3">
+                            <label class="form-label" style="color: #D4AF37;">{{ field.label }}</label>
+                            
+                            {% if field.name == 'username' %}
+                                <input 
+                                    type="text" 
+                                    class="form-control bg-dark text-white" 
+                                    name="{{ field.name }}" 
+                                    id="id_{{ field.name }}" 
+                                    value="{{ field.value|default:'' }}"
+                                    style="color: white !important;"
+                                >
+                            {% elif field.field.widget.input_type == 'select' %}
+                                <select class="form-select bg-dark text-white" name="{{ field.name }}" id="id_{{ field.name }}">
+                                    {% for choice in field.field.choices %}
+                                        <option value="{{ choice.0 }}" {% if field.value == choice.0 %}selected{% endif %}>
+                                            {{ choice.1 }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input 
+                                    type="{{ field.field.widget.input_type }}" 
+                                    class="form-control bg-dark text-white" 
+                                    name="{{ field.name }}" 
+                                    id="id_{{ field.name }}" 
+                                    value="{{ field.value|default:'' }}"
+                                    {% if field.field.widget.input_type == 'date' %}
+                                        onfocus="(this.type='date')"
+                                        onblur="if(!this.value) this.type='text'"
+                                    {% endif %}
+                                    style="color: white !important;"
+                                >
+                            {% endif %}
+                            
+                            {% if field.help_text %}
+                                <small class="text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-gold me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
+
+<style>
+    .form-control, .form-select {
+        background-color: #121212 !important;
+        color: white !important;
+        border-color: #D4AF37 !important;
+    }
+    .form-control:focus, .form-select:focus {
+        background-color: #121212;
+        color: white;
+        border-color: #D4AF37;
+        box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+    }
+    .btn-outline-gold {
+        color: #D4AF37;
+        border-color: #D4AF37;
+    }
+    .btn-outline-gold:hover {
+        background-color: #D4AF37;
+        color: #121212;
+    }
+    /* Ensure text is visible in all states */
+    input, select, textarea {
+        color: white !important;
+    }
+    input::placeholder {
+        color: #6c757d !important;
+    }
+</style>
+
+<script>
+    // Initialize date fields to show placeholder text when empty
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateFields = document.querySelectorAll('input[type="text"][onfocus*="date"]');
+        dateFields.forEach(field => {
+            if (!field.value) {
+                field.placeholder = 'YYYY-MM-DD';
+            }
+        });
+    });
+</script>
+{% endblock %} {% endcomment %}

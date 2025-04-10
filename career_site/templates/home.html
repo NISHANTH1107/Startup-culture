@@ -1,10 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <div class="jumbotron">
-    <h1 class="display-4">Welcome to StartupCulture</h1>
+    <h1 class="display-4">Welcome to SocioPotents</h1>
     <p class="lead">Your personalized career guidance platform</p>
     <hr class="my-4">
     <p>Discover your ideal career path based on your skills, interests, and personality.</p>
@@ -15,28 +15,34 @@
 
 <div class="row mt-5">
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Career Assessment</h5>
-                <p class="card-text">Take our comprehensive assessment to discover careers that match your profile.</p>
+        <a href="{% url 'login' %}" class="text-decoration-none">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Career Assessment</h5>
+                    <p class="card-text">Take our comprehensive assessment to discover careers that match your profile.</p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Career Recommendations</h5>
-                <p class="card-text">Get personalized career recommendations based on your assessment results.</p>
+        <a href="{% url 'login' %}" class="text-decoration-none">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Career Recommendations</h5>
+                    <p class="card-text">Get personalized career recommendations based on your assessment results.</p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Skill Development</h5>
-                <p class="card-text">Access resources to develop skills needed for your recommended careers.</p>
+        <a href="{% url 'login' %}" class="text-decoration-none">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Skill Development</h5>
+                    <p class="card-text">Access resources to develop skills needed for your recommended careers.</p>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 {% endblock %}

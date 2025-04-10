@@ -3,40 +3,46 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h4>User Profile</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4 text-center">
-                        <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Profile Picture">
-                        <h5>{{ user.username }}</h5>
-                        <p>{{ user.email }}</p>
-                    </div>
-                    <div class="col-md-8">
-                        <h5>Personal Information</h5>
-                        <p><strong>Phone:</strong> {{ user.phone }}</p>
-                        <p><strong>Date of Birth:</strong> {{ user.date_of_birth }}</p>
-                        
-                        {% if user.is_student %}
-                            <hr>
-                            <h5>Student Information</h5>
-                            <p><strong>Education Level:</strong> {{ profile.education_level }}</p>
-                            <p><strong>Interests:</strong> {{ profile.interests }}</p>
-                            <p><strong>Skills:</strong> {{ profile.skills }}</p>
-                            <p><strong>Career Goals:</strong> {{ profile.career_goals }}</p>
-                        {% elif user.is_admin %}
-                            <hr>
-                            <h5>Admin Information</h5>
-                            <p><strong>Position:</strong> {{ profile.position }}</p>
-                            <p><strong>Department:</strong> {{ profile.department }}</p>
-                        {% endif %}
-                        
-                        <div class="mt-4">
-                            <a href="{% url 'profile-update' %}" class="btn btn-primary">Edit Profile</a>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card" style="background-color: #1E1E1E; border-color: #D4AF37;">
+                <div class="card-header" style="border-color: #D4AF37;">
+                    <h4 class="mb-0" style="color: #D4AF37;">User Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" class="rounded-circle mb-3" alt="Profile Picture" style="width: 150px; height: 150px; object-fit: cover; border: 2px solid #D4AF37;">
+                            {% else %}
+                                <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Default Profile Picture" style="border: 2px solid #D4AF37;">
+                            {% endif %}
+                            <h5 style="color: #D4AF37;">{{ user.username }}</h5>
+                            <p class="text-white">{{ user.email }}</p>
+                        </div>
+                        <div class="col-md-8">
+                            <h5 style="color: #D4AF37;">Personal Information</h5>
+                            <p class="text-white"><strong>Phone:</strong> {{ user.phone|default:"Not provided" }}</p>
+                            <p class="text-white"><strong>Date of Birth:</strong> {{ user.date_of_birth|default:"Not provided" }}</p>
+                            
+                            {% if user.is_student %}
+                                <hr style="border-color: #D4AF37;">
+                                <h5 style="color: #D4AF37;">Student Information</h5>
+                                <p class="text-white"><strong>Education Level:</strong> {{ profile.education_level|default:"Not provided" }}</p>
+                                <p class="text-white"><strong>Interests:</strong> {{ profile.interests|default:"Not provided" }}</p>
+                                <p class="text-white"><strong>Skills:</strong> {{ profile.skills|default:"Not provided" }}</p>
+                                <p class="text-white"><strong>Career Goals:</strong> {{ profile.career_goals|default:"Not provided" }}</p>
+                            {% elif user.is_admin %}
+                                <hr style="border-color: #D4AF37;">
+                                <h5 style="color: #D4AF37;">Admin Information</h5>
+                                <p class="text-white"><strong>Position:</strong> {{ profile.position|default:"Not provided" }}</p>
+                                <p class="text-white"><strong>Department:</strong> {{ profile.department|default:"Not provided" }}</p>
+                            {% endif %}
+                            
+                            <div class="mt-4">
+                                <a href="{% url 'profile-update' %}" class="btn btn-primary">Edit Profile</a>
+                            </div>
                         </div>
                     </div>
                 </div>
