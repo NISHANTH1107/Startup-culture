@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Assessment Questions</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a56d4;
+            --secondary-color: #f8f9fa;
+            --accent-color: #4cc9f0;
+            --text-color: #2b2d42;
+            --light-gray: #e9ecef;
+            --border-radius: 12px;
+            --input-radius: 6px;
+            --box-shadow: 0 10px 20px rgba(67, 97, 238, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f0f4f8;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 18px;
+        }
+        
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 4px;
+        }
+        
+        form {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--box-shadow);
+            margin-top: 20px;
+        }
+        
+        .question-container {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--light-gray);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question-container:last-of-type {
+            border-bottom: none;
+            margin-bottom: 15px;
+        }
+        
+        .question-container p {
+            font-weight: 600;
+            margin-bottom: 18px;
+            font-size: 18px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .radio-options-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border-radius: var(--input-radius);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid var(--light-gray);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .radio-option:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            border-color: rgba(67, 97, 238, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .radio-option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--primary-color);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .radio-option:has(input:checked) {
+            background-color: rgba(67, 97, 238, 0.08);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.15);
+        }
+        
+        .radio-option:has(input:checked)::before {
+            opacity: 1;
+        }
+        
+        .radio-option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .radio-option input[type="radio"]::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: var(--transition);
+            background-color: var(--primary-color);
+        }
+        
+        .radio-option input[type="radio"]:checked {
+            border-color: var(--primary-color);
+        }
+        
+        .radio-option input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+        
+        .radio-option label {
+            flex: 1;
+            cursor: pointer;
+            font-weight: 500;
+            color: #4a5568;
+            transition: var(--transition);
+        }
+        
+        .radio-option:has(input:checked) label {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: var(--input-radius);
+            display: block;
+            margin: 40px auto 0;
+            transition: var(--transition);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(67, 97, 238, 0.25);
+        }
+        
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .submit-btn:hover::after {
+            left: 100%;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            animation: progress-animation 1s ease forwards;
+        }
+        
+        @keyframes progress-animation {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+        
+        .question-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            margin-right: 12px;
+            font-weight: bold;
+            box-shadow: 0 3px 5px rgba(67, 97, 238, 0.2);
+        }
+        
+        label {
+            font-weight: 600;
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        /* Add these new styles for better form structure */
+        .form-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .question-wrapper {
+            margin-bottom: 24px;
+        }
+        
+        /* Mobile responsiveness improvements */
+        @media (max-width: 768px) {
+            form {
+                padding: 25px;
+            }
+            
+            .radio-options-group {
+                grid-template-columns: 1fr;
+            }
+            
+            h2 {
+                font-size: 28px;
+            }
+            
+            label {
+                font-size: 17px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 15px;
+            }
+            
+            form {
+                padding: 20px 15px;
+                border-radius: 8px;
+            }
+            
+            .question-container {
+                margin-bottom: 25px;
+                padding-bottom: 20px;
+            }
+            
+            .question-container p {
+                font-size: 16px;
+            }
+            
+            .radio-option {
+                padding: 12px;
+                margin-bottom: 8px;
+            }
+            
+            .submit-btn {
+                padding: 12px 25px;
+                font-size: 16px;
+                min-width: unset;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Career Assessment Questions</h2>
+    
+    <form id="assessmentForm" method="POST" action="{% url 'submit_assessment' %}">
+        {% csrf_token %}
+        
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+        
+        <label>1. How do you prefer to spend your free time?</label><br>
+    <input type="radio" name="q1" value="Reading"> Reading
+    <input type="radio" name="q1" value="Socializing"> Socializing
+    <input type="radio" name="q1" value="Sports"> Sports
+    <input type="radio" name="q1" value="Gaming"> Gaming
+    <br><br>
+
+    <label>2. Which of these best describes your approach to solving problems?</label><br>
+    <input type="radio" name="q2" value="Logical"> Logical step-by-step analysis
+    <input type="radio" name="q2" value="Brainstorming"> Discussing and brainstorming with others
+    <input type="radio" name="q2" value="Trial"> Learning by trial and error
+    <input type="radio" name="q2" value="Creative"> Thinking outside the box creatively
+    <br><br>
+
+    <label>3. How do you handle unexpected changes in plans?</label><br>
+    <input type="radio" name="q3" value="Calm"> Stay calm and strategize
+    <input type="radio" name="q3" value="Discuss"> Discuss alternatives with others
+    <input type="radio" name="q3" value="Adapt"> Quickly adapt and take action
+    <input type="radio" name="q3" value="Workaround"> Find a creative workaround
+    <br><br>
+
+    <label>4. What type of work environment do you prefer?</label><br>
+    <input type="radio" name="q4" value="Quiet"> Quiet and structured
+    <input type="radio" name="q4" value="Social"> Social and interactive
+    <input type="radio" name="q4" value="Fast-paced"> Fast-paced and active
+    <input type="radio" name="q4" value="Flexible"> Flexible and creative
+    <br><br>
+
+    <label>5. Which career value is most important to you?</label><br>
+    <input type="radio" name="q5" value="Knowledge"> Knowledge and innovation
+    <input type="radio" name="q5" value="Leadership"> Leadership and teamwork
+    <input type="radio" name="q5" value="Action"> Action and real-world problem-solving
+    <input type="radio" name="q5" value="Creativity"> Freedom and creativity
+    <br><br>
+
+    <label>6. How do you feel about teamwork?</label><br>
+    <input type="radio" name="q6" value="Alone"> Prefer working alone
+    <input type="radio" name="q6" value="Collaborate"> Love collaborating and sharing ideas
+    <input type="radio" name="q6" value="Independence"> Enjoy teamwork but also independence
+    <input type="radio" name="q6" value="Creative"> Prefer working in a creative team
+    <br><br>
+
+    <label>7. When faced with a difficult task, what is your first instinct?</label><br>
+    <input type="radio" name="q7" value="Research"> Research and find a logical solution
+    <input type="radio" name="q7" value="Help"> Ask for help and discuss
+    <input type="radio" name="q7" value="Action"> Take action and learn by doing
+    <input type="radio" name="q7" value="Creative"> Find a creative way to do it
+    <br><br>
+
+    <label>8. What motivates you the most?</label><br>
+    <input type="radio" name="q8" value="Challenges"> Solving challenges and learning
+    <input type="radio" name="q8" value="Helping"> Helping people and making a difference
+    <input type="radio" name="q8" value="Goals"> Achieving goals through action
+    <input type="radio" name="q8" value="Expressing"> Expressing creativity
+    <br><br>
+
+    <button type="submit" class="submit-btn">Submit Answers</button>
+    </form>
+    
+    <script>
+        // Add interactivity - clicking on label also selects radio button
+        document.querySelectorAll('.radio-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+    </script>
+</body>
+</html>

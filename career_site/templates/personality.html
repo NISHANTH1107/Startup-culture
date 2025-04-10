@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Assessment</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary-color: #f3f4f6;
+            --accent-color: #10b981;
+            --text-color: #374151;
+            --light-gray: #e5e7eb;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9fafb;
+            padding: 30px;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 32px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        form {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+        }
+        
+        ol {
+            list-style-position: inside;
+            padding: 0;
+        }
+        
+        li {
+            font-weight: 600;
+            font-size: 18px;
+            color: #1f2937;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: baseline;
+        }
+        
+        li::before {
+            content: attr(value);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .question-container {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .question-container:last-of-type {
+            border-bottom: none;
+            margin-bottom: 20px;
+        }
+        
+        .options-container {
+            padding-left: 45px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .radio-option:hover {
+            background-color: var(--secondary-color);
+            transform: translateX(5px);
+        }
+        
+        .radio-option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .radio-option input[type="radio"]::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: var(--transition);
+            background-color: var(--primary-color);
+        }
+        
+        .radio-option input[type="radio"]:checked {
+            border-color: var(--primary-color);
+        }
+        
+        .radio-option input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+        
+        .radio-option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+        
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            cursor: pointer;
+            font-size: 17px;
+            border-radius: var(--border-radius);
+            display: block;
+            margin: 40px auto 10px;
+            transition: var(--transition);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button[type="submit"]:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .progress-container {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            z-index: 10;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background-color: #e5e7eb;
+            color: #4b5563;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            form {
+                padding: 25px 20px;
+            }
+            
+            h2 {
+                font-size: 26px;
+            }
+            
+            li {
+                font-size: 16px;
+            }
+            
+            .options-container {
+                padding-left: 10px;
+            }
+            
+            .radio-option {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Personality Assessment</h2>
+    
+    <form method="post" id="assessmentForm">
+        {% csrf_token %}
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="question-container">
+            <li value="1">How do you prefer to spend your free time?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q1a" name="q1" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q1a">Reading, researching, or learning new things</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q1b" name="q1" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q1b">Hanging out with friends and socializing</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q1c" name="q1" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q1c">Engaging in hands-on activities or sports</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q1d" name="q1" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q1d">Playing games, solving puzzles, or coding</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="2">When faced with a challenge, how do you usually respond?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q2a" name="q2" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q2a">I analyze the problem logically and find a solution</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q2b" name="q2" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q2b">I ask others for advice or collaborate</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q2c" name="q2" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q2c">I take action immediately without overthinking</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q2d" name="q2" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q2d">I look for creative or unconventional solutions</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="3">Which of these best describes your ideal work environment?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q3a" name="q3" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q3a">A quiet office where I can work independently</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q3b" name="q3" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q3b">A social and dynamic workspace with a team</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q3c" name="q3" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q3c">An active, on-the-move job with real-world challenges</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q3d" name="q3" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q3d">A creative setting where I can express myself freely</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="4">How do you make important decisions?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q4a" name="q4" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q4a">Based on logic and facts</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q4b" name="q4" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q4b">Based on advice from others</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q4c" name="q4" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q4c">Based on gut feeling or experience</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q4d" name="q4" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q4d">Based on emotions and creativity</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="5">Which subject do you enjoy the most?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q5a" name="q5" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q5a">Science and Math (Physics, Chemistry, etc.)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q5b" name="q5" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q5b">Business and Commerce</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q5c" name="q5" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q5c">Social Sciences (Psychology, History, etc.)</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q5d" name="q5" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q5d">Arts, Design, and Literature</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="6">How do you handle stressful situations?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q6a" name="q6" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q6a">I stay calm and analyze the situation logically</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q6b" name="q6" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q6b">I talk to someone and express my feelings</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q6c" name="q6" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q6c">I focus on taking immediate action</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q6d" name="q6" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q6d">I use creativity or humor to reduce stress</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="7">Which of these activities excites you the most?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q7a" name="q7" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q7a">Conducting experiments and solving technical problems</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q7b" name="q7" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q7b">Leading a team or organizing events</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q7c" name="q7" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q7c">Exploring the outdoors or engaging in sports</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q7d" name="q7" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q7d">Creating music, art, or writing</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="8">If you could choose any profession without considering salary, what would you choose?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q8a" name="q8" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q8a">Scientist, Engineer, or Doctor</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q8b" name="q8" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q8b">Business Owner, Marketer, or Financial Analyst</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q8c" name="q8" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q8c">Athlete, Military, or Outdoor Explorer</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q8d" name="q8" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q8d">Artist, Filmmaker, or Writer</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="9">How do you prefer to work?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q9a" name="q9" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q9a">Alone, focusing deeply on complex problems</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q9b" name="q9" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q9b">In a team, discussing ideas and collaborating</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q9c" name="q9" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q9c">In a practical, hands-on environment</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q9d" name="q9" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q9d">In a creative space, exploring new ideas</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <li value="10">What motivates you the most?</li>
+            <div class="options-container">
+                <div class="radio-option">
+                    <input type="radio" id="q10a" name="q10" value="A">
+                    <span class="option-letter">A</span>
+                    <label for="q10a">Learning new things and solving difficult problems</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q10b" name="q10" value="B">
+                    <span class="option-letter">B</span>
+                    <label for="q10b">Achieving goals and being recognized for success</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q10c" name="q10" value="C">
+                    <span class="option-letter">C</span>
+                    <label for="q10c">Helping people and making an impact on society</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="q10d" name="q10" value="D">
+                    <span class="option-letter">D</span>
+                    <label for="q10d">Expressing creativity and originality</label>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Answers</button>
+    </form>
+    
+    <script>
+        // Make entire option clickable
+        document.querySelectorAll('.radio-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                // Don't trigger if clicking on the radio button itself
+                if (e.target.type !== 'radio') {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    updateProgress();
+                }
+            });
+        });
+
+        // Update progress bar based on answered questions
+        function updateProgress() {
+            const totalQuestions = 10;
+            let answeredQuestions = 0;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const radioButtons = document.querySelectorAll(`input[name="q${i}"]:checked`);
+                if (radioButtons.length > 0) {
+                    answeredQuestions++;
+                }
+            }
+            
+            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+        }
+        
+        // Add event listener to all radio buttons
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
+        
+        // Initialize progress bar
+        updateProgress();
+    </script>
+</body>
+</html>
