@@ -35,7 +35,6 @@ urlpatterns = [
     path('assessment/save/', views.save_answers, name='save_answers'),
     path('assessment/results/', views.assessment_results, name='assessment_results'),
     # path('assessment/submit/', views.submit_assessment, name='submit_assessment'),
-    path('assessment/results/', views.assessment_results, name='assessment_results'),
     path('assessment/download/', views.download_results, name='download_results'),
     
     # Admin Question Management URLs

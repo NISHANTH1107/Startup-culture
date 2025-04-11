@@ -1,53 +1,215 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>{{ section_title }}</h2>
-        <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Dashboard
-        </a>
-    </div>
-
-    <div class="card">
-        <div class="card-header bg-light">
-            <div class="row font-weight-bold">
-                <div class="col-3">User</div>
-                <div class="col-3">Date Taken</div>
-                <div class="col-3">Personality Type</div>
-                <div class="col-3">Actions</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Personality Report - {{ assessment.user.username }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #f8f9fa;
+            background-color: #121212;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #D4AF37;
+        }
+        
+        .gold-text {
+            color: #D4AF37;
+            font-weight: bold;
+        }
+        
+        .card {
+            background-color: #1e1e1e;
+            border: 1px solid #D4AF37;
+            border-radius: 0;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: rgba(212, 175, 55, 0.2);
+            color: #D4AF37;
+            padding: 12px 15px;
+            border-bottom: 1px solid #D4AF37;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .chart-container {
+            text-align: center;
+            margin: 20px 0;
+            background-color: #1e1e1e;
+            padding: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background-color: #1e1e1e;
+        }
+        
+        th {
+            background-color: rgba(212, 175, 55, 0.3);
+            color: #D4AF37;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            color: #f8f9fa;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #252525;
+        }
+        
+        .dimension-score {
+            margin-bottom: 20px;
+        }
+        
+        .dimension-score h3 {
+            border-bottom: 1px solid #D4AF37;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .badge-gold {
+            background-color: #D4AF37;
+            color: #121212;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="gold-text">Personality Assessment Report</h1>
+            <p class="gold-text">Generated on {{ date }} for {{ assessment.user.get_full_name|default:assessment.user.username }}</p>
+        </div>
+        
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-user"></i> User Information
+                </div>
+                <div class="card-body">
+                    <p><strong class="gold-text">Username:</strong> {{ assessment.user.username }}</p>
+                    <p><strong class="gold-text">Email:</strong> {{ assessment.user.email }}</p>
+                    <p><strong class="gold-text">Date Taken:</strong> {{ assessment.date_taken|date:"F d, Y H:i" }}</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-star"></i> Personality Type
+                </div>
+                <div class="card-body text-center">
+                    <h2 class="gold-text" style="font-size: 2.5em;">{{ result.personality_type }}</h2>
+                    <p class="gold-text">{{ result.get_type_description }}</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar"></i> Dimension Scores
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <img src="data:image/png;base64,{{ chart_image }}" style="max-width: 100%; height: auto;">
+                    </div>
+                    
+                    <table>
+                        <tr>
+                            <th>Dimension Pair</th>
+                            <th>Score</th>
+                            <th>Dimension Pair</th>
+                            <th>Score</th>
+                        </tr>
+                        <tr>
+                            <td>Extraversion (E)</td>
+                            <td><span class="badge-gold">{{ result.get_e_score }}%</span></td>
+                            <td>Introversion (I)</td>
+                            <td><span class="badge-gold">{{ result.get_i_score }}%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Sensing (S)</td>
+                            <td><span class="badge-gold">{{ result.get_s_score }}%</span></td>
+                            <td>Intuition (N)</td>
+                            <td><span class="badge-gold">{{ result.get_n_score }}%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Thinking (T)</td>
+                            <td><span class="badge-gold">{{ result.get_t_score }}%</span></td>
+                            <td>Feeling (F)</td>
+                            <td><span class="badge-gold">{{ result.get_f_score }}%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Judging (J)</td>
+                            <td><span class="badge-gold">{{ result.get_j_score }}%</span></td>
+                            <td>Perceiving (P)</td>
+                            <td><span class="badge-gold">{{ result.get_p_score }}%</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-info-circle"></i> Type Details
+                </div>
+                <div class="card-body">
+                    <div class="dimension-score">
+                        <h3 class="gold-text"><i class="fas fa-check-circle"></i> Strengths</h3>
+                        <p>{{ result.strengths|linebreaksbr }}</p>
+                    </div>
+                    
+                    <div class="dimension-score">
+                        <h3 class="gold-text"><i class="fas fa-seedling"></i> Growth Areas</h3>
+                        <p>{{ result.growth_areas|linebreaksbr }}</p>
+                    </div>
+                    
+                    <div class="dimension-score">
+                        <h3 class="gold-text"><i class="fas fa-briefcase"></i> Career Suggestions</h3>
+                        <p>{{ result.career_suggestions|linebreaksbr }}</p>
+                    </div>
+                    
+                    <div class="dimension-score">
+                        <h3 class="gold-text"><i class="fas fa-heart"></i> Relationships</h3>
+                        <p>{{ result.relationships|linebreaksbr }}</p>
+                    </div>
+                    
+                    <div class="dimension-score">
+                        <h3 class="gold-text"><i class="fas fa-users"></i> Famous Examples</h3>
+                        <p>{{ result.famous_examples|linebreaksbr }}</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-body p-0">
-            {% if assessments %}
-                <div class="list-group list-group-flush">
-                    {% for assessment in assessments %}
-                        <div class="list-group-item">
-                            <div class="row align-items-center">
-                                <div class="col-3">{{ assessment.user.username }}</div>
-                                <div class="col-3">{{ assessment.date_taken|date:"M d, Y H:i" }}</div>
-                                <div class="col-3">
-                                    {% if assessment.result %}
-                                        <span class="badge badge-info">{{ assessment.result.personality_type }}</span>
-                                    {% else %}
-                                        <span class="badge badge-warning">No Result</span>
-                                    {% endif %}
-                                </div>
-                                <div class="col-3">
-                                    <a href="{% url 'view_result_detail' assessment.id %}" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-eye"></i> View Details
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="p-4 text-center text-muted">
-                    No completed assessments found.
-                </div>
-            {% endif %}
-        </div>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>

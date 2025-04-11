@@ -500,7 +500,7 @@ def admin_result_detail(request, assessment_id):
         personality_type = None
         logger.error(f"Personality type {result.personality_type} not found in database")
     
-    template_path = 'pdf_results.html'
+    template_path = 'view_results.html'
     context = {
         'result': result,
         'assessment': assessment,
