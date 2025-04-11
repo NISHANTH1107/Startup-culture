@@ -34,6 +34,17 @@ admin.site.register(CareerSubCategory, CareerSubCategoryAdmin)
 
 # Assessment-related admin configurations
 class QuestionAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        # Prevent adding new questions if count reaches 70
+        return Question.objects.count() < 70
+    
+    def save_model(self, request, obj, form, change):
+        # Additional safeguard during save
+        if not change and Question.objects.count() >= 70:
+            from django.core.exceptions import ValidationError
+            raise ValidationError("Maximum of 70 questions allowed. Cannot add more.")
+        super().save_model(request, obj, form, change)
+    
     list_display = ('order', 'text_preview', 'option_a', 'option_b')
     list_display_links = ('text_preview',)
     list_editable = ('order',)
@@ -55,9 +66,22 @@ class AnswerInline(admin.TabularInline):
 
 class PersonalityResultInline(admin.StackedInline):
     model = PersonalityResult
-    extra = 0
-    readonly_fields = ('personality_type', 'ei_score', 'sn_score', 'tf_score', 'jp_score', 'date_created')
+    fields = (
+        'type_code', 'title', 'description',
+        'strengths', 'growth_areas', 'career_suggestions',
+        'relationships', 'famous_examples', 'banner_color',
+        'ei_score', 'sn_score', 'tf_score', 'jp_score',
+        'date_created'
+    )
+    readonly_fields = (
+        'type_code', 'title', 'description',
+        'strengths', 'growth_areas', 'career_suggestions',
+        'relationships', 'famous_examples', 'banner_color',
+        'ei_score', 'sn_score', 'tf_score', 'jp_score',
+        'date_created'
+    )
     can_delete = False
+    extra = 0
     
     def has_add_permission(self, request, obj=None):
         return False
@@ -71,7 +95,7 @@ class AssessmentAdmin(admin.ModelAdmin):
     
     def get_personality_type(self, obj):
         if hasattr(obj, 'result'):
-            return obj.result.personality_type
+            return obj.result.type_code
         return None
     get_personality_type.short_description = 'Personality Type'
 

@@ -1,4 +1,6 @@
 import json, logging
+import os
+from django.conf import settings
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 from django.shortcuts import render, redirect
@@ -16,12 +18,17 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .models import Question
 from django import forms
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from .models import Question, Assessment, Answer, PersonalityResult
 from .models import MasterClassCategory
 from .models import CareerLibrary, CareerCategory, CareerSubCategory
-
+from django.core.paginator import Paginator
+from .models import Assessment, Question
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.db import transaction
+from django.urls import reverse
+from career_site.forms import UserRegisterForm, StudentProfileForm, AdminProfileForm, QuestionForm
 
 def home(request):
     return render(request, 'home.html')
@@ -169,114 +176,167 @@ def master_class_detail(request, category_id):
     })
     
 
+
+
 @login_required
 def start_assessment(request):
-    # Check if user already has a completed assessment
     if request.user.assessments.filter(completed=True).exists():
         return redirect('assessment_results')
     
-    # Create a new assessment if none exists
     assessment, created = Assessment.objects.get_or_create(
         user=request.user,
         completed=False
     )
     
+    # Initialize answers for all questions if this is a new assessment
+    if created:
+        with transaction.atomic():
+            for question in Question.objects.all():
+                Answer.objects.get_or_create(
+                    assessment=assessment,
+                    question=question
+                )
+    
     questions = Question.objects.all().order_by('order')
+    paginator = Paginator(questions, 10)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    # Get answered question IDs
+    answered_question_ids = list(
+        assessment.answers.exclude(choice__isnull=True)
+        .values_list('question_id', flat=True)
+    )
+    
     return render(request, 'assessment.html', {
-        'questions': questions,
-        'assessment': assessment
+        'questions': page_obj,
+        'assessment': assessment,
+        'all_questions_count': questions.count(),
+        'answered_count': assessment.get_answered_count(),
+        'progress_percent': assessment.get_progress_percent(),
+        'answered_question_ids': answered_question_ids,
     })
 
 @login_required
-def submit_assessment(request):
-    if request.method == 'POST':
-        try:
-            assessment = Assessment.objects.get(
-                user=request.user,
-                completed=False
-            )
-            
-            # Process answers
-            assessment.answers.all().delete()
-            for question in Question.objects.all():
-                if choice := request.POST.get(f'question_{question.id}'):
-                    Answer.objects.create(
+@require_POST
+def save_answers(request):
+    page_action = request.POST.get('page_action', '')
+    is_final_submit = request.POST.get('is_final_submit') == 'true'
+    
+    # Only process if this is the final submission
+    if not is_final_submit:
+        return JsonResponse({
+            'success': True,
+            'next_page': request.POST.get('next_page')
+        })
+    
+    # On final submission, create or get assessment
+    assessment, created = Assessment.objects.get_or_create(
+        user=request.user,
+        completed=False
+    )
+    
+    try:
+        with transaction.atomic():
+            # Process all submitted answers
+            for key, value in request.POST.items():
+                if key.startswith('question_'):
+                    question_id = key.split('_')[1]
+                    Answer.objects.update_or_create(
                         assessment=assessment,
-                        question=question,
-                        choice=bool(int(choice))
+                        question_id=question_id,
+                        defaults={'choice': bool(int(value))}
                     )
             
+            # Mark assessment as complete
             assessment.completed = True
             assessment.save()
             
-            # Calculate result with error handling
-            if not calculate_personality_type(assessment):
-                messages.error(request, "Could not calculate results. Please try again.")
-                return redirect('start_assessment')
+            # Calculate results
+            result = calculate_personality_type(assessment)
+            if not result:
+                raise Exception("Could not calculate results")
             
-            return redirect('assessment_results')
+            return JsonResponse({
+                'success': True,
+                'redirect_url': reverse('assessment_results')
+            })
             
-        except Exception as e:
-            logger.error(f"Assessment submission error: {str(e)}")
-            messages.error(request, "Error processing your assessment")
-            return redirect('start_assessment')
-    
-    return redirect('start_assessment')
+    except Exception as e:
+        logger.error(f"Error saving answers: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
 
 @login_required
 def assessment_results(request):
     assessment = request.user.assessments.filter(completed=True).first()
-    
     if not assessment:
         return redirect('start_assessment')
     
     try:
         result = assessment.result
     except PersonalityResult.DoesNotExist:
-        # Calculate and create the result if it doesn't exist
         result = calculate_personality_type(assessment)
+        if not result:
+            messages.error(request, "Could not calculate results. Please retake the assessment.")
+            return redirect('start_assessment')
     
     return render(request, 'results.html', {
         'result': result,
         'assessment': assessment
     })
 
-@login_required
+
 def download_results(request):
-    assessment = request.user.assessments.filter(completed=True).first()
-    if not assessment:
-        return redirect('start_assessment')
-    
     try:
-        result = assessment.result
-    except PersonalityResult.DoesNotExist:
-        result = calculate_personality_type(assessment)
-    
-    template_path = 'pdf_results.html'
-    context = {'result': result, 'assessment': assessment}
-    
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="personality_assessment_{request.user.username}.pdf"'
-    
-    template = get_template(template_path)
-    html = template.render(context)
-
-    pisa_status = pisa.CreatePDF(html, dest=response)
-    
-    if pisa_status.err:
-        return HttpResponse('We had some errors <pre>' + html + '</pre>')
-    return response
-
-class QuestionForm(forms.ModelForm):
-    class Meta:
-        model = Question
-        fields = ['text', 'option_a', 'option_b', 'order']
-        widgets = {
-            'text': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
-            'option_a': forms.TextInput(attrs={'class': 'form-control'}),
-            'option_b': forms.TextInput(attrs={'class': 'form-control'}),
-            'order': forms.NumberInput(attrs={'class': 'form-control'})
+        # Get the latest assessment result for the user
+        result = PersonalityResult.objects.filter(assessment__user=request.user).latest('date_created')
+        
+        # Prepare context data
+        context = {
+            'user': request.user,
+            'date': result.date_created.strftime("%B %d, %Y"),
+            'type_code': result.type_code,
+            'title': result.title,
+            'description': result.description,
+            'strengths': result.get_strengths().replace('\n', '<br>'),
+            'growth_areas': result.get_growth_areas().replace('\n', '<br>'),
+            'career_suggestions': result.get_career_suggestions().replace('\n', '<br>'),
+            'relationships': result.get_relationships().replace('\n', '<br>'),
+            'famous_examples': result.get_famous_examples(),
+            'chart_image': result.get_chart_image(),
+            'dimensions': {
+                'e_score': result.get_e_score(),
+                'i_score': result.get_i_score(),
+                's_score': result.get_s_score(),
+                'n_score': result.get_n_score(),
+                't_score': result.get_t_score(),
+                'f_score': result.get_f_score(),
+                'j_score': result.get_j_score(),
+                'p_score': result.get_p_score(),
+            }
         }
+        
+        # Render template
+        template = get_template('pdf_results.html')
+        html = template.render(context)
+        
+        # Create PDF
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="personality_assessment_{request.user.username}.pdf"'
+        
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        
+        if pisa_status.err:
+            return HttpResponse('PDF generation error')
+        return response
+
+    except Exception as e:
+        logger.error(f"PDF download error: {str(e)}", exc_info=True)
+        return redirect('assessment_results')
+    
 
 def is_admin(user):
     return user.is_authenticated and user.is_admin
@@ -292,6 +352,10 @@ def manage_questions(request):
 
 @login_required
 def add_question(request):
+    if Question.objects.count() >= 70:
+        messages.error(request, "Maximum number of questions (70) has been reached.")
+        return redirect('manage_questions')
+    
     if request.method == 'POST':
         form = QuestionForm(request.POST)
         if form.is_valid():
@@ -382,11 +446,19 @@ def view_result_detail(request, assessment_id):
     except PersonalityResult.DoesNotExist:
         result = calculate_personality_type(assessment)
     
+    # Get personality type details
+    try:
+        personality_type = PersonalityResult.objects.get(type_code=result.personality_type)
+    except PersonalityResult.DoesNotExist:
+        personality_type = None
+        logger.error(f"Personality type {result.personality_type} not found in database")
+    
     answers = assessment.answers.all().order_by('question__order')
     
     return render(request, 'result_detail.html', {
         'assessment': assessment,
         'result': result,
+        'personality_type': personality_type,
         'answers': answers,
         'section_title': f'Result: {assessment.user.username}'
     })
@@ -421,15 +493,22 @@ def admin_result_detail(request, assessment_id):
     assessment = get_object_or_404(Assessment, pk=assessment_id)
     result = assessment.result
     
+    # Get personality type details
+    try:
+        personality_type = PersonalityResult.objects.get(type_code=result.personality_type)
+    except PersonalityResult.DoesNotExist:
+        personality_type = None
+        logger.error(f"Personality type {result.personality_type} not found in database")
+    
     template_path = 'pdf_results.html'
     context = {
         'result': result,
         'assessment': assessment,
+        'personality_type': personality_type,
         'admin_view': True
     }
     
     response = HttpResponse(content_type='application/pdf')
-    # Changed from 'attachment' to 'inline' to open in browser
     response['Content-Disposition'] = f'inline; filename="assessment_report_{assessment.user.username}.pdf"'
     
     template = get_template(template_path)

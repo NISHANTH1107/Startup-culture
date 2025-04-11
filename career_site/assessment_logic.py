@@ -1,30 +1,16 @@
 from .models import Assessment, PersonalityResult
 from django.core.exceptions import ObjectDoesNotExist
 import logging
+import numpy as np
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 
 logger = logging.getLogger(__name__)
 
-def split_into_sets(binary_list):
-    """Splits binary answers into groups for personality dimension calculation."""
-    try:
-        # Handle the list if there are exactly 70 items (10 groups of 7)
-        if len(binary_list) == 70:
-            inter = [binary_list[i:i + 7] for i in range(0, len(binary_list), 7)]
-            return [[inter[j][i] for j in range(len(inter))] for i in range(len(inter[0]))]
-        
-        # Fallback for non-standard question counts
-        return [[binary_list[j] for j in range(i, len(binary_list), 7) if j < len(binary_list)] 
-               for i in range(7)]
-    
-    except Exception as e:
-        logger.error(f"Error splitting binary list: {str(e)}")
-        # Return empty groups if processing fails
-        return [[] for _ in range(7)]
-
 def calculate_personality_type(assessment):
     """
-    Calculates personality type from assessment answers.
-    Returns PersonalityResult instance or None if calculation fails.
+    Correctly calculates personality type with proper scoring
     """
     try:
         # Validate assessment exists and has answers
@@ -36,70 +22,89 @@ def calculate_personality_type(assessment):
             logger.warning(f"No answers found for assessment {assessment.id}")
             return None
 
-        # Convert answers to binary list
-        binary_list = [int(answer.choice) for answer in answers]
+        # Convert answers to binary choices (0 for A, 1 for B)
+        binary_answers = [int(answer.choice) for answer in answers]
         
-        # Split into personality dimension groups
-        split_data = split_into_sets(binary_list)
-        
-        # Calculate scores for each dimension
-        assessment_score = [(group.count(0), group.count(1)) for group in split_data]
-        
-        # Handle case where we don't have exactly 7 dimensions
-        if len(assessment_score) != 7:
-            logger.warning(f"Unexpected number of dimensions: {len(assessment_score)}")
-            # Pad with zeros if needed
-            assessment_score = assessment_score + [(0, 0)] * (7 - len(assessment_score))
-            assessment_score = assessment_score[:7]  # Ensure exactly 7 dimensions
+        if len(binary_answers) != 70:
+            logger.error(f"Expected 70 answers, got {len(binary_answers)}")
+            return None
 
-        # Combine scores for MBTI dimensions
-        final_score = [
-            assessment_score[0],  # E/I
-            (assessment_score[1][0] + assessment_score[2][0],  # S
-             assessment_score[1][1] + assessment_score[2][1]), # N
-            (assessment_score[3][0] + assessment_score[4][0],  # T
-             assessment_score[3][1] + assessment_score[4][1]), # F
-            (assessment_score[5][0] + assessment_score[6][0],  # J
-             assessment_score[5][1] + assessment_score[6][1])  # P
-        ]
+        # Group and transpose questions
+        grouped = [binary_answers[i:i+7] for i in range(0, 70, 7)]
+        columns = np.array(grouped).T.tolist()
+
+        # Calculate raw scores
+        e_score = columns[0].count(1)  # Col1 B answers
+        i_score = columns[0].count(0)  # Col1 A answers
+        
+        s_score = columns[1].count(0) + columns[2].count(0)
+        n_score = columns[1].count(1) + columns[2].count(1)
+        
+        t_score = columns[3].count(0) + columns[4].count(0)
+        f_score = columns[3].count(1) + columns[4].count(1)
+        
+        j_score = columns[5].count(0) + columns[6].count(0)
+        p_score = columns[5].count(1) + columns[6].count(1)
+
+        # Calculate percentages
+        def calculate_percentage(score1, score2):
+            total = score1 + score2
+            return int((score1 / total) * 100) if total else 50
+
+        e_percent = calculate_percentage(e_score, i_score)
+        i_percent = 100 - e_percent
+        
+        s_percent = calculate_percentage(s_score, n_score)
+        n_percent = 100 - s_percent
+        
+        t_percent = calculate_percentage(t_score, f_score)
+        f_percent = 100 - t_percent
+        
+        j_percent = calculate_percentage(j_score, p_score)
+        p_percent = 100 - j_percent
 
         # Determine personality type
         personality_type = ''.join([
-            'E' if final_score[0][1] > final_score[0][0] else 'I',
-            'S' if final_score[1][0] > final_score[1][1] else 'N',
-            'T' if final_score[2][0] > final_score[2][1] else 'F',
-            'J' if final_score[3][0] > final_score[3][1] else 'P'
+            'E' if e_score > i_score else 'I',
+            'S' if s_score > n_score else 'N',
+            'T' if t_score > f_score else 'F',
+            'J' if j_score > p_score else 'P'
         ])
 
-        # Calculate relative scores (0-100 scale showing dominance)
-        ei_score = (final_score[0][1] / (final_score[0][0] + final_score[0][1])) * 100 if (final_score[0][0] + final_score[0][1]) > 0 else 50
-        sn_score = (final_score[1] / (final_score[1] + final_score[2])) * 100 if (final_score[1] + final_score[2]) > 0 else 50
-        tf_score = (final_score[3] / (final_score[3] + final_score[4])) * 100 if (final_score[3] + final_score[4]) > 0 else 50
-        jp_score = (final_score[5] / (final_score[5] + final_score[6])) * 100 if (final_score[5] + final_score[6]) > 0 else 50
-
-        # Create or update the result
-        result, created = PersonalityResult.objects.update_or_create(
+        # Get type data
+        type_data = PersonalityResult.get_type_data().get(personality_type, {})
+        
+        # Create the result
+        result = PersonalityResult.objects.create(
             assessment=assessment,
-            defaults={
-                'personality_type': personality_type,
-                'ei_score': round(ei_score),
-                'sn_score': round(sn_score),
-                'tf_score': round(tf_score),
-                'jp_score': round(jp_score),
-                # Store raw scores for debugging
-                'raw_e_score': final_score[0][1],
-                'raw_i_score': final_score[0][0],
-                'raw_s_score': final_score[1],
-                'raw_n_score': final_score[2],
-                'raw_t_score': final_score[3],
-                'raw_f_score': final_score[4],
-                'raw_j_score': final_score[5],
-                'raw_p_score': final_score[6],
-            }
+            type_code=personality_type,
+            personality_type=personality_type,
+            title=type_data.get('title', ''),
+            description=type_data.get('description', ''),
+            strengths=type_data.get('strengths', ''),
+            growth_areas=type_data.get('growth_areas', ''),
+            career_suggestions=type_data.get('career_suggestions', ''),
+            relationships=type_data.get('relationships', ''),
+            famous_examples=type_data.get('famous_examples', ''),
+            banner_color=type_data.get('banner_color', '#D4AF37'),
+            # Store raw scores
+            raw_e_score=e_score,
+            raw_i_score=i_score,
+            raw_s_score=s_score,
+            raw_n_score=n_score,
+            raw_t_score=t_score,
+            raw_f_score=f_score,
+            raw_j_score=j_score,
+            raw_p_score=p_score,
+            # Store percentage scores
+            ei_score=e_percent,
+            sn_score=s_percent,
+            tf_score=t_percent,
+            jp_score=j_percent
         )
         
         return result
 
     except Exception as e:
-        logger.error(f"Error calculating personality type for assessment {assessment.id}: {str(e)}")
+        logger.error(f"Error calculating personality type: {str(e)}", exc_info=True)
         return None

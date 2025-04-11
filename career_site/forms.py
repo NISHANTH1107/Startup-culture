@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, StudentProfile, AdminProfile
+from .models import User, StudentProfile, AdminProfile, Question
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -24,3 +24,14 @@ class AdminProfileForm(forms.ModelForm):
 class UserLoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+    
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['text', 'option_a', 'option_b', 'order']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
+            'option_a': forms.TextInput(attrs={'class': 'form-control'}),
+            'option_b': forms.TextInput(attrs={'class': 'form-control'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control'})
+        }

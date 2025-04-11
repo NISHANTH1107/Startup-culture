@@ -4,65 +4,73 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col">
-            <h1>Your Personality Assessment Results</h1>
-            <p class="lead">Assessment completed on {{ assessment.date_taken|date:"F j, Y" }}</p>
+            <h1 class="text-gold">Your Personality Assessment Results</h1>
+            <p class="lead text-light">Assessment completed on {{ assessment.date_taken|date:"F j, Y" }}</p>
         </div>
         <div class="col-auto">
-            <a href="{% url 'download_results' %}" class="btn btn-outline-primary">
-                <i class="bi bi-download"></i> Download PDF
+            <a href="{% url 'download_results' %}" class="btn btn-gold">
+                <i class="fas fa-download me-2"></i> Download PDF
             </a>
         </div>
     </div>
     
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            Your Personality Type
+    <div class="card mb-4 border-gold">
+        <div class="card-header bg-gold text-dark">
+            <i class="fas fa-user me-2"></i> Your Personality Type
         </div>
-        <div class="card-body text-center">
-            <h2 class="display-1">{{ result.personality_type }}</h2>
-            <p class="lead">{{ result.get_type_description }}</p>
+        <div class="card-body bg-dark text-center">
+            <h2 class="display-1 text-gold mb-3">{{ result.personality_type }}</h2>
+            <p class="lead text-light">{{ result.get_type_description }}</p>
         </div>
     </div>
     
     <div class="row">
         <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    Dimension Scores
+            <div class="card mb-4 border-gold">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-chart-radar me-2"></i> Dimension Scores
                 </div>
-                <div class="card-body">
+                <div class="card-body bg-dark">
                     <canvas id="personalityChart"></canvas>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    Detailed Breakdown
+            <div class="card mb-4 border-gold">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-list-ul me-2"></i> Detailed Breakdown
                 </div>
-                <div class="card-body">
+                <div class="card-body bg-dark">
                     <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Extraversion (E) vs Introversion (I)
-                            <span class="badge bg-primary rounded-pill">
+                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="fas fa-users me-2 text-gold"></i> Extraversion (E) vs Introversion (I)
+                            </span>
+                            <span class="badge bg-gold text-dark rounded-pill">
                                 E: {{ result.get_e_score }} | I: {{ result.get_i_score }}
                             </span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Sensing (S) vs Intuition (N)
-                            <span class="badge bg-primary rounded-pill">
+                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="fas fa-eye me-2 text-gold"></i> Sensing (S) vs Intuition (N)
+                            </span>
+                            <span class="badge bg-gold text-dark rounded-pill">
                                 S: {{ result.get_s_score }} | N: {{ result.get_n_score }}
                             </span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Thinking (T) vs Feeling (F)
-                            <span class="badge bg-primary rounded-pill">
+                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="fas fa-brain me-2 text-gold"></i> Thinking (T) vs Feeling (F)
+                            </span>
+                            <span class="badge bg-gold text-dark rounded-pill">
                                 T: {{ result.get_t_score }} | F: {{ result.get_f_score }}
                             </span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Judging (J) vs Perceiving (P)
-                            <span class="badge bg-primary rounded-pill">
+                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+                            <span>
+                                <i class="fas fa-tasks me-2 text-gold"></i> Judging (J) vs Perceiving (P)
+                            </span>
+                            <span class="badge bg-gold text-dark rounded-pill">
                                 J: {{ result.get_j_score }} | P: {{ result.get_p_score }}
                             </span>
                         </li>
@@ -72,19 +80,35 @@
         </div>
     </div>
     
-    <div class="card">
-        <div class="card-header">
-            Type Description
+    <div class="card border-gold">
+        <div class="card-header bg-dark-gold text-light">
+            <i class="fas fa-info-circle me-2"></i> Type Description
         </div>
-        <div class="card-body">
-            <h4>Strengths</h4>
-            <p>{{ result.get_strengths }}</p>
+        <div class="card-body bg-dark text-light">
+            <div class="mb-4">
+                <h4 class="text-gold"><i class="fas fa-star me-2"></i> Strengths</h4>
+                <div class="type-details ps-4">{{ result.strengths|linebreaksbr }}</div>
+            </div>
             
-            <h4>Potential Growth Areas</h4>
-            <p>{{ result.get_growth_areas }}</p>
+            <div class="mb-4">
+                <h4 class="text-gold"><i class="fas fa-seedling me-2"></i> Potential Growth Areas</h4>
+                <div class="type-details ps-4">{{ result.growth_areas|linebreaksbr }}</div>
+            </div>
             
-            <h4>Career Suggestions</h4>
-            <p>{{ result.get_career_suggestions }}</p>
+            <div class="mb-4">
+                <h4 class="text-gold"><i class="fas fa-briefcase me-2"></i> Career Suggestions</h4>
+                <div class="type-details ps-4">{{ result.career_suggestions|linebreaksbr }}</div>
+            </div>
+            
+            <div class="mb-4">
+                <h4 class="text-gold"><i class="fas fa-heart me-2"></i> Relationships</h4>
+                <div class="type-details ps-4">{{ result.relationships|linebreaksbr }}</div>
+            </div>
+            
+            <div>
+                <h4 class="text-gold"><i class="fas fa-users me-2"></i> Famous Examples</h4>
+                <div class="type-details ps-4">{{ result.famous_examples|linebreaksbr }}</div>
+            </div>
         </div>
     </div>
 </div>
@@ -105,25 +129,102 @@
                     {{ result.get_t_score }}, {{ result.get_f_score }},
                     {{ result.get_j_score }}, {{ result.get_p_score }}
                 ],
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(212, 175, 55, 0.2)',
+                borderColor: 'rgba(212, 175, 55, 1)',
+                pointBackgroundColor: 'rgba(212, 175, 55, 1)',
                 pointBorderColor: '#fff',
                 pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
+                pointHoverBorderColor: 'rgba(212, 175, 55, 1)'
             }]
         },
         options: {
             scales: {
                 r: {
                     angleLines: {
-                        display: true
+                        display: true,
+                        color: 'rgba(255, 255, 255, 0.1)'
                     },
                     suggestedMin: 0,
-                    suggestedMax: 100
+                    suggestedMax: 100,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    pointLabels: {
+                        color: '#fff'
+                    },
+                    ticks: {
+                        backdropColor: 'rgba(0, 0, 0, 0)',
+                        color: '#fff'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#fff',
+                        font: {
+                            size: 14
+                        }
+                    }
                 }
             }
         }
     });
 </script>
+
+<style>
+    :root {
+        --gold: #D4AF37;
+        --gold-dark: #B7950B;
+        --dark: #121212;
+    }
+    
+    .bg-gold {
+        background-color: var(--gold) !important;
+    }
+    
+    .bg-dark-gold {
+        background-color: rgba(212, 175, 55, 0.15) !important;
+        border-bottom: 1px solid var(--gold);
+    }
+    
+    .btn-gold {
+        background-color: var(--gold);
+        color: #000 !important;
+        font-weight: 600;
+        border: none;
+        padding: 0.5rem 1.25rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-gold:hover {
+        background-color: var(--gold-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+    
+    .border-gold {
+        border-color: var(--gold) !important;
+    }
+    
+    .text-gold {
+        color: var(--gold) !important;
+    }
+    
+    .text-light {
+        color: #f8f9fa !important;
+    }
+    
+    .bg-dark {
+        background-color: var(--dark) !important;
+    }
+    
+    .card {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+    
+    .list-group-item {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+</style>
 {% endblock %}
