@@ -15,51 +15,99 @@
             --light-gray: #2E2E2E;
         }
         body {
-            background-color: var(--black);
+            background-color: #1E1E1E;
             color: white;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
+        
+        /* New navbar styles to match the trapezoid design */
         .navbar {
-            background-color: var(--black) !important;
-            border-bottom: 2px solid var(--gold);
-        }
-        .navbar-brand, .nav-link {
-            color: var(--gold) !important;
+            background-color: transparent !important;
+            padding: 0;
             position: relative;
-            padding-bottom: 0.25rem !important;
-            transition: color 0.3s ease;
         }
-        /* Default state - no underline */
-        .nav-link::after {
-            content: '';
+        
+        .navbar::before {
+            content: "";
             position: absolute;
-            bottom: -2px; /* Position directly below text */
-            left: 50%;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background-color: #121212;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            border-bottom: 2px solid var(--gold);
+            z-index: -1;
+        }
+        
+        .navbar .container {
+            height: 70px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand {
+            color: var(--gold) !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Center section with Home link */
+        .navbar-center {
+            position: absolute;
+            left: 25%;
             transform: translateX(-50%);
-            width: 0; /* Start with no width */
-            height: 2px;
-            background-color: var(--gold);
-            transition: width 0.3s ease;
         }
         
-        /* Hover state - animate underline */
-        .nav-link:hover::after {
-            width: 70%; /* Smaller underline on hover */
+        .navbar-center .nav-link {
+            color: white !important;
+            font-size: 1rem;
+            padding: 8px 16px;
         }
         
-        /* Active state - smaller underline */
-        .nav-link.active::after {
-            width: 70%; /* Smaller underline for active links */
+        /* Auth buttons */
+        .auth-buttons {
+            margin-left: auto;
         }
         
-        .nav-link.active {
-            font-weight: 500;
-        }
-        .card {
-            background-color: var(--dark-gray);
+        .auth-btn {
+            display: inline-block;
+            background-color: transparent;
+            color: white;
             border: 1px solid var(--gold);
+            border-radius: 4px;
+            padding: 6px 20px;
+            margin-left: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-btn:hover {
+            background-color: var(--gold);
+            color: #121212;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-center {
+                position: static;
+                transform: none;
+                margin: 0 auto;
+            }
+            
+            .auth-buttons {
+                display: flex;
+                margin-top: 10px;
+            }
+        }
+        
+        /* Rest of your original styles */
+        .card {
+            background-color: #1E1E1E;
+            border: 1px solid #D4AF37;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             color: white;
         }
@@ -68,18 +116,18 @@
             box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
         }
         .card-title {
-            color: var(--gold);
+            color: #D4AF37;
         }
         .btn-primary {
-            background-color: var(--gold);
-            border-color: var(--gold);
-            color: var(--black);
+            background-color: #D4AF37;
+            border-color: #D4AF37;
+            color: #121212;
             font-weight: bold;
             transition: all 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: var(--dark-gold);
-            border-color: var(--dark-gold);
+            background-color: #B7950B;
+            border-color: #B7950B;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(183, 149, 11, 0.3);
         }
@@ -87,15 +135,15 @@
             transform: translateY(0);
         }
         .breadcrumb {
-            background-color: var(--dark-gray);
+            background-color: #1E1E1E;
         }
         .breadcrumb-item.active {
-            color: var(--gold);
+            color: #D4AF37;
         }
         .list-group-item {
-            background-color: var(--light-gray);
+            background-color: #2E2E2E;
             color: white;
-            border-color: var(--gold);
+            border-color: #D4AF37;
         }
         .demand-scale {
             display: flex;
@@ -105,7 +153,7 @@
         .demand-level {
             text-align: center;
             font-size: 0.8rem;
-            color: var(--gold);
+            color: #D4AF37;
         }
         .auth-container {
             display: flex;
@@ -118,14 +166,14 @@
             max-width: 500px;
         }
         .form-control {
-            background-color: var(--light-gray);
-            border-color: var(--gold);
+            background-color: #2E2E2E;
+            border-color: #D4AF37;
             color: white;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-control:focus {
-            background-color: var(--light-gray);
-            border-color: var(--dark-gold);
+            background-color: #2E2E2E;
+            border-color: #B7950B;
             box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
             color: white;
         }
@@ -133,75 +181,138 @@
             color: rgba(255, 255, 255, 0.5);
         }
         .form-check-input {
-            background-color: var(--light-gray);
-            border-color: var(--gold);
+            background-color: #2E2E2E;
+            border-color: #D4AF37;
         }
         .form-check-input:checked {
-            background-color: var(--gold);
-            border-color: var(--gold);
+            background-color: #D4AF37;
+            border-color: #D4AF37;
         }
         .form-label {
-            color: var(--gold);
+            color: #D4AF37;
         }
         a {
-            color: var(--gold);
+            color: #D4AF37;
             text-decoration: none;
             transition: color 0.3s ease;
         }
         a:hover {
-            color: var(--dark-gold);
+            color: #B7950B;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <!-- New navbar structure to match the image -->
+    <nav class="navbar">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">SocioPotents</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                    </li>
-                    {% comment %} {% if user.is_authenticated %}
-                        {% if user.is_student %}
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
-                            </li>
-                        {% elif user.is_admin %}
-                            <li class="nav-item">
-                                <a class="nav-link {% if request.resolver_match.url_name == 'admin-dashboard' %}active{% endif %}" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
-                            </li>
-                        {% endif %}
-                    {% endif %} {% endcomment %}
-                </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
+            <!-- Left: Brand name -->
+            <a class="navbar-brand" href="{% url 'home' %}">SocioPotents</a>
+            
+            <!-- Center: Home link -->
+            <div class="navbar-center d-none d-md-block">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </div>
+            
+            <!-- Right: Auth buttons -->
+            <div class="auth-buttons">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="auth-btn">Profile</a>
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="auth-btn">
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="auth-btn">Login</a>
+                    <a href="{% url 'register' %}" class="auth-btn">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hidden collapsible menu for authenticated users on md+ screens -->
+    {% if user.is_authenticated %}
+    <div class="container mt-2 d-none d-md-block">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <ul class="nav">
+                    {% if user.is_student %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
+                            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <form method="post" action="{% url 'logout' %}" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link" style="padding: 8px 0;">
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'register' %}">Register</a>
+                            <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
+                        </li>
+                    {% elif user.is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Career Paths</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'manage_questions' %}">Assessment Questions</a>
+                        </li>  
                     {% endif %}
                 </ul>
             </div>
         </div>
-    </nav>
+    </div>
+    {% endif %}
+    
+    <!-- Mobile navigation -->
+    <div class="container d-md-none mb-3">
+        <button class="navbar-toggler w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNavbar">
+            <span class="navbar-toggler-icon"></span> Menu
+        </button>
+        <div class="collapse navbar-collapse mt-2" id="mobileNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+                
+                {% if user.is_authenticated %}
+                    {% if user.is_student %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
+                        </li>
+                    {% elif user.is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Career Paths</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'manage_questions' %}">Assessment Questions</a>
+                        </li>  
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
 
     <div class="container mt-4">
         {% if messages %}
@@ -217,14 +328,12 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    {% block scripts %}{% endblock %}
-    
     <script>
         // Get current page URL path
         const currentPath = window.location.pathname;
         
         // Get all nav links
-        const navLinks = document.querySelectorAll('.navbar .nav-link');
+        const navLinks = document.querySelectorAll('.navbar .nav-link, .nav .nav-link');
         
         // Check each link against current URL path
         navLinks.forEach(link => {
@@ -240,5 +349,6 @@
             }
         });
     </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

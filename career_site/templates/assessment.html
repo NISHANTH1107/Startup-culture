@@ -2,10 +2,10 @@
 
 {% block content %}
 <div class="container position-relative">
-    <!-- Floating Submit Button (Top Right) -->
+    <!-- Floating Submit Button (Top Right) - Only appears at the end -->
     <div class="position-absolute top-0 end-0 mt-3 me-3">
         <button type="submit" form="assessmentForm" class="btn btn-gold btn-lg shadow" id="submitBtn" disabled>
-            <i class="fas fa-paper-plane me-2"></i> {% if questions.has_next %}Save & Continue{% else %}Submit Assessment{% endif %}
+            <i class="fas fa-paper-plane me-2"></i> Submit Assessment
         </button>
     </div>
 
@@ -16,21 +16,21 @@
         {% csrf_token %}
         <input type="hidden" name="current_page" value="{{ questions.number }}">
         <input type="hidden" name="next_page" value="{% if questions.has_next %}{{ questions.next_page_number }}{% else %}final{% endif %}">
-        <input type="hidden" name="is_final_submit" value="{% if not questions.has_next %}true{% else %}false{% endif %}" id="is_final_submit">
-        <input type="hidden" name="page_action" value="continue" id="page_action">
+        <input type="hidden" name="is_final_submit" value="true" id="is_final_submit">
+        <input type="hidden" name="page_action" value="submit" id="page_action">
         
         <!-- Incomplete Warning -->
         <div id="incompleteWarning" class="alert alert-warning position-absolute top-0 end-0 mt-5 me-3 shadow" style="width: 300px; display: none;">
-            <i class="fas fa-exclamation-circle me-2"></i> Please answer all questions to continue
+            <i class="fas fa-exclamation-circle me-2"></i> Please answer all questions to submit
         </div>
 
         <!-- Saving indicator -->
         <div id="savingIndicator" class="alert alert-info position-fixed top-50 start-50 translate-middle shadow" style="display: none; z-index: 9999;">
             <div class="d-flex align-items-center">
                 <div class="spinner-border spinner-border-sm text-dark me-2" role="status">
-                    <span class="visually-hidden">Saving...</span>
+                    <span class="visually-hidden">Submitting...</span>
                 </div>
-                <span>Saving your answers...</span>
+                <span>Submitting your assessment...</span>
             </div>
         </div>
 
@@ -42,7 +42,8 @@
                 <ul class="mb-0 text-light">
                     <li class="mb-2">Select the option that <strong>best describes you</strong></li>
                     <li class="mb-2">Answer <strong>quickly and honestly</strong> - trust your instincts</li>
-                    <li>All questions are <strong>required</strong> to complete</li>
+                    <li class="mb-2">Your answers are <strong>saved automatically</strong> as you progress</li>
+                    <li>All {{ all_questions_count }} questions are <strong>required</strong> to complete the assessment</li>
                 </ul>
             </div>
         </div>
@@ -247,7 +248,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const STORAGE_KEY = 'assessmentAnswers';
+        const STORAGE_KEY = 'assessmentAnswers_{{ request.user.id }}';
         const form = document.getElementById('assessmentForm');
         const questionCards = document.querySelectorAll('.question-card');
         const radioButtons = document.querySelectorAll('.question-radio');
@@ -258,8 +259,6 @@
         const incompleteWarning = document.getElementById('incompleteWarning');
         const navPageBtns = document.querySelectorAll('.nav-page-btn');
         const savingIndicator = document.getElementById('savingIndicator');
-        const pageActionInput = document.getElementById('page_action');
-        const isFinalSubmitInput = document.getElementById('is_final_submit');
         const totalQuestions = {{ all_questions_count }};
         let localAnswers = {};
         
@@ -343,8 +342,10 @@
             progressPercent.textContent = `${percent}%`;
             progressBar.style.width = `${percent}%`;
             
-            // Enable/disable submit button
-            submitBtn.disabled = !currentPageAnswered;
+            // Only enable submit button if ALL questions are answered (all 70)
+            submitBtn.disabled = answered < totalQuestions;
+            
+            // Show warning if current page has unanswered questions
             incompleteWarning.style.display = currentPageAnswered ? 'none' : 'block';
         }
         
@@ -367,7 +368,7 @@
             });
         });
         
-        // Handle page navigation - MODIFIED VERSION
+        // Handle page navigation
         navPageBtns.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -385,29 +386,31 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Check if all questions on current page are answered
-            let allCurrentPageAnswered = true;
-            
-            questionCards.forEach(card => {
-                const questionId = card.id.split('-')[1];
-                if (!document.querySelector(`input[name="question_${questionId}"]:checked`)) {
-                    allCurrentPageAnswered = false;
-                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    card.classList.add('border-danger');
-                    setTimeout(() => card.classList.remove('border-danger'), 2000);
-                }
-            });
-            
-            if (!allCurrentPageAnswered) {
-                incompleteWarning.classList.add('animate__animated', 'animate__headShake');
-                setTimeout(() => {
-                    incompleteWarning.classList.remove('animate__animated', 'animate__headShake');
-                }, 1000);
-                return;
-            }
-            
             // Save all answers to form data for submission
             saveAnswersLocally();
+            
+            // Check if ALL questions (all 70) are answered
+            if (Object.keys(localAnswers).length < totalQuestions) {
+                // Calculate which pages have unanswered questions
+                let unansweredPages = new Set();
+                const answeredIds = new Set(Object.keys(localAnswers).map(id => parseInt(id)));
+                
+                // Assuming you have a way to get all question IDs
+                // For simplicity, let's assume they are sequential from 1 to totalQuestions
+                for (let i = 1; i <= totalQuestions; i++) {
+                    if (!answeredIds.has(i)) {
+                        // Determine which page this question belongs to
+                        // This would depend on your pagination logic
+                        // For example, if you have 10 questions per page:
+                        const page = Math.ceil(i / 10);
+                        unansweredPages.add(page);
+                    }
+                }
+                
+                // Alert user about unanswered questions
+                alert(`Please complete all questions before submitting. You have unanswered questions on page(s): ${Array.from(unansweredPages).join(', ')}`);
+                return;
+            }
             
             // Show saving indicator
             savingIndicator.style.display = 'block';
@@ -417,9 +420,6 @@
             for (const [questionId, answerValue] of Object.entries(localAnswers)) {
                 formData.append(`question_${questionId}`, answerValue);
             }
-            
-            // Update form values for submission
-            pageActionInput.value = 'submit';
             
             // Submit the form with AJAX
             fetch(form.action, {
@@ -437,22 +437,22 @@
                     localStorage.removeItem(STORAGE_KEY);
                     
                     if (data.redirect_url) {
-                        // Final submission - redirect to results
+                        // Redirect to results
                         window.location.href = data.redirect_url;
-                    } else if (data.next_page) {
-                        // Continue to next page
-                        window.location.href = `?page=${data.next_page}`;
+                    } else {
+                        savingIndicator.style.display = 'none';
+                        alert('Assessment submitted successfully!');
                     }
                 } else {
                     console.error('Error saving answers:', data.error);
                     savingIndicator.style.display = 'none';
-                    alert('There was an error saving your answers. Please try again.');
+                    alert('There was an error submitting your assessment. Please try again.');
                 }
             })
             .catch(error => {
                 console.error('Error saving answers:', error);
                 savingIndicator.style.display = 'none';
-                alert('There was an error saving your answers. Please try again.');
+                alert('There was an error submitting your assessment. Please try again.');
             });
         });
     });

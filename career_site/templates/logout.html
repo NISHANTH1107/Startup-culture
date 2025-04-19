@@ -20,4 +20,16 @@
         </div>
     </div>
 </div>
+
+<script>
+// Clear all assessment answers from localStorage when logging out
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove all keys that start with 'assessmentAnswers_'
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('assessmentAnswers_')) {
+            localStorage.removeItem(key);
+        }
+    });
+});
+</script>
 {% endblock %}

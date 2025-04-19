@@ -15,48 +15,126 @@
             --light-gray: #2E2E2E;
         }
         body {
-            background-color: #121212;
+            background-color: #1E1E1E;
             color: white;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
+        
+        /* Navbar styles */
         .navbar {
-            background-color: #121212 !important;
-            border-bottom: 2px solid #D4AF37;
-        }
-        .navbar-brand, .nav-link {
-            color: #D4AF37 !important;
+            background-color: transparent !important;
+            padding: 0;
             position: relative;
-            padding-bottom: 0.25rem !important;
+        }
+        
+        .navbar::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background-color: #121212;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            border-bottom: 2px solid var(--gold);
+            z-index: -1;
+        }
+        
+        .navbar .container {
+            height: 70px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand {
+            color: var(--gold) !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Modified navbar navigation section */
+        .navbar-nav {
+            display: flex;
+            margin-left: 40px;
+        }
+        
+        .navbar-nav .nav-link {
+            color: white !important;
+            font-size: 1rem;
+            padding: 8px 16px;
             transition: color 0.3s ease;
         }
-        /* Default state - no underline */
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; /* Position directly below text */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0; /* Start with no width */
-            height: 2px;
-            background-color: #D4AF37;
-            transition: width 0.3s ease;
+        
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: var(--gold) !important;
         }
         
-        /* Hover state - animate underline */
-        .nav-link:hover::after {
-            width: 70%; /* Smaller underline on hover */
+        /* Auth buttons */
+        .auth-buttons {
+            margin-left: auto;
         }
         
-        /* Active state - smaller underline */
-        .nav-link.active::after {
-            width: 70%; /* Smaller underline for active links */
+        .auth-btn {
+            display: inline-block;
+            background-color: transparent;
+            color: white;
+            border: 1px solid var(--gold);
+            border-radius: 4px;
+            padding: 6px 20px;
+            margin-left: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
         
-        .nav-link.active {
-            font-weight: 500;
+        .auth-btn:hover {
+            background-color: var(--gold);
+            color: #121212;
         }
+        
+        /* Mobile navigation adjustments */
+        .navbar-toggler {
+            border-color: var(--gold);
+            color: white;
+            margin-right: 10px;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: #121212;
+                z-index: 1000;
+                padding: 10px;
+                border-bottom: 2px solid var(--gold);
+            }
+            
+            .navbar-nav {
+                margin-left: 0;
+            }
+            
+            .auth-buttons {
+                margin: 10px 0;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .auth-btn {
+                margin: 0 5px;
+            }
+        }
+        
+        /* Rest of your original styles */
         .card {
             background-color: #1E1E1E;
             border: 1px solid #D4AF37;
@@ -151,18 +229,24 @@
         a:hover {
             color: #B7950B;
         }
-
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <!-- Updated navbar structure -->
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">SocioPotents</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <!-- Brand name -->
+            <a class="navbar-brand" href="{% url 'home' %}">SocioPotents</a>
+            
+            <!-- Navbar toggler for mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+            
+            <!-- Collapsible navbar content -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <!-- Navigation menu -->
+                <ul class="navbar-nav">
                     {% comment %} <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">Home</a>
                     </li> {% endcomment %}
@@ -197,28 +281,22 @@
                         {% endif %}
                     {% endif %}
                 </ul>
-                <ul class="navbar-nav">
+                
+                <!-- Auth buttons -->
+                <div class="auth-buttons">
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <form method="post" action="{% url 'logout' %}" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link" style="padding: 8px 0;">
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
+                        <a href="{% url 'profile' %}" class="auth-btn">Profile</a>
+                        <form method="post" action="{% url 'logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="auth-btn">
+                                Logout
+                            </button>
+                        </form>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Register</a>
-                        </li>
+                        <a href="{% url 'login' %}" class="auth-btn">Login</a>
+                        <a href="{% url 'register' %}" class="auth-btn">Register</a>
                     {% endif %}
-                </ul>
+                </div>
             </div>
         </div>
     </nav>
