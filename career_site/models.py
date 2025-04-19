@@ -209,7 +209,7 @@ class PersonalityResult(models.Model):
                 "description": "Practical and fact-minded individuals, whose reliability cannot be doubted. They are thorough, responsible, and systematic, making them excellent at managing and executing tasks.",
                 "strengths": "1. Honest and direct\n2. Strong-willed and dutiful\n3. Responsible and reliable\n4. Calm and practical\n5. Create and enforce order",
                 "growth_areas": "1. Being more open to unconventional ideas\n2. Expressing emotions more freely\n3. Being more flexible with change\n4. Considering alternative perspectives\n5. Taking more risks",
-                "career_suggestions": "1. Accountant\n2. Military officer\n3. Judge\n4. Financial analyst\n5. Project manager\n6. Auditor\n7. Police officer\n8. Business administrator",
+                "career_suggestions": "1. Business Administration\n2. Finance\n3. Law\n4. Public Administration\n5. Accounting\n6. Military Science\n7. Criminal Justice\n8. Project Management",
                 "relationships": "ISTJs are loyal and dependable partners who value stability and tradition. They show love through practical actions rather than words. They may struggle with emotional expression but are deeply committed to their relationships.",
                 "famous_examples": "Queen Elizabeth II, George Washington, Natalie Portman, Warren Buffett, Angela Merkel"
             },
@@ -218,7 +218,7 @@ class PersonalityResult(models.Model):
                 "description": "Warm, caring, and protective individuals who are always ready to defend their loved ones. They are extremely reliable, patient, and practical with a strong sense of duty.",
                 "strengths": "1. Supportive and reliable\n2. Warm and considerate\n3. Practical and responsible\n4. Detailed and thorough\n5. Loyal and committed",
                 "growth_areas": "1. Setting healthy boundaries\n2. Saying no without guilt\n3. Handling criticism better\n4. Being more assertive\n5. Taking more personal time",
-                "career_suggestions": "1. Nurse\n2. Teacher\n3. Counselor\n4. Social worker\n5. Healthcare administrator\n6. Librarian\n7. Accountant\n8. Office manager",
+                "career_suggestions": "1. Elementary Education\n2. Healthcare Administration\n3. Nursing\n4. Human Resources\n5. Social Work\n6. Counseling\n7. Library Science\n8. Nutrition/Dietetics",
                 "relationships": "ISFJs are nurturing partners who express love through acts of service. They prioritize their partner's needs, sometimes at their own expense. They value stability and may struggle with conflict.",
                 "famous_examples": "Mother Teresa, Kate Middleton, Rosa Parks, Dr. Watson (Sherlock Holmes), Laura Bush"
             },
@@ -227,7 +227,7 @@ class PersonalityResult(models.Model):
                 "description": "Creative and compassionate individuals with strong intuition and deep convictions. They have a talent for helping others achieve potential while pursuing their own ideals.",
                 "strengths": "1. Creative and insightful\n2. Principled and passionate\n3. Altruistic and empathetic\n4. Decisive and determined\n5. Organized and future-oriented",
                 "growth_areas": "1. Being less perfectionistic\n2. Setting realistic expectations\n3. Sharing personal needs\n4. Handling criticism better\n5. Balancing idealism with practicality",
-                "career_suggestions": "1. Counselor\n2. Psychologist\n3. Writer\n4. Teacher\n5. Human resources\n6. Healthcare professional\n7. Clergy\n8. Social worker",
+                "career_suggestions": "1. Psychology\n2. Education\n3. Public Health\n4. Organizational Leadership\n5. Counseling\n6. Social Work\n7. Theology/Religious Studies\n8. Human Rights",
                 "relationships": "INFJs seek deep, meaningful connections and are intensely loyal. They may idealize relationships and need to communicate their needs more directly. They value emotional intimacy and shared values.",
                 "famous_examples": "Nelson Mandela, Carl Jung, Martin Luther King Jr., Emily Brontë, Mother Teresa"
             },
@@ -236,7 +236,7 @@ class PersonalityResult(models.Model):
                 "description": "Strategic, analytical thinkers with a clear vision of how things should be. They are highly independent, confident, and self-motivated with a strong drive to implement their ideas.",
                 "strengths": "1. Rational and quick-witted\n2. Independent and decisive\n3. Hardworking and determined\n4. Open-minded and imaginative\n5. Honest and direct",
                 "growth_areas": "1. Being more open to emotions\n2. Considering others' feelings\n3. Practicing patience\n4. Accepting imperfections\n5. Valuing social rituals",
-                "career_suggestions": "1. Scientist\n2. Engineer\n3. Judge\n4. Business strategist\n5. Software developer\n6. Architect\n7. Professor\n8. Investment banker",
+                "career_suggestions": "1. Strategic Management\n2. Economics\n3. Law\n4. International Business\n5. Computer Science\n6. Engineering\n7. Physics\n8. Mathematics",
                 "relationships": "INTJs value intellectual connection and personal growth in relationships. They may struggle with emotional expression but are deeply loyal. They need partners who respect their independence.",
                 "famous_examples": "Elon Musk, Friedrich Nietzsche, Ruth Bader Ginsburg, Stephen Hawking, Mark Zuckerberg"
             },
@@ -245,7 +245,7 @@ class PersonalityResult(models.Model):
                 "description": "Bold and practical experimenters who excel at using tools and solving problems with hands-on approaches. They are spontaneous, adaptable, and masters of any situation.",
                 "strengths": "1. Optimistic and energetic\n2. Creative and practical\n3. Spontaneous and rational\n4. Knowledgable about tools\n5. Excellent in crises",
                 "growth_areas": "1. Considering long-term consequences\n2. Developing follow-through\n3. Expressing emotions better\n4. Valuing commitments more\n5. Planning ahead",
-                "career_suggestions": "1. Pilot\n2. Engineer\n3. Mechanic\n4. Forensic scientist\n5. Carpenter\n6. Athlete\n7. Computer technician\n8. Emergency responder",
+                "career_suggestions": "1. Engineering\n2. Computer Science\n3. Aviation\n4. Criminal Justice\n5. Sports Science\n6. Architecture\n7. Industrial Design\n8. Emergency Medicine",
                 "relationships": "ISTPs are exciting but independent partners who value personal freedom. They show love through shared activities rather than words. They may struggle with emotional conversations.",
                 "famous_examples": "Bruce Lee, Michael Jordan, Amelia Earhart, Clint Eastwood, Tom Cruise"
             },
@@ -254,7 +254,7 @@ class PersonalityResult(models.Model):
                 "description": "Flexible and charming artists who live in the present moment. They are sensitive, caring, and deeply attuned to their environment and personal values.",
                 "strengths": "1. Charming and sensitive\n2. Imaginative and artistic\n3. Passionate and curious\n4. Practical and hands-on\n5. Loyal and committed",
                 "growth_areas": "1. Being more assertive\n2. Handling conflict better\n3. Planning for the future\n4. Setting clearer boundaries\n5. Valuing structure more",
-                "career_suggestions": "1. Artist\n2. Musician\n3. Designer\n4. Chef\n5. Nurse\n6. Physical therapist\n7. Forest ranger\n8. Veterinarian",
+                "career_suggestions": "1. Fine Arts\n2. Graphic Design\n3. Interior Design\n4. Fashion Design\n5. Music\n6. Photography\n7. Culinary Arts\n8. Physical Therapy",
                 "relationships": "ISFPs are warm, caring partners who value harmony. They express love through thoughtful actions and quality time. They may avoid confrontation and need personal space.",
                 "famous_examples": "Michael Jackson, Frida Kahlo, Britney Spears, Wolfgang Amadeus Mozart, Jacqueline Kennedy Onassis"
             },
@@ -263,7 +263,7 @@ class PersonalityResult(models.Model):
                 "description": "Poetic, kind-hearted individuals who are guided by their values and ideals. They seek meaning in everything and want to make the world a better place.",
                 "strengths": "1. Empathetic and caring\n2. Creative and imaginative\n3. Open-minded and curious\n4. Loyal and committed\n5. Idealistic and principled",
                 "growth_areas": "1. Being more assertive\n2. Setting practical goals\n3. Handling criticism better\n4. Avoiding perfectionism\n5. Managing time effectively",
-                "career_suggestions": "1. Writer\n2. Counselor\n3. Psychologist\n4. Teacher\n5. Artist\n6. Social worker\n7. Musician\n8. Human resources",
+                "career_suggestions": "1. Creative Writing\n2. Literature\n3. Social Work\n4. Human Rights\n5. Psychology\n6. Counseling\n7. Environmental Studies\n8. Philosophy",
                 "relationships": "INFPs seek deep, authentic connections and value emotional intimacy. They are supportive partners but may idealize relationships. They need partners who respect their values.",
                 "famous_examples": "William Shakespeare, J.R.R. Tolkien, Princess Diana, John Lennon, Audrey Hepburn"
             },
@@ -272,7 +272,7 @@ class PersonalityResult(models.Model):
                 "description": "Innovative inventors with an unquenchable thirst for knowledge. They are logical, analytical, and enjoy theoretical problem-solving above all else.",
                 "strengths": "1. Original and inventive\n2. Objective and logical\n3. Open-minded and curious\n4. Honest and straightforward\n5. Independent and self-motivated",
                 "growth_areas": "1. Considering emotional impacts\n2. Following through on projects\n3. Developing social skills\n4. Being more decisive\n5. Valuing practical applications",
-                "career_suggestions": "1. Scientist\n2. Programmer\n3. Mathematician\n4. Engineer\n5. Professor\n6. Architect\n7. Philosopher\n8. Technical writer",
+                "career_suggestions": "1. Theoretical Physics\n2. Mathematics\n3. Computer Science\n4. Philosophy of Science\n5. Engineering\n6. Neuroscience\n7. Artificial Intelligence\n8. Linguistics",
                 "relationships": "INTPs value intellectual connection and personal freedom. They may struggle with emotional expression but are loyal partners. They need space for independent thinking.",
                 "famous_examples": "Albert Einstein, Charles Darwin, Marie Curie, Abraham Lincoln, Socrates"
             },
@@ -281,7 +281,7 @@ class PersonalityResult(models.Model):
                 "description": "Smart, energetic, and perceptive people who truly enjoy living on the edge. They are action-oriented problem-solvers who bring immediate energy to any situation.",
                 "strengths": "1. Bold and practical\n2. Original and direct\n3. Perceptive and observant\n4. Excellent in crises\n5. Social and spontaneous",
                 "growth_areas": "1. Considering long-term consequences\n2. Developing patience\n3. Valuing commitments more\n4. Being more sensitive to others\n5. Planning ahead",
-                "career_suggestions": "1. Entrepreneur\n2. Salesperson\n3. Marketing executive\n4. Police officer\n5. Emergency responder\n6. Athlete\n7. Pilot\n8. Construction manager",
+                "career_suggestions": "1. Marketing\n2. Entrepreneurship\n3. Sports Management\n4. Hospitality\n5. Criminal Justice\n6. Emergency Medicine\n7. Construction Management\n8. Real Estate",
                 "relationships": "ESTPs are exciting, spontaneous partners who value fun and adventure. They show love through shared experiences. They may struggle with emotional depth and long-term planning.",
                 "famous_examples": "Ernest Hemingway, Madonna, Donald Trump, Winston Churchill, Jack Nicholson"
             },
@@ -290,7 +290,7 @@ class PersonalityResult(models.Model):
                 "description": "Spontaneous, energetic, and enthusiastic people who love life, people, and material comforts. They are the life of the party and enjoy bringing joy to others.",
                 "strengths": "1. Bold and original\n2. Practical and observant\n3. Excellent people skills\n4. Generous and optimistic\n5. Natural performers",
                 "growth_areas": "1. Developing follow-through\n2. Considering future consequences\n3. Handling conflict better\n4. Valuing alone time\n5. Setting long-term goals",
-                "career_suggestions": "1. Actor\n2. Sales representative\n3. Event planner\n4. Teacher\n5. Social worker\n6. Nurse\n7. Public relations\n8. Fashion designer",
+                "career_suggestions": "1. Performing Arts\n2. Music\n3. Event Management\n4. Mass Communication\n5. Hospitality\n6. Tourism\n7. Public Relations\n8. Sports Coaching",
                 "relationships": "ESFPs are fun-loving, affectionate partners who enjoy shared experiences. They express love through physical affection and acts of service. They may avoid serious conversations.",
                 "famous_examples": "Marilyn Monroe, Elvis Presley, Jamie Oliver, Bill Clinton, Adele"
             },
@@ -299,7 +299,7 @@ class PersonalityResult(models.Model):
                 "description": "Enthusiastic, creative, and sociable free spirits who can always find a reason to smile. They see life as full of possibilities and connect deeply with others.",
                 "strengths": "1. Curious and perceptive\n2. Energetic and enthusiastic\n3. Excellent communicators\n4. Popular and friendly\n5. Empathetic and caring",
                 "growth_areas": "1. Developing focus\n2. Following through on projects\n3. Setting boundaries\n4. Handling criticism better\n5. Managing time effectively",
-                "career_suggestions": "1. Counselor\n2. Psychologist\n3. Actor\n4. Journalist\n5. Teacher\n6. Entrepreneur\n7. Human resources\n8. Event planner",
+                "career_suggestions": "1. Journalism\n2. Media Studies\n3. Development Studies\n4. Public Relations\n5. Psychology\n6. Counseling\n7. Education\n8. Creative Arts",
                 "relationships": "ENFPs seek deep, meaningful connections and value emotional intimacy. They are affectionate partners but may struggle with commitment. They need partners who appreciate their enthusiasm.",
                 "famous_examples": "Robin Williams, Walt Disney, Ellen DeGeneres, Robert Downey Jr., Oscar Wilde"
             },
@@ -308,7 +308,7 @@ class PersonalityResult(models.Model):
                 "description": "Smart, curious thinkers who cannot resist an intellectual challenge. They are quick, ingenious, and excellent at reading other people and finding connections.",
                 "strengths": "1. Knowledgeable and quick-witted\n2. Original and imaginative\n3. Excellent brainstormers\n4. Charismatic and energetic\n5. Rational and objective",
                 "growth_areas": "1. Developing follow-through\n2. Being more sensitive to others\n3. Avoiding unnecessary arguments\n4. Valuing stability more\n5. Practicing patience",
-                "career_suggestions": "1. Lawyer\n2. Entrepreneur\n3. Inventor\n4. Consultant\n5. Engineer\n6. Scientist\n7. Marketing executive\n8. Politician",
+                "career_suggestions": "1. Business Innovation\n2. Political Science\n3. Law\n4. Advertising\n5. Entrepreneurship\n6. Engineering\n7. Economics\n8. Philosophy",
                 "relationships": "ENTPs value intellectual stimulation and personal growth in relationships. They enjoy debating but may struggle with emotional expression. They need partners who challenge them.",
                 "famous_examples": "Thomas Edison, Benjamin Franklin, Mark Twain, Voltaire, Steve Jobs"
             },
@@ -317,7 +317,7 @@ class PersonalityResult(models.Model):
                 "description": "Excellent administrators who value tradition, order, and security. They are practical, realistic, and unsurpassed at managing things and people.",
                 "strengths": "1. Dedicated and strong-willed\n2. Direct and honest\n3. Loyal and reliable\n4. Excellent organizers\n5. Practical and realistic",
                 "growth_areas": "1. Being more open to new ideas\n2. Considering others' feelings\n3. Being more flexible\n4. Valuing innovation more\n5. Delegating effectively",
-                "career_suggestions": "1. Military officer\n2. Judge\n3. School administrator\n4. Financial officer\n5. Project manager\n6. Business executive\n7. Police officer\n8. Government official",
+                "career_suggestions": "1. Business Administration\n2. Finance\n3. Law\n4. Public Administration\n5. Accounting\n6. Military Science\n7. Criminal Justice\n8. Project Management",
                 "relationships": "ESTJs are reliable, traditional partners who value stability. They show love through practical support. They may struggle with emotional expression and flexibility.",
                 "famous_examples": "Judge Judy, George W. Bush, Frank Sinatra, Lyndon B. Johnson, James Monroe"
             },
@@ -326,7 +326,7 @@ class PersonalityResult(models.Model):
                 "description": "Caring, social, and popular individuals who are always eager to help. They are practical, warm, and cooperative, valuing harmony and generosity.",
                 "strengths": "1. Practical and reliable\n2. Sensitive and caring\n3. Strong social skills\n4. Loyal and hardworking\n5. Excellent organizers",
                 "growth_areas": "1. Setting healthier boundaries\n2. Saying no without guilt\n3. Handling criticism better\n4. Being less people-pleasing\n5. Valuing alone time",
-                "career_suggestions": "1. Nurse\n2. Teacher\n3. Social worker\n4. Human resources\n5. Event planner\n6. Counselor\n7. Healthcare administrator\n8. Customer service",
+                "career_suggestions": "1. Elementary Education\n2. Healthcare Administration\n3. Nursing\n4. Human Resources\n5. Social Work\n6. Counseling\n7. Nutrition/Dietetics\n8. Event Planning",
                 "relationships": "ESFJs are nurturing, devoted partners who prioritize their loved ones' needs. They express love through acts of service. They may struggle with conflict and need appreciation.",
                 "famous_examples": "Taylor Swift, Bill Gates, Steve Harvey, Dolley Madison, Sally Field"
             },
@@ -335,7 +335,7 @@ class PersonalityResult(models.Model):
                 "description": "Charismatic and inspiring leaders who can motivate others toward growth. They are empathetic, persuasive, and naturally attuned to others' emotions and needs.",
                 "strengths": "1. Receptive and reliable\n2. Charismatic and inspiring\n3. Empathetic and caring\n4. Organized and decisive\n5. Natural leaders",
                 "growth_areas": "1. Setting healthier boundaries\n2. Avoiding people-pleasing\n3. Handling criticism better\n4. Being less perfectionistic\n5. Valuing alone time",
-                "career_suggestions": "1. Teacher\n2. Counselor\n3. Psychologist\n4. Human resources\n5. Sales manager\n6. Public relations\n7. Politician\n8. Clergy",
+                "career_suggestions": "1. Psychology\n2. Education\n3. Public Health\n4. Organizational Leadership\n5. Counseling\n6. Human Resources\n7. Public Relations\n8. Social Work",
                 "relationships": "ENFJs seek deep, meaningful connections and are highly attentive partners. They may neglect their own needs while caring for others. They value emotional intimacy and growth.",
                 "famous_examples": "Barack Obama, Oprah Winfrey, Martin Luther King Jr., John C. Maxwell, Tony Robbins"
             },
@@ -344,7 +344,7 @@ class PersonalityResult(models.Model):
                 "description": "Bold, imaginative, and strong-willed leaders who always find a way. They are strategic, logical, and excellent at implementing plans and mobilizing people.",
                 "strengths": "1. Efficient and energetic\n2. Self-confident and assertive\n3. Strong-willed and decisive\n4. Strategic and logical\n5. Excellent organizers",
                 "growth_areas": "1. Being more patient\n2. Considering others' feelings\n3. Delegating effectively\n4. Valuing downtime\n5. Practicing humility",
-                "career_suggestions": "1. CEO\n2. Entrepreneur\n3. Lawyer\n4. Consultant\n5. Project manager\n6. Politician\n7. Investment banker\n8. Military officer",
+                "career_suggestions": "1. Strategic Management\n2. Economics\n3. Law\n4. International Business\n5. Political Science\n6. Engineering\n7. Entrepreneurship\n8. Finance",
                 "relationships": "ENTJs value intellectual connection and shared goals in relationships. They are loyal but may struggle with emotional expression. They need partners who respect their ambition.",
                 "famous_examples": "Margaret Thatcher, Steve Jobs, Franklin D. Roosevelt, Gordon Ramsay, Jim Carrey"
             }

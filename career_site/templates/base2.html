@@ -271,7 +271,7 @@
         </div>
     </nav>
     
-    <!-- Hidden collapsible menu for authenticated users on md+ screens -->
+    {% comment %} <!-- Hidden collapsible menu for authenticated users on md+ screens -->
     {% if user.is_authenticated %}
      <div class="container mt-2 d-none d-md-block">
         <div class="row justify-content-center">
@@ -352,7 +352,7 @@
                 {% endif %}
             </ul>
         </div>
-    </div>
+    </div> {% endcomment %}
 
     <div class="container mt-4">
         {% if messages %}

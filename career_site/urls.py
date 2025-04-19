@@ -52,4 +52,4 @@ urlpatterns = [
     path('admin/users/', views.manage_users, name='manage_users'),
     path('admin/results/<int:assessment_id>/pdf/', views.admin_result_detail, name='admin_result_detail'),
     
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -22,115 +22,123 @@
             flex-direction: column;
         }
         
-        /* Navbar styles */
+        /* Updated navbar styles with trapezoid design */
         .navbar {
-            background-color: transparent !important;
-            padding: 0;
+            background-color: #222222;
+            padding: 15px 0;
+            width: 100%;
             position: relative;
-        }
-        
-        .navbar::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background-color: #121212;
-            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
-            border-bottom: 2px solid var(--gold);
-            z-index: -1;
+            overflow: hidden;
+            border-bottom: 2px solid #D4AF37; /* Gold bottom border/stroke */
         }
         
         .navbar .container {
-            height: 70px;
+            width: 90%;
+            margin: 0 auto;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            height: auto;
+        }
+        
+        /* Trapezoid background with correct slants */
+        .logo-bg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.12);
+            clip-path: polygon(0% 0, 100% 0, 85% 100%, 15% 100%);
+            z-index: 1;
+            display: flex;
+            justify-content: center;
             align-items: center;
         }
         
         .navbar-brand {
+            position: relative;
+            z-index: 3;
             color: var(--gold) !important;
             font-weight: bold;
             font-size: 1.5rem;
-            padding: 0;
             margin: 0;
+            text-decoration: none;
+            /* Remove left padding to center properly */
+            padding: 0;
+            /* Position the logo to be centered in trapezoid */
+            position: absolute;
+            left: 50px;
+            transform: translateX(-50%);
         }
         
-        /* Modified navbar navigation section */
-        .navbar-nav {
+        .navbar-center {
+            position: relative;
+            z-index: 2;
             display: flex;
-            margin-left: 40px;
+            align-items: center;
+            margin-left: 200px; /* Adjust this to position your nav links */
         }
         
-        .navbar-nav .nav-link {
+        .navbar-center .nav-link {
             color: white !important;
+            text-decoration: none;
+            margin: 0 10px;
             font-size: 1rem;
-            padding: 8px 16px;
+            padding: 8px 12px;
             transition: color 0.3s ease;
         }
         
-        .navbar-nav .nav-link:hover,
-        .navbar-nav .nav-link.active {
-            color: var(--gold) !important;
+        /* Add hover effect for nav links */
+        .navbar-center .nav-link:hover {
+            color: #D4AF37 !important;
         }
-        
-        /* Auth buttons */
+
+        /* Style for active/selected nav links */
+        .navbar-center .nav-link.active {
+            color: #D4AF37 !important;
+            font-weight: bold;
+            border-bottom: 2px solid #D4AF37;
+        }
+
         .auth-buttons {
+            display: flex;
+            gap: 10px;
             margin-left: auto;
         }
         
-        .auth-btn {
-            display: inline-block;
+        .auth-btn, .login-btn {
             background-color: transparent;
             color: white;
-            border: 1px solid var(--gold);
-            border-radius: 4px;
-            padding: 6px 20px;
-            margin-left: 10px;
+            padding: 6px 15px;
+            border: 2px solid transparent;
+            border-radius: 5px;
             text-decoration: none;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
             transition: all 0.3s ease;
+            background-image: linear-gradient(#1E1E1E, #1E1E1E), 
+                            linear-gradient(to right, #D4AF37, #BB922F);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+        .auth-btn:hover, .login-btn:hover {
+            background-image: linear-gradient(to right, #D4AF37, #BB922F),
+                            linear-gradient(to right, #D4AF37, #BB922F);
+            color: black;
+            border-color: transparent;
         }
         
-        .auth-btn:hover {
-            background-color: var(--gold);
-            color: #121212;
-        }
-        
-        /* Mobile navigation adjustments */
-        .navbar-toggler {
-            border-color: var(--gold);
-            color: white;
-            margin-right: 10px;
-        }
-        
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-        
-        @media (max-width: 991px) {
-            .navbar-collapse {
-                position: absolute;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background-color: #121212;
-                z-index: 1000;
-                padding: 10px;
-                border-bottom: 2px solid var(--gold);
+        @media (max-width: 768px) {
+            .navbar-center {
+                display: none;
             }
             
-            .navbar-nav {
-                margin-left: 0;
-            }
-            
-            .auth-buttons {
-                margin: 10px 0;
-                display: flex;
-                justify-content: center;
-            }
-            
-            .auth-btn {
-                margin: 0 5px;
+            .navbar-brand {
+                left: 120px;
             }
         }
         
@@ -232,74 +240,84 @@
     </style>
 </head>
 <body>
-    <!-- Updated navbar structure -->
-    <nav class="navbar navbar-expand-lg">
+    <!-- Updated navbar structure with trapezoid design -->
+    <nav class="navbar">
+        <div class="logo-bg"></div>
         <div class="container">
-            <!-- Brand name -->
             <a class="navbar-brand" href="{% url 'home' %}">SocioPotents</a>
             
-            <!-- Navbar toggler for mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <div class="navbar-center d-none d-md-flex">
+                {% if user.is_authenticated %}
+                    {% if user.is_student %}
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
+                        <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a>
+                        <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
+                    {% elif user.is_admin %}
+                        <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
+                        <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
+                        <a class="nav-link" href="#">Career Paths</a>
+                        <a class="nav-link" href="{% url 'manage_questions' %}">Assessment Questions</a>
+                    {% endif %}
+                {% endif %}
+            </div>
             
-            <!-- Collapsible navbar content -->
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <!-- Navigation menu -->
-                <ul class="navbar-nav">
-                    {% comment %} <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
-                    </li> {% endcomment %}
-                    
-                    {% if user.is_authenticated %}
-                        {% if user.is_student %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
-                            </li>
-                        {% elif user.is_admin %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Career Paths</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'manage_questions' %}">Assessment Questions</a>
-                            </li>  
-                        {% endif %}
-                    {% endif %}
-                </ul>
-                
-                <!-- Auth buttons -->
-                <div class="auth-buttons">
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'profile' %}" class="auth-btn">Profile</a>
-                        <form method="post" action="{% url 'logout' %}" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="auth-btn">
-                                Logout
-                            </button>
-                        </form>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="auth-btn">Login</a>
-                        <a href="{% url 'register' %}" class="auth-btn">Register</a>
-                    {% endif %}
-                </div>
+            <div class="auth-buttons">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="auth-btn">Profile</a>
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="auth-btn">
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="login-btn">Login</a>
+                    <a href="{% url 'register' %}" class="auth-btn">Register</a>
+                {% endif %}
             </div>
         </div>
     </nav>
+
+    <!-- Mobile navigation (keep this as is) -->
+    <div class="container d-md-none mb-3">
+        <button class="navbar-toggler w-100 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNavbar">
+            <span class="navbar-toggler-icon"></span> Menu
+        </button>
+        <div class="collapse navbar-collapse mt-2" id="mobileNavbar">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    {% if user.is_student %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
+                        </li>
+                    {% elif user.is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Career Paths</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'manage_questions' %}">Assessment Questions</a>
+                        </li>  
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
 
     <div class="container mt-4">
         {% if messages %}
@@ -320,7 +338,7 @@
         const currentPath = window.location.pathname;
         
         // Get all nav links
-        const navLinks = document.querySelectorAll('.navbar .nav-link');
+        const navLinks = document.querySelectorAll('.navbar .nav-link, .nav .nav-link');
         
         // Check each link against current URL path
         navLinks.forEach(link => {
@@ -329,7 +347,6 @@
             const hrefPath = href.replace(/https?:\/\/[^\/]+/, '');
             
             // If the current path exactly matches or starts with the link path 
-            // (for paths like /dashboard/something)
             if (currentPath === hrefPath || 
                 (hrefPath !== '/' && currentPath.startsWith(hrefPath))) {
                 link.classList.add('active');
