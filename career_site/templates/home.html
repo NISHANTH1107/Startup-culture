@@ -1,5 +1,10 @@
 {% extends 'base2.html' %}
+{% load static %}
 
+{% block meta %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
@@ -12,6 +17,13 @@
         <a class="btn btn-primary btn-lg" href="{% url 'register' %}" role="button">Get Started</a>
     {% endif %}
 </div>
+
+<style>
+    body {
+        background: url("{% static 'images/login.jpg' %}") no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
 
 <div class="row mt-5">
     <div class="col-md-4">

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Student Dashboard{% endblock %}
 
@@ -6,54 +7,59 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="card" style="background-color: #1E1E1E; border-color: #D4AF37;">
-                <div class="card-header" style="border-color: #D4AF37;">
-                    <h4 class="mb-0" style="color: #D4AF37;">Welcome, {{ user.username }}!</h4>
+            <!-- Main heading section -->
+            <div class="mb-4">
+                <h1 class="text-white">Welcome {{ user.username }}!</h1>
+                <h4 class="text-gold">Your Career Progress</h4>
+            </div>
+
+            <!-- Three main cards in a row -->
+            <div class="row">
+                <!-- Career Assessment Card -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card card-custom h-100">
+                        <div class="card-body">
+                            <div class="card-img-container mb-3">
+                                <img src="{% static 'images/assessment.png' %}" alt="Career Assessment" class="card-img">
+                            </div>
+                            <h2 class="card-title text-gold">Career Assessment</h2>
+                            <p class="card-text">Complete your career assessment to get personalized recommendations.</p>
+                            <div class="mt-auto text-center">
+                                <a href="{% url 'start_assessment' %}" class="btn btn-gold">Start Assessment</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Main Content Area -->
-                        <div class="col-12">
-                            <h5 class="text-gold">Your Career Progress</h5>
-                            <div class="row">
-                                <!-- Assessment Card (Dynamic based on completion) -->
-                                <div class="col-md-4 mb-4">
-                                    <div class="card h-100 card-hover" style="background-color: #2E2E2E; border-color: #D4AF37;">
-                                        <div class="card-body">
-                                            {% if assessment_completed %}
-                                                <h5 class="card-title text-gold">Assessment Report</h5>
-                                                <p class="card-text">View your personality assessment results and career recommendations.</p>
-                                                <a href="{% url 'assessment_results' %}" class="btn btn-primary">View Report</a>
-                                            {% else %}
-                                                <h5 class="card-title text-gold">Career Assessment</h5>
-                                                <p class="card-text">Complete your career assessment to get personalized recommendations.</p>
-                                                <a href="{% url 'start_assessment' %}" class="btn btn-primary">Start Assessment</a>
-                                            {% endif %}
-                                        </div>
-                                    </div>
+
+                <!-- Recommended Careers Card -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card card-custom h-100">
+                        <div class="card-body">
+                            <div class="card-img-container mb-3">
+                                <img src="{% static 'images/recommend.png' %}" alt="Recommended Careers" class="card-img">
+                            </div>
+                            <h2 class="card-title text-gold">Recommended Careers</h2>
+                            <p class="card-text">View careers matched to your skills and interests.</p>
+                            <div class="mt-auto text-center">
+                                <a href="{% url 'career_library' %}" class="btn btn-gold">View Library</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skill Development Card -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card card-custom h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="card-img-container mb-3">
+                                    <img src="{% static 'images/skilldev.png' %}" alt="Skill Development" class="card-img">
                                 </div>
-                                
-                                <!-- Recommended Careers Card -->
-                                <div class="col-md-4 mb-4">
-                                    <div class="card h-100 card-hover" style="background-color: #2E2E2E; border-color: #D4AF37;">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-gold">Recommended Careers</h5>
-                                            <p class="card-text">View careers matched to your skills and interests.</p>
-                                            <a href="{% url 'career_library' %}" class="btn btn-primary">View Library</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Skill Development Card -->
-                                <div class="col-md-4 mb-4">
-                                    <div class="card h-100 card-hover" style="background-color: #2E2E2E; border-color: #D4AF37;">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-gold">Skill Development</h5>
-                                            <p class="card-text">Explore resources to develop in-demand skills.</p>
-                                            <a href="{% url 'master_class_list' %}" class="btn btn-primary">Browse Resources</a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h2 class="card-title text-gold">Skill Development</h2>
+                                <p class="card-text">Explore resources to develop in-demand skills.</p>
+                            </div>
+                            <div class="mt-auto text-center">
+                                <a href="{% url 'master_class_list' %}" class="btn btn-gold">Browse Resource</a>
                             </div>
                         </div>
                     </div>
@@ -64,22 +70,109 @@
 </div>
 
 <style>
+
+    body {
+        background-image: url("{% static 'images/db_bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+    }
+
+    /* Global styling */
     .text-gold {
         color: #D4AF37;
     }
-    .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+    
+    /* Card styling */
+    .card-custom {
+        background-color: #1E1E1E;
+        border: 2px solid #D4AF37;
+        border-radius: 8px;
         transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
-    .btn-primary {
+    
+    .card-custom:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+    }
+    
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    .card-img-container {
+        border-radius: 6px;
+        overflow: hidden;
+        height: 200px;
+    }
+    
+    .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .card-title {
+        font-size: 1.75rem;
+        margin-bottom: 10px;
+    }
+    
+    .card-text {
+        color: #e0e0e0;
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+    
+    /* Button styling */
+    .btn-gold {
         background-color: #D4AF37;
-        border-color: #D4AF37;
         color: #121212;
+        font-weight: 500;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 4px;
+        transition: all 0.2s ease;
     }
-    .btn-primary:hover {
+    
+    .btn-gold:hover {
         background-color: #B7950B;
-        border-color: #B7950B;
+        transform: scale(1.05);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+        .card-img-container {
+            height: 180px;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        h1 {
+            font-size: 2rem;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-img-container {
+            height: 160px;
+        }
+    }
+    
+    /* Background pattern - circles (optional) */
+    .container-fluid {
+        position: relative;
+        z-index: 1;
     }
 </style>
 {% endblock %}

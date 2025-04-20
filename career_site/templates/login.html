@@ -10,7 +10,7 @@
         <div class="auth-card">
             <div class="login-card">
                 <div class="card-body p-4">
-                    <h2 class="mb-4">Login</h2>
+                    <h2 class="mb-4 text-center">Login</h2>
                     <form method="POST">
                         {% csrf_token %}
                         
@@ -107,18 +107,23 @@
     }
 
     .form-label {
-        color: #D4AF37;
+        margin-bottom: 0.15rem;
+        color: #d4af37;
+        font-weight: 500;
+        font-size: 0.95rem;
     }
 
     .form-control {
-        height: 50px;
-        background-color: #2d2d2d !important; /* Dark tone */
-        color: #fff !important;
-        border: 1px solid #555;
+        height: 40px;
+        background-color: white !important;
+        color: #121212 !important;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
     }
 
     .form-control::placeholder {
-        color:white !important;
+        color: #2d2d2d !important;
         opacity: 0.9 !important; /* Placeholder color */
     }
 

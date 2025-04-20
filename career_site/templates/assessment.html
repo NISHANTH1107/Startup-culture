@@ -1,16 +1,81 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container position-relative">
-    <!-- Floating Submit Button (Top Right) - Only appears at the end -->
-    <div class="position-absolute top-0 end-0 mt-3 me-3">
-        <button type="submit" form="assessmentForm" class="btn btn-gold btn-lg shadow" id="submitBtn" disabled>
-            <i class="fas fa-paper-plane me-2"></i> Submit Assessment
-        </button>
+<div class="container position-relative px-2 px-sm-3">
+    <!-- Floating Submit Button with integrated warning -->
+    <div class="position-fixed top-4 end-0 m-3 m-md-4 submit-btn-container" style="z-index: 999;">
+        <div class="position-relative d-inline-block">
+            <button type="submit" form="assessmentForm" class="btn btn-gold btn-lg shadow" id="submitBtn" disabled>
+                <i class="fas fa-paper-plane me-2"></i> <span class="d-none d-sm-inline">Submit</span> Assessment
+            </button>
+            
+            <!-- Compact warning positioned above button -->
+            <div id="incompleteWarning" class="alert alert-warning position-absolute bottom-100 start-50 translate-middle-x mb-2 shadow-sm" 
+                 style="width: auto; display: none; z-index: 1000; padding: 0.35rem 0.75rem; font-size: 0.85rem; white-space: nowrap; transform: translateX(-50%);">
+                <i class="fas fa-exclamation-circle me-1"></i> Answer all <strong>questions!</strong>
+            </div>
+        </div>
     </div>
 
-    <h1 class="text-gold mb-4">Personality Assessment</h1>
-    <p class="lead text-light mb-4">Please answer all {{ all_questions_count }} questions honestly. There are no right or wrong answers.</p>
+    <!-- Saving indicator -->
+    <div id="savingIndicator" class="alert alert-info position-fixed top-50 start-50 translate-middle shadow" style="display: none; z-index: 9999;">
+        <div class="d-flex align-items-center">
+            <div class="spinner-border spinner-border-sm text-dark me-2" role="status">
+                <span class="visually-hidden">Submitting...</span>
+            </div>
+            <span>Submitting your assessment...</span>
+        </div>
+    </div>
+
+    <h1 class="text-gold mb-3 mb-md-4 text-center text-md-start">Personality Assessment</h1>
+    <p class="lead text-light mb-3 mb-md-4 text-center text-md-start">Please answer all 70 questions honestly. There are no right or wrong answers.</p>
+    
+    <!-- Instructions and Progress -->
+    <div class="row mb-4 g-3">
+        <div class="col-12 col-md-6">
+            <div class="instructions-box">
+                <h5 class="mb-2 mb-md-3 text-gold">Note:</h5>
+                <ul class="mb-0 text-light ps-3">
+                    <li class="mb-2">Select the option that <strong>best describes you</strong></li>
+                    <li class="mb-2">Answer <strong>quickly and honestly</strong> - trust your instincts</li>
+                    <li class="mb-2">Your answers are <strong>saved automatically</strong> as you progress</li>
+                    <li>All {{ all_questions_count }} questions are <strong>required</strong> to complete</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="progress-wrapper d-flex justify-content-center align-items-center">
+                <div class="semicircle-progress-container">
+                    <div class="semicircle-progress">
+                        <div class="semicircle-bg"></div>
+                        <div class="semicircle-fill" id="progressFill"></div>
+                        <div class="progress-content">
+                            <div class="progress-value text-gold" id="progressPercent">14%</div>
+                            <div class="progress-text text-light">Progress</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-legend mt-2 mt-md-3">
+                        <div class="row text-light">
+                            <div class="col-6 d-flex align-items-center">
+                                <div class="legend-dot legend-complete me-2"></div>
+                                <span>Complete</span>
+                            </div>
+                            <div class="col-6 d-flex align-items-center">
+                                <div class="legend-dot legend-incomplete me-2"></div>
+                                <span>Incomplete</span>
+                            </div>
+                        </div>
+                        <div class="text-center mt-2 text-light">
+                            <span id="answeredCount">0</span>/70
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="mt-3 mb-4 text-light text-center text-md-start">Here you go,</p>
     
     <form method="post" action="{% url 'save_answers' %}" id="assessmentForm">
         {% csrf_token %}
@@ -19,130 +84,93 @@
         <input type="hidden" name="is_final_submit" value="true" id="is_final_submit">
         <input type="hidden" name="page_action" value="submit" id="page_action">
         
-        <!-- Incomplete Warning -->
-        <div id="incompleteWarning" class="alert alert-warning position-absolute top-0 end-0 mt-5 me-3 shadow" style="width: 300px; display: none;">
-            <i class="fas fa-exclamation-circle me-2"></i> Please answer all questions to submit
-        </div>
-
-        <!-- Saving indicator -->
-        <div id="savingIndicator" class="alert alert-info position-fixed top-50 start-50 translate-middle shadow" style="display: none; z-index: 9999;">
-            <div class="d-flex align-items-center">
-                <div class="spinner-border spinner-border-sm text-dark me-2" role="status">
-                    <span class="visually-hidden">Submitting...</span>
-                </div>
-                <span>Submitting your assessment...</span>
-            </div>
-        </div>
-
-        <div class="card mb-4 border-gold">
-            <div class="card-header bg-gold text-dark">
-                <i class="fas fa-info-circle me-2"></i> Instructions
-            </div>
-            <div class="card-body bg-dark">
-                <ul class="mb-0 text-light">
-                    <li class="mb-2">Select the option that <strong>best describes you</strong></li>
-                    <li class="mb-2">Answer <strong>quickly and honestly</strong> - trust your instincts</li>
-                    <li class="mb-2">Your answers are <strong>saved automatically</strong> as you progress</li>
-                    <li>All {{ all_questions_count }} questions are <strong>required</strong> to complete the assessment</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Progress indicator -->
-        <div class="mb-4">
-            <div class="d-flex justify-content-between mb-2 text-light">
-                <span>Progress: <span id="answeredCount">0</span>/{{ all_questions_count }}</span>
-                <span id="progressPercent">0%</span>
-            </div>
-            <div class="progress" style="height: 10px; background-color: #2a2a2a;">
-                <div id="progressBar" class="progress-bar bg-gold" role="progressbar" style="width: 0%"></div>
-            </div>
-        </div>
-        
-        <!-- Pagination Controls (Top) -->
-        <nav aria-label="Question navigation" class="mb-4">
-            <ul class="pagination justify-content-center">
-                {% if questions.has_previous %}
-                    <li class="page-item">
-                        <button type="button" class="page-link bg-dark text-gold border-gold nav-page-btn" data-page="{{ questions.previous_page_number }}">Previous</button>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link bg-dark text-secondary border-gold">Previous</span>
-                    </li>
-                {% endif %}
-                
-                {% for num in questions.paginator.page_range %}
-                    <li class="page-item {% if questions.number == num %}active{% endif %}">
-                        <button type="button" class="page-link bg-dark text-gold border-gold nav-page-btn" data-page="{{ num }}">{{ num }}</button>
-                    </li>
-                {% endfor %}
-                
-                {% if questions.has_next %}
-                    <li class="page-item">
-                        <button type="button" class="page-link bg-dark text-gold border-gold nav-page-btn" data-page="{{ questions.next_page_number }}">Next</button>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link bg-dark text-secondary border-gold">Next</span>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
-        
         <!-- Questions (Paginated) -->
         {% for question in questions %}
-        <div class="card mb-3 question-card bg-dark text-light unanswered" id="question-{{ question.id }}">
-            <div class="card-header d-flex justify-content-between align-items-center bg-dark-gold">
-                <span>Question {{ forloop.counter0|add:questions.start_index }} of {{ all_questions_count }}</span>
-                <span class="badge bg-danger answer-required">Not answered</span>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title mb-3">{{ question.text }}</h5>
-                <div class="form-check mb-3">
-                    <input class="form-check-input question-radio" type="radio" 
-                           name="question_{{ question.id }}" id="q{{ question.id }}_a" value="0" required>
-                    <label class="form-check-label d-block ps-3" for="q{{ question.id }}_a">
-                        <span class="badge bg-gold text-dark me-2">A</span> {{ question.option_a }}
-                    </label>
+        <div class="question-item mb-4" id="question-{{ question.id }}">
+            <div class="question-card {% if not forloop.first %}unanswered{% endif %}">
+                <div class="question-header d-flex align-items-center flex-wrap">
+                    <div class="question-number">{{ forloop.counter0|add:questions.start_index }}</div>
+                    <div class="question-text">{{ question.text }}</div>
+                    <div class="ms-auto">
+                        {% if forloop.first %}
+                        <div class="status-icon status-completed">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        {% else %}
+                        <div class="status-icon status-incomplete">
+                            <i class="fas fa-exclamation"></i>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input question-radio" type="radio" 
-                           name="question_{{ question.id }}" id="q{{ question.id }}_b" value="1" required>
-                    <label class="form-check-label d-block ps-3" for="q{{ question.id }}_b">
-                        <span class="badge bg-gold text-dark me-2">B</span> {{ question.option_b }}
-                    </label>
+                <div class="question-options mt-3">
+                    <div class="option-row">
+                        <label class="option-btn {% if forloop.first %}selected{% endif %}" for="q{{ question.id }}_a">
+                            <span class="option-label">A</span>
+                            <span class="option-text">{{ question.option_a }}</span>
+                            <input class="question-radio visually-hidden" type="radio" 
+                                name="question_{{ question.id }}" id="q{{ question.id }}_a" value="0" required 
+                                {% if forloop.first %}checked{% endif %}>
+                        </label>
+                    </div>
+                    <div class="option-row">
+                        <label class="option-btn" for="q{{ question.id }}_b">
+                            <span class="option-label">B</span>
+                            <span class="option-text">{{ question.option_b }}</span>
+                            <input class="question-radio visually-hidden" type="radio" 
+                                name="question_{{ question.id }}" id="q{{ question.id }}_b" value="1" required>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
         {% endfor %}
 
-        <!-- Pagination Controls (Bottom) -->
-        <nav aria-label="Question navigation" class="mt-4">
-            <ul class="pagination justify-content-center">
+        <!-- Pagination Controls -->
+        <nav aria-label="Question navigation" class="my-4">
+            <ul class="pagination pagination-lg justify-content-center flex-wrap">
                 {% if questions.has_previous %}
                     <li class="page-item">
-                        <button type="button" class="page-link bg-dark text-gold border-gold nav-page-btn" data-page="{{ questions.previous_page_number }}">Previous</button>
+                        <button type="button" class="page-link text-gold border-gold nav-page-btn" data-page="{{ questions.previous_page_number }}">
+                            <i class="fas fa-chevron-left d-md-none"></i>
+                            <span class="d-none d-md-inline">Previous</span>
+                        </button>
                     </li>
                 {% else %}
                     <li class="page-item disabled">
-                        <span class="page-link bg-dark text-secondary border-gold">Previous</span>
+                        <span class="page-link text-secondary border-gold">
+                            <i class="fas fa-chevron-left d-md-none"></i>
+                            <span class="d-none d-md-inline">Previous</span>
+                        </span>
                     </li>
                 {% endif %}
                 
                 {% for num in questions.paginator.page_range %}
-                    <li class="page-item {% if questions.number == num %}active{% endif %}">
-                        <button type="button" class="page-link bg-dark text-gold border-gold nav-page-btn" data-page="{{ num }}">{{ num }}</button>
+                    <li class="page-item {% if questions.number == num %}active{% endif %} d-none d-sm-block">
+                        <button type="button" class="page-link text-gold border-gold nav-page-btn" data-page="{{ num }}">{{ num }}</button>
                     </li>
                 {% endfor %}
                 
+                <!-- Mobile pagination indicator -->
+                <li class="page-item d-sm-none">
+                    <span class="page-link bg-dark text-gold border-gold">
+                        {{ questions.number }} of {{ questions.paginator.num_pages }}
+                    </span>
+                </li>
+                
                 {% if questions.has_next %}
                     <li class="page-item">
-                        <button type="button" class="page-link bg-dark text-gold border-gold nav-page-btn" data-page="{{ questions.next_page_number }}">Next</button>
+                        <button type="button" class="page-link text-gold border-gold nav-page-btn" data-page="{{ questions.next_page_number }}">
+                            <i class="fas fa-chevron-right d-md-none"></i>
+                            <span class="d-none d-md-inline">Next</span>
+                        </button>
                     </li>
                 {% else %}
                     <li class="page-item disabled">
-                        <span class="page-link bg-dark text-secondary border-gold">Next</span>
+                        <span class="page-link text-secondary border-gold">
+                            <i class="fas fa-chevron-right d-md-none"></i>
+                            <span class="d-none d-md-inline">Next</span>
+                        </span>
                     </li>
                 {% endif %}
             </ul>
@@ -156,15 +184,12 @@
         --gold-dark: #B7950B;
         --gold-light: #F5D98B;
         --dark: #121212;
+        --light-gray: #2a2a2a;
     }
     
+    /* Gold utilities */
     .bg-gold {
         background-color: var(--gold) !important;
-    }
-    
-    .bg-dark-gold {
-        background-color: rgba(212, 175, 55, 0.15) !important;
-        border-bottom: 1px solid var(--gold);
     }
     
     .btn-gold {
@@ -173,21 +198,22 @@
         font-weight: 600;
         border: none;
         padding: 0.75rem 1.5rem;
-        min-width: 220px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
     
     .btn-gold:hover {
         background-color: var(--gold-light);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        box-shadow: 0 6px 12px rgba(212, 175, 55, 0.4);
     }
     
     .btn-gold:disabled {
         opacity: 0.7;
         background-color: var(--gold-dark);
+        transform: none;
     }
     
     .border-gold {
@@ -198,17 +224,104 @@
         color: var(--gold) !important;
     }
     
-    .text-light {
-        color: #f8f9fa !important;
+    /* Instructions Box */
+    .instructions-box {
+        background-color: var(--dark);
+        border: 1px solid var(--gold);
+        border-radius: 8px;
+        padding: 15px;
+        height: 100%;
     }
     
-    .bg-dark {
-        background-color: var(--dark) !important;
+    /* Semi-circle Progress */
+    .progress-wrapper {
+        height: 100%;
     }
     
+    .semicircle-progress-container {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .semicircle-progress {
+        position: relative;
+        width: 180px;
+        height: 90px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    
+    .semicircle-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 180px;
+        height: 90px;
+        border-top-left-radius: 90px;
+        border-top-right-radius: 90px;
+        background-color: #2a2a2a;
+        transform: rotate(180deg);
+        transform-origin: center bottom;
+    }
+    
+    .semicircle-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 180px;
+        height: 90px;
+        border-top-left-radius: 90px;
+        border-top-right-radius: 90px;
+        background-color: var(--gold);
+        transform: rotate(180deg);
+        transform-origin: center bottom;
+        transition: transform 0.5s ease-in-out;
+    }
+    
+    .progress-content {
+        position: absolute;
+        top: 25px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .progress-value {
+        font-size: 2rem;
+        font-weight: bold;
+        line-height: 1;
+    }
+    
+    .progress-text {
+        font-size: 0.9rem;
+    }
+    
+    .progress-legend {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+    
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+    
+    .legend-complete {
+        background-color: var(--gold);
+    }
+    
+    .legend-incomplete {
+        background-color: #2a2a2a;
+    }
+    
+    /* Question Cards */
     .question-card {
+        background-color: var(--dark);
+        border: 1px solid var(--gold);
+        border-radius: 8px;
+        padding: 15px;
         transition: all 0.3s ease;
-        border: 1px solid #333;
     }
     
     .question-card.unanswered {
@@ -219,21 +332,110 @@
         border-left: 4px solid var(--gold);
     }
     
-    .form-check-input {
-        width: 1.2em;
-        height: 1.2em;
-        margin-top: 0.2em;
+    .question-header {
+        position: relative;
     }
     
-    .form-check-input:checked {
-        background-color: var(--gold);
+    .question-number {
+        color: var(--gold);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+    
+    .question-text {
+        color: #f8f9fa;
+        font-weight: 500;
+        font-size: 1rem;
+        flex: 1;
+        padding-right: 10px;
+    }
+    
+    /* Options styling */
+    .option-row {
+        margin-bottom: 10px;
+    }
+    
+    .option-btn {
+        display: flex;
+        align-items: center;
+        background-color: var(--light-gray);
+        border: 1px solid var(--gold);
+        border-radius: 6px;
+        color: #f8f9fa;
+        padding: 10px;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .option-btn:hover {
+        background-color: rgba(212, 175, 55, 0.1);
+    }
+    
+    .option-btn.selected {
+        background-color: rgba(212, 175, 55, 0.2);
+        border-width: 2px;
+    }
+    
+    .option-label {
+        color: var(--gold);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-right: 10px;
+        min-width: 24px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    
+    .option-text {
+        flex-grow: 1;
+    }
+    
+    /* Status icons */
+    .status-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .status-completed {
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+    }
+    
+    .status-incomplete {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #dc3545;
+    }
+    
+    /* Pagination styling */
+    .pagination .page-link {
+        background-color: var(--light-gray);
+        color: var(--gold);
         border-color: var(--gold);
+        margin: 0 2px;
+        min-width: 40px;
+        text-align: center;
     }
     
-    .progress-bar {
-        transition: width 0.5s ease;
+    .pagination .page-item.active .page-link {
+        background-color: var(--dark);
+        color: whitesmoke;
     }
     
+    /* Animation */
     #incompleteWarning {
         z-index: 1000;
         animation: pulse 2s infinite;
@@ -244,6 +446,98 @@
         50% { transform: scale(1.02); }
         100% { transform: scale(1); }
     }
+    
+    .submit-btn-container {
+        transition: transform 0.3s ease;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+        
+        .lead {
+            font-size: 1rem;
+        }
+        
+        .semicircle-progress {
+            width: 150px;
+            height: 75px;
+        }
+        
+        .semicircle-bg, .semicircle-fill {
+            width: 150px;
+            height: 75px;
+            border-top-left-radius: 75px;
+            border-top-right-radius: 75px;
+        }
+        
+        .progress-content {
+            top: 20px;
+        }
+        
+        .progress-value {
+            font-size: 1.7rem;
+        }
+        
+        .progress-text {
+            font-size: 0.8rem;
+        }
+        
+        .progress-legend {
+            font-size: 0.8rem;
+        }
+        
+        .btn-gold {
+            padding: 0.6rem 1.2rem;
+        }
+        
+        .question-text {
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 575.98px) {
+        h1 {
+            font-size: 1.5rem;
+        }
+        
+        .instructions-box, .semicircle-progress-container {
+            margin-bottom: 15px;
+        }
+        
+        .question-card {
+            padding: 12px;
+        }
+        
+        .question-number {
+            width: 26px;
+            height: 26px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+        }
+        
+        .option-btn {
+            padding: 8px;
+        }
+        
+        .option-label {
+            padding: 1px 6px;
+            min-width: 20px;
+            margin-right: 8px;
+        }
+        
+        .pagination .page-link {
+            padding: 0.4rem 0.6rem;
+            min-width: 36px;
+        }
+        
+        .btn-gold {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
 </style>
 
 <script>
@@ -253,7 +547,7 @@
         const questionCards = document.querySelectorAll('.question-card');
         const radioButtons = document.querySelectorAll('.question-radio');
         const submitBtn = document.getElementById('submitBtn');
-        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
         const answeredCount = document.getElementById('answeredCount');
         const progressPercent = document.getElementById('progressPercent');
         const incompleteWarning = document.getElementById('incompleteWarning');
@@ -268,21 +562,49 @@
                 const savedData = localStorage.getItem(STORAGE_KEY);
                 if (savedData) {
                     localAnswers = JSON.parse(savedData);
+                }
+                
+                // Process all questions - IMPORTANT: We do this regardless of whether there's saved data
+                questionCards.forEach(card => {
+                    const questionId = card.closest('.question-item').id.split('-')[1];
                     
-                    // Apply saved answers to current page
-                    questionCards.forEach(card => {
-                        const questionId = card.id.split('-')[1];
-                        if (localAnswers[questionId] !== undefined) {
-                            const radioToCheck = document.querySelector(`#q${questionId}_${localAnswers[questionId] === 0 ? 'a' : 'b'}`);
-                            if (radioToCheck) {
-                                radioToCheck.checked = true;
-                            }
-                        }
+                    // First, unselect all options and mark as unanswered by default
+                    card.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                        const radio = btn.querySelector('input[type="radio"]');
+                        radio.checked = false;
                     });
                     
-                    // Update UI
-                    updateProgress();
-                }
+                    // Mark as unanswered and update icon
+                    card.classList.add('unanswered');
+                    card.classList.remove('answered');
+                    const statusIcon = card.querySelector('.status-icon');
+                    statusIcon.classList.remove('status-completed');
+                    statusIcon.classList.add('status-incomplete');
+                    statusIcon.innerHTML = '<i class="fas fa-exclamation"></i>';
+                    
+                    // Only apply saved answers if they exist
+                    if (localAnswers[questionId] !== undefined) {
+                        const value = localAnswers[questionId];
+                        const optionLetter = value === 0 ? 'a' : 'b';
+                        const radioToCheck = document.querySelector(`#q${questionId}_${optionLetter}`);
+                        
+                        if (radioToCheck) {
+                            radioToCheck.checked = true;
+                            radioToCheck.closest('.option-btn').classList.add('selected');
+                            card.classList.add('answered');
+                            card.classList.remove('unanswered');
+                            
+                            // Update status icon
+                            statusIcon.classList.remove('status-incomplete');
+                            statusIcon.classList.add('status-completed');
+                            statusIcon.innerHTML = '<i class="fas fa-check"></i>';
+                        }
+                    }
+                });
+                
+                // Update UI
+                updateProgress();
             } catch (error) {
                 console.error('Error loading saved answers', error);
             }
@@ -293,7 +615,7 @@
             try {
                 // Update localAnswers object with current page selections
                 questionCards.forEach(card => {
-                    const questionId = card.id.split('-')[1];
+                    const questionId = card.closest('.question-item').id.split('-')[1];
                     const checkedRadio = document.querySelector(`input[name="question_${questionId}"]:checked`);
                     if (checkedRadio) {
                         localAnswers[questionId] = parseInt(checkedRadio.value);
@@ -317,18 +639,25 @@
             let currentPageAnswered = true;
             
             questionCards.forEach(card => {
-                const questionId = card.id.split('-')[1];
-                const isAnswered = document.querySelector(`input[name="question_${questionId}"]:checked`) || 
-                                  (localAnswers[questionId] !== undefined);
+                const questionId = card.closest('.question-item').id.split('-')[1];
+                const isAnswered = document.querySelector(`input[name="question_${questionId}"]:checked`) !== null;
                 
-                if (isAnswered) {
+                if (isAnswered && localAnswers[questionId] !== undefined) {
                     card.classList.add('answered');
                     card.classList.remove('unanswered');
-                    card.querySelector('.answer-required').classList.add('d-none');
+                    // Update status icon
+                    const statusIcon = card.querySelector('.status-icon');
+                    statusIcon.classList.remove('status-incomplete');
+                    statusIcon.classList.add('status-completed');
+                    statusIcon.innerHTML = '<i class="fas fa-check"></i>';
                 } else {
                     card.classList.add('unanswered');
                     card.classList.remove('answered');
-                    card.querySelector('.answer-required').classList.remove('d-none');
+                    // Update status icon to show incomplete
+                    const statusIcon = card.querySelector('.status-icon');
+                    statusIcon.classList.remove('status-completed');
+                    statusIcon.classList.add('status-incomplete');
+                    statusIcon.innerHTML = '<i class="fas fa-exclamation"></i>';
                     currentPageAnswered = false;
                 }
             });
@@ -340,33 +669,68 @@
             // Update UI elements
             answeredCount.textContent = answered;
             progressPercent.textContent = `${percent}%`;
-            progressBar.style.width = `${percent}%`;
             
-            // Only enable submit button if ALL questions are answered (all 70)
+            // Update semicircle progress
+            const rotationDegree = 180 - (percent * 1.8);
+            progressFill.style.transform = `rotate(${rotationDegree}deg)`;
+            
+            // Only enable submit button if ALL questions are answered
             submitBtn.disabled = answered < totalQuestions;
             
-            // Show warning if current page has unanswered questions
-            incompleteWarning.style.display = currentPageAnswered ? 'none' : 'block';
+            // Show warning if current page has unanswered questions and there's at least one question answered
+            incompleteWarning.style.display = (currentPageAnswered || answered === 0) ? 'none' : 'block';
         }
         
-        // Add this to your DOMContentLoaded event listener
+        // Add event listeners for option selection
+        document.querySelectorAll('.option-btn').forEach(optionBtn => {
+            optionBtn.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Remove selected class from all options in this question
+                const questionCard = this.closest('.question-card');
+                questionCard.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                // Add selected class to this option
+                this.classList.add('selected');
+                
+                // Mark question as answered
+                questionCard.classList.add('answered');
+                questionCard.classList.remove('unanswered');
+                
+                // Update status icon
+                const statusIcon = questionCard.querySelector('.status-icon');
+                statusIcon.classList.remove('status-incomplete');
+                statusIcon.classList.add('status-completed');
+                statusIcon.innerHTML = '<i class="fas fa-check"></i>';
+                
+                // Update local storage and progress
+                const questionId = this.closest('.question-item').id.split('-')[1];
+                localAnswers[questionId] = parseInt(radio.value);
+                saveAnswersLocally();
+                updateProgress();
+                
+                // Auto-scroll to next question on mobile (if not the last question on the page)
+                if (window.innerWidth < 768) {
+                    const nextQuestion = this.closest('.question-item').nextElementSibling;
+                    if (nextQuestion) {
+                        setTimeout(() => {
+                            nextQuestion.scrollIntoView({behavior: "smooth", block: "start"});
+                        }, 300);
+                    }
+                }
+            });
+        });
+        
+        // Save before leaving page
         window.addEventListener('beforeunload', function(e) {
-            // Save answers before leaving page
             saveAnswersLocally();
         });
         
         // Initialize by loading saved answers
         loadSavedAnswers();
-        
-        // Add event listeners for radio buttons
-        radioButtons.forEach(radio => {
-            radio.addEventListener('change', function() {
-                const questionId = this.name.split('_')[1];
-                localAnswers[questionId] = parseInt(this.value);
-                saveAnswersLocally();
-                updateProgress();
-            });
-        });
         
         // Handle page navigation
         navPageBtns.forEach(btn => {
@@ -389,7 +753,7 @@
             // Save all answers to form data for submission
             saveAnswersLocally();
             
-            // Check if ALL questions (all 70) are answered
+            // Check if ALL questions are answered
             if (Object.keys(localAnswers).length < totalQuestions) {
                 // Calculate which pages have unanswered questions
                 let unansweredPages = new Set();
