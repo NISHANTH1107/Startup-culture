@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% block content %}
 <div class="container position-relative px-2 px-sm-3">
     <!-- Floating Submit Button with integrated warning -->
@@ -185,6 +186,15 @@
         --gold-light: #F5D98B;
         --dark: #121212;
         --light-gray: #2a2a2a;
+    }
+
+    body {
+        background-image: url("{% static 'images/db_bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        min-height: 100vh;
     }
     
     /* Gold utilities */

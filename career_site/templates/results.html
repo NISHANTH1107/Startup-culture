@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
 <div class="container">
     <div class="row mb-4">
@@ -24,9 +26,9 @@
         </div>
     </div>
     
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-md-6">
-            <div class="card mb-4 border-gold">
+            <div class="card border-gold h-100">
                 <div class="card-header bg-dark-gold text-light">
                     <i class="fas fa-chart-radar me-2"></i> Dimension Scores
                 </div>
@@ -35,79 +37,187 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card mb-4 border-gold">
+    </div>
+    
+    <!-- Detailed Breakdown Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="text-gold mb-4"><i class="fas fa-chart-pie me-2"></i> Detailed Breakdown</h3>
+        </div>
+        <!-- First row -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-gold h-100">
                 <div class="card-header bg-dark-gold text-light">
-                    <i class="fas fa-list-ul me-2"></i> Detailed Breakdown
+                    <i class="fas fa-users me-2"></i> Extraversion vs Introversion
                 </div>
-                <div class="card-body bg-dark">
-                    <ul class="list-group">
-                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
-                            <span>
-                                <i class="fas fa-users me-2 text-gold"></i> Extraversion (E) vs Introversion (I)
-                            </span>
-                            <span class="badge bg-gold text-dark rounded-pill">
-                                E: {{ result.get_e_score }} | I: {{ result.get_i_score }}
-                            </span>
-                        </li>
-                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
-                            <span>
-                                <i class="fas fa-eye me-2 text-gold"></i> Sensing (S) vs Intuition (N)
-                            </span>
-                            <span class="badge bg-gold text-dark rounded-pill">
-                                S: {{ result.get_s_score }} | N: {{ result.get_n_score }}
-                            </span>
-                        </li>
-                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
-                            <span>
-                                <i class="fas fa-brain me-2 text-gold"></i> Thinking (T) vs Feeling (F)
-                            </span>
-                            <span class="badge bg-gold text-dark rounded-pill">
-                                T: {{ result.get_t_score }} | F: {{ result.get_f_score }}
-                            </span>
-                        </li>
-                        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
-                            <span>
-                                <i class="fas fa-tasks me-2 text-gold"></i> Judging (J) vs Perceiving (P)
-                            </span>
-                            <span class="badge bg-gold text-dark rounded-pill">
-                                J: {{ result.get_j_score }} | P: {{ result.get_p_score }}
-                            </span>
-                        </li>
-                    </ul>
+                <div class="card-body bg-dark text-center">
+                    <div class="donut-chart-container">
+                        <canvas id="eiChart"></canvas>
+                        <div class="donut-center">
+                            <span class="score-text">E: {{ result.get_e_score }}%</span>
+                            <span class="score-text">I: {{ result.get_i_score }}%</span>
+                        </div>
+                    </div>
+                    <div class="legend mt-3">
+                        <div class="legend-item">
+                            <span class="legend-color outer-donut"></span>
+                            <span class="legend-text text-light">Extraversion (E)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color inner-donut"></span>
+                            <span class="legend-text text-light">Introversion (I)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card border-gold h-100">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-eye me-2"></i> Sensing vs Intuition
+                </div>
+                <div class="card-body bg-dark text-center">
+                    <div class="donut-chart-container">
+                        <canvas id="snChart"></canvas>
+                        <div class="donut-center">
+                            <span class="score-text">S: {{ result.get_s_score }}%</span>
+                            <span class="score-text">N: {{ result.get_n_score }}%</span>
+                        </div>
+                    </div>
+                    <div class="legend mt-3">
+                        <div class="legend-item">
+                            <span class="legend-color outer-donut"></span>
+                            <span class="legend-text text-light">Sensing (S)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color inner-donut"></span>
+                            <span class="legend-text text-light">Intuition (N)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Second row -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-gold h-100">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-brain me-2"></i> Thinking vs Feeling
+                </div>
+                <div class="card-body bg-dark text-center">
+                    <div class="donut-chart-container">
+                        <canvas id="tfChart"></canvas>
+                        <div class="donut-center">
+                            <span class="score-text">T: {{ result.get_t_score }}%</span>
+                            <span class="score-text">F: {{ result.get_f_score }}%</span>
+                        </div>
+                    </div>
+                    <div class="legend mt-3">
+                        <div class="legend-item">
+                            <span class="legend-color outer-donut"></span>
+                            <span class="legend-text text-light">Thinking (T)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color inner-donut"></span>
+                            <span class="legend-text text-light">Feeling (F)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card border-gold h-100">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-tasks me-2"></i> Judging vs Perceiving
+                </div>
+                <div class="card-body bg-dark text-center">
+                    <div class="donut-chart-container">
+                        <canvas id="jpChart"></canvas>
+                        <div class="donut-center">
+                            <span class="score-text">J: {{ result.get_j_score }}%</span>
+                            <span class="score-text">P: {{ result.get_p_score }}%</span>
+                        </div>
+                    </div>
+                    <div class="legend mt-3">
+                        <div class="legend-item">
+                            <span class="legend-color outer-donut"></span>
+                            <span class="legend-text text-light">Judging (J)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color inner-donut"></span>
+                            <span class="legend-text text-light">Perceiving (P)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="card border-gold">
-        <div class="card-header bg-dark-gold text-light">
-            <i class="fas fa-info-circle me-2"></i> Type Description
+    <!-- Type Description Section in Grid Layout -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3 class="text-gold mb-4"><i class="fas fa-info-circle me-2"></i> Type Description</h3>
         </div>
-        <div class="card-body bg-dark text-light">
-            <div class="mb-4">
-                <h4 class="text-gold"><i class="fas fa-star me-2"></i> Strengths</h4>
-                <div class="type-details ps-4">{{ result.strengths|linebreaksbr }}</div>
+        
+        <!-- Strengths -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card border-gold h-100">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-star me-2"></i> Strengths
+                </div>
+                <div class="card-body bg-dark">
+                    <div class="type-details">{{ result.strengths|linebreaksbr }}</div>
+                </div>
             </div>
-            
-            <div class="mb-4">
-                <h4 class="text-gold"><i class="fas fa-seedling me-2"></i> Potential Growth Areas</h4>
-                <div class="type-details ps-4">{{ result.growth_areas|linebreaksbr }}</div>
+        </div>
+        
+        <!-- Growth Areas -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card border-gold h-100">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-seedling me-2"></i> Growth Areas
+                </div>
+                <div class="card-body bg-dark">
+                    <div class="type-details">{{ result.growth_areas|linebreaksbr }}</div>
+                </div>
             </div>
-            
-            <div class="mb-4">
-                <h4 class="text-gold"><i class="fas fa-briefcase me-2"></i> Career Suggestions</h4>
-                <div class="type-details ps-4">{{ result.career_suggestions|linebreaksbr }}</div>
+        </div>
+        
+        <!-- Career Suggestions -->
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card border-gold h-100">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-briefcase me-2"></i> Career Suggestions
+                </div>
+                <div class="card-body bg-dark">
+                    <div class="type-details">{{ result.career_suggestions|linebreaksbr }}</div>
+                </div>
             </div>
-            
-            <div class="mb-4">
-                <h4 class="text-gold"><i class="fas fa-heart me-2"></i> Relationships</h4>
-                <div class="type-details ps-4">{{ result.relationships|linebreaksbr }}</div>
+        </div>
+        
+        <!-- Relationships -->
+        <div class="col-md-6 col-lg-6 mb-4">
+            <div class="card border-gold h-100">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-heart me-2"></i> Relationships
+                </div>
+                <div class="card-body bg-dark">
+                    <div class="type-details">{{ result.relationships|linebreaksbr }}</div>
+                </div>
             </div>
-            
-            <div>
-                <h4 class="text-gold"><i class="fas fa-users me-2"></i> Famous Examples</h4>
-                <div class="type-details ps-4">{{ result.famous_examples|linebreaksbr }}</div>
+        </div>
+        
+        <!-- Famous Examples -->
+        <div class="col-md-6 col-lg-6 mb-4">
+            <div class="card border-gold h-100">
+                <div class="card-header bg-dark-gold text-light">
+                    <i class="fas fa-users me-2"></i> Famous Examples
+                </div>
+                <div class="card-body bg-dark">
+                    <div class="type-details">{{ result.famous_examples|linebreaksbr }}</div>
+                </div>
             </div>
         </div>
     </div>
@@ -115,6 +225,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Radar chart for overall personality
     const ctx = document.getElementById('personalityChart').getContext('2d');
     const chart = new Chart(ctx, {
         type: 'radar',
@@ -170,13 +281,148 @@
             }
         }
     });
+
+    // Create donut charts for each dimension
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create gradient for outer donut (top fill)
+        const createOuterGradient = (ctx) => {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, '#B7950B');  // Darker gold at top
+            gradient.addColorStop(1, '#D4AF37');  // Medium gold at bottom
+            return gradient;
+        };
+        
+        // Create gradient for inner donut (bottom fill)
+        const createInnerGradient = (ctx) => {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, '#D4AF37');  // Medium gold at top
+            gradient.addColorStop(1, '#FFD700');  // Lighter gold at bottom
+            return gradient;
+        };
+        
+        // E/I Chart - Outer top fill, inner bottom fill
+        createDualDonutChart(
+            'eiChart', 
+            {{ result.get_e_score }}, 
+            {{ result.get_i_score }},
+            0,    // Outer rotation (top fill)
+            270    // Inner rotation (bottom fill)
+        );
+        
+        // S/N Chart
+        createDualDonutChart(
+            'snChart', 
+            {{ result.get_s_score }}, 
+            {{ result.get_n_score }},
+            0,
+            270
+        );
+        
+        // T/F Chart
+        createDualDonutChart(
+            'tfChart', 
+            {{ result.get_t_score }}, 
+            {{ result.get_f_score }},
+            0,
+            270
+        );
+        
+        // J/P Chart
+        createDualDonutChart(
+            'jpChart', 
+            {{ result.get_j_score }}, 
+            {{ result.get_p_score }},
+            0,
+            270
+        );
+    });
+    
+    // Function to create dual donut charts with different fill directions
+    function createDualDonutChart(elementId, outerValue, innerValue, outerRotation, innerRotation) {
+        const canvas = document.getElementById(elementId);
+        const ctx = canvas.getContext('2d');
+        
+        // Create gradients
+        const outerGradient = ctx.createLinearGradient(0, 0, 0, 200);
+        outerGradient.addColorStop(0, '#B7950B');
+        outerGradient.addColorStop(1, '#D4AF37');
+        
+        const innerGradient = ctx.createLinearGradient(0, 0, 0, 200);
+        innerGradient.addColorStop(0, '#D4AF37');
+        innerGradient.addColorStop(1, '#FFD700');
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [
+                    // Outer donut (top fill)
+                    {
+                        data: [outerValue, 100 - outerValue],
+                        backgroundColor: [
+                            outerGradient,
+                            'rgba(255, 255, 255, 0.05)'
+                        ],
+                        borderColor: ['rgba(0,0,0,0.1)', 'rgba(0,0,0,0)'],
+                        borderWidth: 1,
+                        weight: 1,
+                        borderRadius: 5,
+                        cutout: '70%'
+                    },
+                    // Inner donut (bottom fill)
+                    {
+                        data: [innerValue, 100 - innerValue],
+                        backgroundColor: [
+                            innerGradient,
+                            'rgba(255, 255, 255, 0.05)'
+                        ],
+                        borderColor: ['rgba(0,0,0,0.1)', 'rgba(0,0,0,0)'],
+                        borderWidth: 1,
+                        weight: 1,
+                        borderRadius: 5,
+                        cutout: '50%'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + '%';
+                            }
+                        }
+                    }
+                },
+                // Different rotation for each dataset
+                rotation: (context) => {
+                    return context.datasetIndex === 0 ? outerRotation : innerRotation;
+                },
+                circumference: 360
+            }
+        });
+    }
 </script>
 
 <style>
     :root {
         --gold: #D4AF37;
         --gold-dark: #B7950B;
+        --gold-light: #FFD700;
         --dark: #121212;
+    }
+
+    body {
+        background-image: url("{% static 'images/db_bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        min-height: 100vh;
     }
     
     .bg-gold {
@@ -225,6 +471,89 @@
     
     .list-group-item {
         border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Larger donut chart styling */
+    .donut-chart-container {
+        position: relative;
+        height: 250px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .donut-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+    
+    .score-text {
+        display: block;
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    
+    .legend {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+    }
+    
+    .legend-color {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        margin-right: 5px;
+        border-radius: 50%;
+    }
+    
+    /* Gradient backgrounds for legend */
+    .outer-donut {
+        background-color: #B7950B;
+    }
+    
+    .inner-donut {
+        background-color: #FFD700;
+    }
+    
+    .legend-text {
+        font-size: 0.9rem;
+    }
+    
+    /* Ensure cards in grid have consistent height */
+    .card-body {
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .donut-chart-container {
+        flex-grow: 1;
+    }
+    
+    /* Type description cards */
+    .type-details {
+        color: #f8f9fa;
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 0.5rem;
+    }
+    
+    /* Responsive grid adjustments */
+    @media (max-width: 767.98px) {
+        .card-body {
+            min-height: 150px;
+        }
     }
 </style>
 {% endblock %}
