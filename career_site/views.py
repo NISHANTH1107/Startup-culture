@@ -29,6 +29,7 @@ from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.urls import reverse
 from career_site.forms import UserRegisterForm, StudentProfileForm, AdminProfileForm, QuestionForm
+from django.utils import timezone
 
 def home(request):
     if request.user.is_authenticated:
@@ -471,25 +472,43 @@ def view_result_detail(request, assessment_id):
 @login_required
 # @user_passes_test(is_admin)
 def manage_users(request):
-    students = User.objects.filter(is_student=True).select_related('studentprofile')
+    students = []
+    completed_count = 0
+    pending_count = 0
     
-    # Add assessment status for each student
-    student_data = []
-    for student in students:
-        latest_assessment = student.assessments.filter(completed=True).order_by('-date_taken').first()
-        has_result = hasattr(latest_assessment, 'result') if latest_assessment else False
+    for user in User.objects.filter(is_student=True):
+        latest_assessment = user.assessments.order_by('-date_taken').first()
+        has_assessment = latest_assessment is not None and latest_assessment.completed
+        result = getattr(latest_assessment, 'result', None) if has_assessment else None
         
-        student_data.append({
-            'user': student,
-            'profile': student.studentprofile,
-            'has_assessment': latest_assessment is not None,
-            'result': latest_assessment.result if has_result else None,
-            'assessment_id': latest_assessment.id if latest_assessment else None
+        if has_assessment:
+            completed_count += 1
+        else:
+            pending_count += 1
+            
+        students.append({
+            'user': user,
+            'profile': user.studentprofile,
+            'has_assessment': has_assessment,
+            'assessment_id': latest_assessment.id if has_assessment else None,
+            'result': result
         })
     
+    # Get new users this month
+    new_this_month = User.objects.filter(
+        is_student=True,
+        date_joined__month=timezone.now().month
+    ).count()
+    
+    # Get all personality types for filter dropdown
+    personality_types = PersonalityResult.get_type_data()
+    
     return render(request, 'manage_users.html', {
-        'students': student_data,
-        'section_title': 'Manage Students'
+        'students': students,
+        'completed_count': completed_count,
+        'pending_count': pending_count,
+        'new_this_month': new_this_month,
+        'personality_types': personality_types
     })
     
 @login_required

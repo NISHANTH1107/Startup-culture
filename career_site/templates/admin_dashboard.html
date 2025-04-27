@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Admin Dashboard{% endblock %}
 
@@ -6,48 +7,114 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="card" style="background-color: #1E1E1E; border-color: #D4AF37;">
-                <div class="card-header" style="border-color: #D4AF37;">
-                    <h4 class="mb-0" style="color: #D4AF37;">Admin Dashboard</h4>
+            <div class="card admin-main-card">
+                <div class="card-header admin-card-header">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-shield-alt me-3"></i>
+                        <h4 class="mb-0">Admin Dashboard</h4>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <!-- Main Content Area -->
                         <div class="col-12">
-                            <h5 class="text-gold">Management Tools</h5>
+                            <h5 class="section-title"><i class="fas fa-tools me-2"></i>Management Tools</h5>
                             <div class="row">
                                 <!-- Admin Card 1 -->
-                                <div class="col-md-4 mb-4">
-                                    <div class="card h-100" style="background-color: #2E2E2E; border-color: #D4AF37;">
+                                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                    <div class="card h-100 admin-tool-card">
                                         <div class="card-body">
-                                            <h5 class="card-title text-gold">Manage Users</h5>
-                                            <p class="card-text">View and manage all registered users.</p>
-                                            <a href="{% url 'manage_users' %}" class="btn btn-primary">Go to Users</a>
+                                            <div class="card-icon">
+                                                <i class="fas fa-users-cog"></i>
+                                            </div>
+                                            <h5 class="card-title">Manage Users</h5>
+                                            <p class="card-text">View and manage all registered users and their permissions.</p>
+                                            <a href="{% url 'manage_users' %}" class="btn btn-admin-action">
+                                                <i class="fas fa-arrow-right me-2"></i>Go to Users
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <!-- Admin Card 2 -->
-                                <div class="col-md-4 mb-4">
-                                    <div class="card h-100" style="background-color: #2E2E2E; border-color: #D4AF37;">
+                                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                    <div class="card h-100 admin-tool-card">
                                         <div class="card-body">
-                                            <h5 class="card-title text-gold">Career Paths</h5>
-                                            <p class="card-text">Edit available career paths and categories.</p>
-                                            <a href="#" class="btn btn-primary">Manage Careers</a>
+                                            <div class="card-icon">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <h5 class="card-title">Career Paths</h5>
+                                            <p class="card-text">Edit available career paths, categories, and requirements.</p>
+                                            <a href="#" class="btn btn-admin-action">
+                                                <i class="fas fa-arrow-right me-2"></i>Manage Careers
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <!-- Admin Card 3 -->
-                                <div class="col-md-4 mb-4">
-                                    <div class="card h-100" style="background-color: #2E2E2E; border-color: #D4AF37;">
+                                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                    <div class="card h-100 admin-tool-card">
                                         <div class="card-body">
-                                            <h5 class="card-title text-gold">Assessment Questions</h5>
-                                            <p class="card-text">Update career assessment questions.</p>
-                                            <a href="{% url 'manage_questions' %}" class="btn btn-primary">Edit Questions</a>
+                                            <div class="card-icon">
+                                                <i class="fas fa-question-circle"></i>
+                                            </div>
+                                            <h5 class="card-title">Assessment Questions</h5>
+                                            <p class="card-text">Update career assessment questions and scoring criteria.</p>
+                                            <a href="{% url 'manage_questions' %}" class="btn btn-admin-action">
+                                                <i class="fas fa-arrow-right me-2"></i>Edit Questions
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Admin Card 4 -->
+                                {% comment %} <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                    <div class="card h-100 admin-tool-card">
+                                        <div class="card-body">
+                                            <div class="card-icon">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <h5 class="card-title">Analytics</h5>
+                                            <p class="card-text">View system analytics and user engagement metrics.</p>
+                                            <a href="#" class="btn btn-admin-action">
+                                                <i class="fas fa-arrow-right me-2"></i>View Analytics
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div> {% endcomment %}
+
+                                <!-- Admin Card 5 -->
+                                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                    <div class="card h-100 admin-tool-card">
+                                        <div class="card-body">
+                                            <div class="card-icon">
+                                                <i class="fas fa-book"></i>
+                                            </div>
+                                            <h5 class="card-title">Resources</h5>
+                                            <p class="card-text">Manage learning resources and skill development materials.</p>
+                                            <a href="#" class="btn btn-admin-action">
+                                                <i class="fas fa-arrow-right me-2"></i>Manage Resources
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Admin Card 6 -->
+                                {% comment %} <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                    <div class="card h-100 admin-tool-card">
+                                        <div class="card-body">
+                                            <div class="card-icon">
+                                                <i class="fas fa-cog"></i>
+                                            </div>
+                                            <h5 class="card-title">System Settings</h5>
+                                            <p class="card-text">Configure system preferences and global settings.</p>
+                                            <a href="#" class="btn btn-admin-action">
+                                                <i class="fas fa-arrow-right me-2"></i>System Settings
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div> {% endcomment %}
                             </div>
                         </div>
                     </div>
@@ -56,4 +123,152 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Base Styles */
+    :root {
+        --admin-dark: #1E1E1E;
+        --admin-darker: #121212;
+        --admin-gold: #D4AF37;
+        --admin-light: #f8f9fa;
+        --admin-card-bg: #2E2E2E;
+    }
+
+    body {
+        background-color: var(--admin-darker);
+        color: var(--admin-light);
+    }
+
+    /* Main Card */
+    .admin-main-card {
+        background-color: var(--admin-dark);
+        border: 1px solid var(--admin-gold);
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1);
+    }
+
+    .admin-card-header {
+        background-color: rgba(212, 175, 55, 0.1);
+        border-bottom: 1px solid var(--admin-gold);
+        color: var(--admin-gold);
+        font-weight: 600;
+    }
+
+    .admin-card-header i {
+        font-size: 1.5rem;
+    }
+
+    /* Section Title */
+    .section-title {
+        color: var(--admin-gold);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+        font-weight: 600;
+    }
+
+    /* Tool Cards */
+    .admin-tool-card {
+        background-color: var(--admin-card-bg);
+        border: 1px solid var(--admin-gold);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .admin-tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+    }
+
+    .card-icon {
+        font-size: 2.5rem;
+        color: var(--admin-gold);
+        margin-bottom: 15px;
+    }
+
+    .card-title {
+        color: var(--admin-gold);
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .card-text {
+        color: #d1d1d1;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+    }
+
+    /* Buttons */
+    .btn-admin-action {
+        background-color: var(--admin-gold);
+        color: var(--admin-dark);
+        border: none;
+        font-weight: 500;
+        padding: 8px 20px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-admin-action:hover {
+        background-color: #c2a030;
+        color: var(--admin-dark);
+        transform: scale(1.03);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1199px) {
+        .card-icon {
+            font-size: 2.2rem;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .section-title {
+            font-size: 1.3rem;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+        }
+        
+        .card-text {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .admin-card-header h4 {
+            font-size: 1.3rem;
+        }
+        
+        .admin-card-header i {
+            font-size: 1.2rem;
+        }
+        
+        .section-title {
+            margin-bottom: 20px;
+        }
+    }
+
+    @media (max-width: 575px) {
+        .admin-main-card {
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+        }
+        
+        .btn-admin-action {
+            padding: 7px 15px;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 {% endblock %}

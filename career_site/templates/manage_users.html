@@ -1,110 +1,596 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark-gold: #B7950B;
+            --black: #121212;
+            --dark-gray: #1E1E1E;
+            --light-gray: #2E2E2E;
+            --text-white: #f8f9fa;
+        }
+        
+        body {
+            background-color: var(--black);
+            color: var(--text-white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .text-gold {
+            color: var(--gold);
+        }
+        
+        .border-gold {
+            border-color: var(--gold) !important;
+        }
+        
+        .bg-gold {
+            background-color: var(--gold) !important;
+        }
+        
+        .bg-dark-gray {
+            background-color: var(--dark-gray) !important;
+        }
+        
+        .btn-outline-gold {
+            color: var(--gold);
+            border-color: var(--gold);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-gold:hover {
+            background-color: var(--gold);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+        }
+        
+        .card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--gold);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 16px rgba(212, 175, 55, 0.2);
+        }
+        
+        .card-header {
+            font-weight: 600;
+            padding: 15px;
+        }
+        
+        .student-row {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .student-row:hover {
+            background-color: rgba(30, 30, 30, 0.8);
+            border-left: 3px solid var(--gold);
+        }
+        
+        .badge {
+            padding: 8px 12px;
+            font-weight: 500;
+            border-radius: 20px;
+        }
+        
+        .badge-personality {
+            background-color: var(--gold);
+            color: var(--black);
+        }
+        
+        .badge-success {
+            background-color: var(--gold);
+            color: var(--black);
+        }
+        
+        .badge-warning {
+            background-color: var(--dark-gold);
+            color: var(--black);
+        }
+        
+        .badge-secondary {
+            background-color: var(--light-gray);
+            color: var(--text-white);
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .action-icon {
+            margin-right: 5px;
+        }
+        
+        /* Search and Filter Styling */
+        .search-container {
+            background-color: var(--dark-gray);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 0.375rem 0.75rem;
+        }
+        
+        .search-box {
+            background-color: transparent;
+            border: none;
+            color: var(--text-white);
+            width: 100%;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        
+        .filter-container {
+            background-color: var(--dark-gray);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            position: relative;
+        }
+        
+        .filter-dropdown {
+            background-color: transparent;
+            border: none;
+            color: var(--text-white);
+            width: 100%;
+            padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .filter-dropdown:focus {
+            outline: none;
+            box-shadow: none;
+            color: var(--text-white);
+        }
+        
+        /* Custom dropdown arrow */
+        .filter-container::after {
+            content: "\f078";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--gold);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        
+        .header-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Dashboard stats boxes */
+        .stats-box {
+            background-color: var(--dark-gray);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--gold);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .stats-box:not(:last-child):after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background-color: var(--gold);
+            opacity: 0.5;
+        }
+        
+        .stats-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+        }
+        
+        .stats-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-white);
+        }
+        
+        .stats-label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        /* Column spacing */
+        .student-info-cell {
+            padding: 12px 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .email-cell {
+            min-width: 250px;
+        }
+        
+        .phone-cell {
+            min-width: 150px;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 992px) {
+            .stats-row {
+                margin-bottom: 15px;
+            }
+            
+            .stats-box:after {
+                display: none;
+            }
+            
+            .email-cell, .phone-cell {
+                min-width: auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .student-table-header,
+            .student-row {
+                font-size: 0.85rem;
+            }
+            
+            .badge {
+                padding: 5px 8px;
+                font-size: 0.75rem;
+            }
+            
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            
+            .stats-icon {
+                font-size: 2rem;
+            }
+            
+            .stats-number {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .btn-hide-on-mobile {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.7rem;
+            }
+            
+            .stats-box {
+                margin-bottom: 15px;
+            }
+            
+            .filter-container {
+                margin-bottom: 10px;
+            }
+        }
+        
+        /* Tooltip */
+        .tooltip-inner {
+            background-color: var(--gold);
+            color: var(--black);
+        }
+    </style>
+</head>
+<body>
+    {% extends "base.html" %}
 
-{% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-gold">Student Management</h2>
-    </div>
-
-    <div class="card bg-dark border-gold">
-        <div class="card-header bg-gold text-black">
-            <div class="row font-weight-bold">
-                <div class="col-3">Name</div>
-                <div class="col-3">Email</div>
-                <div class="col-2">Education Level</div>
-                <div class="col-2">Assessment Status</div>
-                <div class="col-2">Actions</div>
+    {% block content %}
+    <div class="container-fluid mt-4">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h2 class="text-gold d-flex align-items-center">
+                    <i class="fas fa-users-cog header-icon"></i>Student Management
+                </h2>
             </div>
         </div>
-        <div class="card-body p-0">
-            {% if students %}
-                <div class="list-group list-group-flush">
+
+        <!-- Dashboard Stats -->
+        <div class="row mb-4 stats-row">
+            <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+                <div class="stats-box">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stats-number" id="totalCount">{{ students|length }}</div>
+                            <div class="stats-label">Total Students</div>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+                <div class="stats-box">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stats-number" id="completedCount">{{ completed_count }}</div>
+                            <div class="stats-label">Completed Assessments</div>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
+                <div class="stats-box">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stats-number" id="pendingCount">{{ pending_count }}</div>
+                            <div class="stats-label">Pending Assessments</div>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stats-box">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stats-number">{{ new_this_month }}</div>
+                            <div class="stats-label">New This Month</div>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-5 col-sm-6 mb-3 mb-md-0">
+                <div class="search-container d-flex align-items-center">
+                    <i class="fas fa-search text-gold me-2"></i>
+                    <input type="text" id="studentSearch" class="search-box" placeholder="Search students...">
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3 mb-sm-0">
+                <div class="filter-container position-relative">
+                    <select id="statusFilter" class="filter-dropdown">
+                        <option value="all" selected>All Statuses</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3 mb-sm-0">
+                <div class="filter-container position-relative">
+                    <select id="typeFilter" class="filter-dropdown">
+                        <option value="all" selected>All Personality Types</option>
+                        {% for type_code, type_data in personality_types.items %}
+                        <option value="{{ type_code }}">{{ type_code }} - {{ type_data.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-1 col-sm-6 d-flex justify-content-end">
+                <button id="applyFilters" class="btn btn-outline-gold w-100">
+                    <i class="fas fa-filter"></i> <span class="d-none d-md-inline">Filter</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Student Table -->
+        <div class="card bg-dark border-gold mb-4">
+            <div class="card-header bg-gold text-black student-table-header">
+                <div class="row font-weight-bold">
+                    <div class="col-lg-2 col-md-3 col-sm-4 student-info-cell">
+                        <i class="fas fa-user header-icon"></i>Name
+                    </div>
+                    <div class="col-lg-3 col-md-3 d-none d-md-block student-info-cell email-cell">
+                        <i class="fas fa-envelope header-icon"></i>Email
+                    </div>
+                    <div class="col-lg-2 col-md-2 d-none d-md-block student-info-cell phone-cell">
+                        <i class="fas fa-phone header-icon"></i>Phone
+                    </div>
+                    <div class="col-lg-2 col-md-2 d-none d-md-block student-info-cell">
+                        <i class="fas fa-graduation-cap header-icon"></i>Education
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-4 student-info-cell">
+                        <i class="fas fa-clipboard-check header-icon"></i>Status
+                    </div>
+                    <div class="col-lg-1 col-md-1 d-none d-md-block student-info-cell">
+                        <i class="fas fa-brain header-icon"></i>Type
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-4 text-end student-info-cell">
+                        <i class="fas fa-cogs header-icon"></i>Actions
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0 table-responsive">
+                {% if students %}
+                <div class="list-group list-group-flush" id="studentTable">
                     {% for student in students %}
-                        <div class="list-group-item bg-dark text-white border-light">
-                            <div class="row align-items-center">
-                                <div class="col-3">{{ student.user.get_full_name|default:student.user.username }}</div>
-                                <div class="col-3">{{ student.user.email }}</div>
-                                <div class="col-2">{{ student.profile.education_level }}</div>
-                                <div class="col-2">
-                                    {% if student.has_assessment %}
-                                        <span class="badge bg-success text-white">Completed</span>
-                                    {% else %}
-                                        <span class="badge bg-warning text-black">Pending</span>
-                                    {% endif %}
+                    <div class="list-group-item bg-dark-gray text-white border-light student-row" 
+                         data-status="{% if student.has_assessment %}completed{% else %}pending{% endif %}"
+                         data-type="{% if student.result %}{{ student.result.type_code }}{% else %}none{% endif %}"
+                         data-search="{{ student.user.get_full_name|default:student.user.username|lower }} {{ student.user.email|lower }} {{ student.user.phone|default:''|lower }} {{ student.profile.education_level|default:''|lower }}">
+                        <div class="row align-items-center">
+                            <!-- Name -->
+                            <div class="col-lg-2 col-md-3 col-sm-4 student-info-cell">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-gold rounded-circle text-center me-2" style="width: 32px; height: 32px; line-height: 32px;">
+                                        {{ student.user.get_full_name|default:student.user.username|slice:":1"|upper }}
+                                    </div>
+                                    <div>{{ student.user.get_full_name|default:student.user.username }}</div>
                                 </div>
-                                <div class="col-2">
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="col-lg-3 col-md-3 d-none d-md-block student-info-cell email-cell text-truncate">
+                                {{ student.user.email }}
+                            </div>
+                            
+                            <!-- Phone -->
+                            <div class="col-lg-2 col-md-2 d-none d-md-block student-info-cell phone-cell">
+                                {{ student.user.phone|default:"N/A" }}
+                            </div>
+                            
+                            <!-- Education Level -->
+                            <div class="col-lg-2 col-md-2 d-none d-md-block student-info-cell">
+                                {{ student.profile.education_level|default:"N/A" }}
+                            </div>
+                            
+                            <!-- Assessment Status -->
+                            <div class="col-lg-1 col-md-1 col-sm-4 student-info-cell">
+                                {% if student.has_assessment %}
+                                <span class="badge badge-success">
+                                    <i class="fas fa-check-circle me-1"></i>Completed
+                                </span>
+                                {% else %}
+                                <span class="badge badge-warning">
+                                    <i class="fas fa-hourglass-half me-1"></i>Pending
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Personality Type -->
+                            <div class="col-lg-1 col-md-1 d-none d-md-block student-info-cell">
+                                {% if student.result %}
+                                <span class="badge badge-personality" data-bs-toggle="tooltip" 
+                                      title="{{ student.result.title }}">
+                                    {{ student.result.type_code }}
+                                </span>
+                                {% else %}
+                                <span class="badge badge-secondary">
+                                    N/A
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="col-lg-1 col-md-1 col-sm-4 text-end student-info-cell">
+                                <div class="btn-group" role="group">
                                     {% if student.has_assessment %}
                                     <a href="{% url 'admin_result_detail' student.assessment_id %}" 
-                                       class="btn btn-sm btn-outline-gold">
-                                        <i class="fas fa-file-alt"></i> View
+                                       class="btn btn-sm btn-outline-gold" data-bs-toggle="tooltip" 
+                                       title="View Assessment Results">
+                                        <i class="fas fa-file-alt"></i>
                                     </a>
-                                    {% else %}
-                                    <span class="text-light">N/A</span>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
+                    </div>
                     {% endfor %}
                 </div>
-            {% else %}
+                {% else %}
                 <div class="p-4 text-center text-gold">
-                    No students found
+                    <i class="fas fa-user-slash fa-3x mb-3"></i>
+                    <h5>No students found</h5>
+                    <p class="text-muted">Try adjusting your search or filters</p>
                 </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 
-<style>
-    :root {
-        --gold: #D4AF37;
-        --dark-gold: #B7950B;
-        --black: #121212;
-        --dark-gray: #1E1E1E;
-        --light-gray: #2E2E2E;
-    }
-    .text-gold {
-        color: var(--gold);
-    }
-    .text-light {
-        color: #f8f9fa;
-    }
-    .border-gold {
-        border-color: var(--gold) !important;
-    }
-    .border-light {
-        border-color: var(--light-gray) !important;
-    }
-    .bg-gold {
-        background-color: var(--gold) !important;
-    }
-    .bg-dark {
-        background-color: var(--black) !important;
-    }
-    .btn-outline-gold {
-        color: var(--gold);
-        border-color: var(--gold);
-    }
-    .btn-outline-gold:hover {
-        background-color: var(--gold);
-        color: var(--black);
-    }
-    .list-group-item {
-        background-color: var(--dark-gray);
-        color: white;
-    }
-    .badge.bg-success {
-        background-color: #28a745 !important;
-    }
-    .badge.bg-warning {
-        background-color: #ffc107 !important;
-    }
-    .card {
-        border-radius: 5px;
-        overflow: hidden;
-    }
-    .col-1, .col-2, .col-3, .col-6 {
-        padding: 12px 15px;
-    }
-</style>
-{% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enable tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Filter students when any filter changes
+            document.getElementById('statusFilter').addEventListener('change', filterStudents);
+            document.getElementById('typeFilter').addEventListener('change', filterStudents);
+            document.getElementById('studentSearch').addEventListener('input', filterStudents);
+            
+            // Main filtering function
+            function filterStudents() {
+                const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+                const statusFilter = document.getElementById('statusFilter').value;
+                const typeFilter = document.getElementById('typeFilter').value;
+                const studentRows = document.querySelectorAll('.student-row');
+                
+                let visibleCount = 0;
+                let completedCount = 0;
+                let pendingCount = 0;
+                
+                studentRows.forEach(function(row) {
+                    const rowSearch = row.getAttribute('data-search');
+                    const rowStatus = row.getAttribute('data-status');
+                    const rowType = row.getAttribute('data-type');
+                    
+                    // Check if row matches all active filters
+                    const matchesSearch = searchTerm === '' || rowSearch.includes(searchTerm);
+                    const matchesStatus = statusFilter === 'all' || rowStatus === statusFilter;
+                    const matchesType = typeFilter === 'all' || rowType === typeFilter;
+                    
+                    if (matchesSearch && matchesStatus && matchesType) {
+                        row.style.display = '';
+                        visibleCount++;
+                        
+                        // Update counts
+                        if (rowStatus === 'completed') {
+                            completedCount++;
+                        } else {
+                            pendingCount++;
+                        }
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Update counters
+                document.getElementById('totalCount').textContent = visibleCount;
+                document.getElementById('completedCount').textContent = completedCount;
+                document.getElementById('pendingCount').textContent = pendingCount;
+                
+                // Show/hide no results message
+                const noResultsMessage = document.querySelector('.no-results-message');
+                if (visibleCount === 0 && studentRows.length > 0) {
+                    if (!noResultsMessage) {
+                        const tableBody = document.querySelector('.card-body');
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'p-4 text-center text-gold no-results-message';
+                        messageDiv.innerHTML = `
+                            <i class="fas fa-user-slash fa-3x mb-3"></i>
+                            <h5>No matching students found</h5>
+                            <p class="text-muted">Try adjusting your search or filters</p>
+                        `;
+                        tableBody.appendChild(messageDiv);
+                    }
+                } else if (noResultsMessage) {
+                    noResultsMessage.remove();
+                }
+            }
+            
+            // Initialize filters
+            filterStudents();
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

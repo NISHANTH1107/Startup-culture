@@ -7,7 +7,7 @@
     <div class="position-fixed top-4 end-0 m-3 m-md-4 submit-btn-container" style="z-index: 999;">
         <div class="position-relative d-inline-block">
             <button type="submit" form="assessmentForm" class="btn btn-gold btn-lg shadow" id="submitBtn" disabled>
-                <i class="fas fa-paper-plane me-2"></i> <span class="d-none d-sm-inline">Submit</span> Submit
+                <i class="fas fa-paper-plane me-2"></i> Submit
             </button>
             
             <!-- Compact warning positioned above button -->
@@ -40,7 +40,7 @@
                     <li class="mb-2">Select the option that <strong>best describes you</strong></li>
                     <li class="mb-2">Answer <strong>quickly and honestly</strong> - trust your instincts</li>
                     <li class="mb-2">Your answers are <strong>saved automatically</strong> as you progress</li>
-                    <li>All {{ all_questions_count }} questions are <strong>required</strong> to complete</li>
+                    <li>All {{ all_questions_count }} questions are <strong>required</strong> to complete and <strong> Submit </strong></li>
                 </ul>
             </div>
         </div>
@@ -322,7 +322,7 @@
     }
     
     .legend-incomplete {
-        background-color: #2a2a2a;
+        background-color: #dc3545;
     }
     
     /* Question Cards */
