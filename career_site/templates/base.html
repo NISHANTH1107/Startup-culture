@@ -29,7 +29,7 @@
         
         /* Navbar - Desktop */
         .navbar {
-            background-color: #222222;
+            background-color: var(--dark-gray);
             padding: 0;
             width: 100%;
             position: relative;
@@ -51,7 +51,7 @@
         }
         
 
-        /* Trapezoid background with better responsiveness */
+        {% comment %} /* Trapezoid background with better responsiveness */
         .logo-bg {
             position: absolute;
             left: 0;
@@ -64,10 +64,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-        }
+        } {% endcomment %}
 
         .navbar-brand {
-            position: relative;
+            position: absolute;
             z-index: 3;
             color: var(--gold) !important;
             font-weight: bold;
@@ -77,16 +77,22 @@
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
             padding: 0;
             /* Position the logo to be centered in trapezoid */
-            position: absolute;
-            left: 82px;
-            transform: translateX(-50%); 
+            left: 82px; /* Half of the default trapezoid width */
+            transform: translateX(-50%);
             white-space: nowrap;
+            text-align: center; /* Keep text centered */
+            width: 200px; /* Control the width for better text wrapping if needed */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* Adjust existing media queries and add for extreme small screens */
         @media (max-width: 1200px) {
             .navbar-brand {
                 font-size: 1.4rem;
+                left: 120px;
+                width: 180px;
             }
         }
 
@@ -97,7 +103,8 @@
             
             .navbar-brand {
                 font-size: 1.3rem;
-                max-width: 180px;
+                left: 82px; /* Half of 250px trapezoid width */
+                width: 160px;
             }
         }
 
@@ -108,19 +115,22 @@
             
             .navbar-brand {
                 font-size: 1.2rem;
-                max-width: 150px;
+                left: 45px; /* Half of 180px trapezoid width */
+                width: 140px;
             }
         }
 
         @media (max-width: 576px) {
             .logo-bg {
-                width: 140px;
+                width: 150px;
             }
             
             .navbar-brand {
                 font-size: 1.1rem;
-                max-width: 120px;
-                margin-left: 10px;
+                left: 60px; /* Half of 150px trapezoid width */
+                width: 120px;
+                /* Adjust letter spacing for better fit */
+                letter-spacing: -0.5px;
             }
         }
 
@@ -130,9 +140,58 @@
             }
             
             .navbar-brand {
-                font-size: 1rem;
-                max-width: 110px;
-                margin-left: 8px;
+                font-size: 0.95rem;
+                left: 80px; /* Half of 130px trapezoid width */
+                width: 100px;
+                letter-spacing: -0.8px;
+            }
+        }
+
+        /* New extremely small screen breakpoint */
+        @media (max-width: 350px) {
+            .logo-bg {
+                width: 100px;
+                min-width: 120px; /* Ensure minimum width */
+            }
+            
+            .navbar-brand {
+                font-size: 0.85rem;
+                left: 60px; /* Half of 120px trapezoid width */
+                width: 95px;
+                letter-spacing: -1px;
+            }
+        }
+
+        /* For the smallest screens */
+        @media (max-width: 320px) {
+            .logo-bg {
+                width: 110px;
+                min-width: 110px;
+            }
+            
+            .navbar-brand {
+                font-size: 0.8rem;
+                left: 55px; /* Half of 110px trapezoid width */
+                width: 90px;
+            }
+        }
+
+        /* Fixed mobile navbar adjustments */
+        @media (max-width: 768px) {
+            .navbar .container {
+                position: relative; /* Ensure proper positioning context */
+            }
+            
+            /* Optional: Adjust navbar height for better mobile appearance */
+            .navbar .container {
+                padding: 10px 0;
+                min-height: 50px;
+            }
+            
+            /* Make sure mobile toggle button doesn't overlap with logo */
+            .mobile-toolbar {
+                top: 12px;
+                right: 15px;
             }
         }
 
@@ -455,7 +514,7 @@
             
             .logo-bg {
                 width: 180px;
-            }
+            }            
             
             .mobile-toolbar {
                 display: block;

@@ -1,5 +1,5 @@
-{% extends 'base2.html' %}
-{% load static %}  <!-- This MUST be at the very top after extends -->
+{% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Register{% endblock %}
 
@@ -9,95 +9,81 @@
     <div class="auth-container">
         <div class="auth-card">
             <div class="register-card">
-                <div class="card-body p-3">
-                    <h2 class="mb-2">Register</h2>
+                <div class="card-body">
+                    <h2 class="text-center mb-3">Register</h2>
                     <form method="POST">
                         {% csrf_token %}
                         
                         <!-- Username field -->
-                        <div class="form-group mb-2">
-                            <label class="form-label mb-1">Username</label>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Username</label>
                             <div class="input-wrapper">
-                                <input type="text" name="username" class="form-control" placeholder="username" id="id_username">
+                                <input type="text" name="username" class="form-control" placeholder="username" id="id_username" required>
                             </div>
                         </div>
                         
                         <!-- Email field -->
-                        <div class="form-group mb-2">
-                            <label class="form-label mb-1">Email</label>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Email</label>
                             <div class="input-wrapper">
-                                <input type="email" name="email" class="form-control" placeholder="Email Address" id="id_email">
+                                <input type="email" name="email" class="form-control" placeholder="Email Address" id="id_email" required>
                             </div>
                         </div>
                         
-                        <div class="row">
-                            <!-- DOB field with calendar -->
+                        <div class="row g-2">
+                            <!-- DOB field -->
                             <div class="col-md-6">
-                                <div class="form-group mb-2">
-                                    <label class="form-label mb-1">DOB</label>
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Date of Birth</label>
                                     <div class="input-wrapper">
-                                        <input type="date" name="date_of_birth" class="form-control" placeholder="mm/dd/yy" id="id_date_of_birth">
+                                        <input type="date" name="date_of_birth" class="form-control" id="id_date_of_birth" required>
                                     </div>
                                 </div>
                             </div>
                             
                             <!-- Phone field -->
                             <div class="col-md-6">
-                                <div class="form-group mb-2">
-                                    <label class="form-label mb-1">Phone</label>
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Phone</label>
                                     <div class="input-wrapper">
-                                        <input type="tel" name="phone" class="form-control" placeholder="Mobile number" id="id_phone">
+                                        <input type="tel" name="phone" class="form-control" placeholder="Mobile number" id="id_phone" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Password field -->
-                        <div class="form-group mb-2">
-                            <label class="form-label mb-1">Password</label>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Password</label>
                             <div class="input-wrapper position-relative">
-                                <input type="password" name="password1" class="form-control" placeholder="Password" id="id_password1">
-                                <span class="password-toggle position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%);">
+                                <input type="password" name="password1" class="form-control" placeholder="Password" id="id_password1" required>
+                                <span class="password-toggle">
                                     <i class="bi bi-eye-slash"></i>
                                 </span>
                             </div>
                         </div>
                         
                         <!-- Confirm Password field -->
-                        <div class="form-group mb-2">
-                            <label class="form-label mb-1">Confirm Password</label>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Confirm Password</label>
                             <div class="input-wrapper position-relative">
-                                <input type="password" name="password2" class="form-control" placeholder="Re-enter Password" id="id_password2">
-                                <span class="password-toggle position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%);">
+                                <input type="password" name="password2" class="form-control" placeholder="Re-enter Password" id="id_password2" required>
+                                <span class="password-toggle">
                                     <i class="bi bi-eye-slash"></i>
                                 </span>
                             </div>
                         </div>
                         
-                        <!-- User type selection (hidden in the image but keeping it) -->
-                        <div class="form-group mb-2" style="display: none;">
-                            <label class="form-label mb-1">Register as:</label>
-                            <div class="d-flex flex-column" style="margin-left: 0.5rem;">
-                                <div class="form-check mb-1">
-                                    <input class="form-check-input" type="radio" name="user_type" id="student" value="student" checked>
-                                    <label class="form-check-label" for="student">
-                                        Student
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Submit button with new text -->
-                        <div class="d-grid gap-2 mt-3">
-                            <button type="submit" class="btn btn-primary" style="background-color: #d4af37;">Sign up</button>
+                        <!-- Submit button -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Sign up</button>
                         </div>
                     </form>
                     
-                    <!-- Login link at bottom -->
+                    <!-- Login link -->
                     <div class="text-center mt-4">
                         <small class="text-muted">
-                            <a> Already have an account?</a> 
-                            <a href="{% url 'login' %}">Login</a>
+                            Already have an account? <a href="{% url 'login' %}">Login</a>
                         </small>
                     </div>
                 </div>
@@ -106,25 +92,31 @@
     </div>
 </div>
 
-{% if form.errors and not field.errors %}
-    <div class="alert alert-danger mt-4">
+{% if form.errors %}
+    <div class="alert alert-danger mt-3 mx-3">
         {% for field, errors in form.errors.items %}
-            {{ field }}: {{ errors|join:", " }}
+            {{ errors|join:", " }}
         {% endfor %}
     </div>
 {% endif %}
 
 <style>
-    /* Reset body to prevent scrolling */
+    :root {
+        --gold: #D4AF37;
+        --dark-gold: #B7950B;
+        --black: #121212;
+        --dark-gray: #1E1E1E;
+        --light-gray: #2E2E2E;
+    }
+
     body {
         margin: 0;
         padding: 0;
-        overflow: hidden;
-        height: 100vh;
-        width: 100vw;
+        min-height: 100vh;
+        width: 100%;
+        overflow-x: hidden;
     }
 
-    /* Background image */
     .auth-background {
         background-image: url('{% static "images/login.jpg" %}');
         background-size: cover;
@@ -138,7 +130,6 @@
         z-index: -1;
     }
 
-    /* Background overlay */
     .auth-background::before {
         content: '';
         position: absolute;
@@ -147,151 +138,291 @@
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
     }
 
-    /* Wrapper for the entire auth section */
     .auth-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
+        position: relative;
         width: 100%;
-        height: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
         z-index: 1;
     }
 
-    /* Container for the register card - keeping position on left side */
     .auth-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
         display: flex;
+        justify-content: center;
         align-items: center;
-        height: 100%;
-        justify-content: flex-start;
-        padding-left: 120px;
-        box-sizing: border-box;
+        padding: 20px;
     }
 
-    /* Card styles */
+    .auth-card {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
     .register-card {
         border-radius: 16px;
-        border: 1px solid #d4af37;
-        background-color: rgba(46, 46, 46, 0.85);
-        width: 500px;
-        max-width: 100%;
-        padding: 15px;
-        margin-top: 60px; /* Add space to prevent navbar overlap */
-        overflow: visible;
-    }
-    
-    /* Form controls - reduced height */
-    .form-control {
-        height: 40px;
-        background-color: white !important;
-        color: #121212 !important;
-        border: none;
-        border-radius: 8px;
-        padding: 8px 12px;
-    }
-    
-    .form-control::placeholder {
-        color: #909090;
-    }
-    
-    .form-control:focus {
-        background-color: white !important;
-        color: #121212 !important;
-        box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
-    }
-    
-    /* Button styling - reduced height */
-    .btn-primary {
-        background-color: #d4af37 !important;
-        border: none;
-        height: 40px;
-        font-weight: 500;
-        cursor: pointer;
-        border-radius: 8px;
-    }
-    
-    .btn-primary:hover {
-        background-color: #B7950B !important;
-    }
-    
-    /* Form label styling - reduced margins */
-    .form-label {
-        margin-bottom: 0.15rem;
-        color: #d4af37;
-        font-weight: 500;
-        font-size: 0.95rem;
+        border: 1px solid var(--gold);
+        background-color: rgba(46, 46, 46, 0.9);
+        backdrop-filter: blur(5px);
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
-    /* Input field height - reduced */
-    .input-wrapper input {
-        height: 38px;
+    .card-body {
+        padding: 2rem;
     }
-    
-    /* Calendar input styling */
-    input[type="date"] {
-        position: relative;
+
+    h2 {
+        color: white;
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
     }
-    
+
+    .form-label {
+        color: var(--gold);
+        font-weight: 500;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        color: var(--black) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control::placeholder {
+        color: rgba(45, 45, 45, 0.7) !important;
+    }
+
+    .form-control:focus {
+        background-color: white !important;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+        border-color: var(--gold);
+    }
+
+    .btn-primary {
+        background-color: var(--gold) !important;
+        border: none;
+        height: 50px;
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--dark-gold) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(183, 149, 11, 0.4);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: var(--black);
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+    }
+
+    .password-toggle:hover {
+        opacity: 1;
+    }
+
     input[type="date"]::-webkit-calendar-picker-indicator {
         background: transparent;
-        color: #909090;
+        color: transparent;
         cursor: pointer;
         height: 100%;
         position: absolute;
         right: 0;
         top: 0;
-        width: 40px;
-    }
-    
-    /* Password visibility toggle icon */
-    .password-toggle {
-        cursor: pointer;
-        color: #909090;
-    }
-    
-    h2 {
-        color: white;
-        text-align: center;
-        font-size: 1.75rem;
-        margin-top: 0.5rem;
-    }
-    
-    /* Link styling */
-    a {
-        color: #d4af37;
-        text-decoration: none;
-    }
-    
-    a:hover {
-        text-decoration: underline;
-    }
-    
-    /* Card body padding adjustments */
-    .card-body {
-        padding: 0.75rem !important;
-    }
-    
-    /* Make form elements more compact */
-    .form-group {
-        margin-bottom: 0.75rem;
+        width: 100%;
     }
 
-    .text-muted,.text-muted a {
-        color:  #D4AF37 !important;
+    .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .text-muted a {
+        color: var(--gold) !important;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .text-muted a:hover {
+        color: var(--dark-gold) !important;
+        text-decoration: underline;
+    }
+
+    .alert-danger {
+        background-color: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90%;
+        z-index: 1000;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .auth-container {
+            padding: 15px;
+        }
+        
+        .register-card {
+            max-width: 450px;
+        }
+        
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-control {
+            height: 45px;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            height: 45px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .auth-wrapper {
+            padding: 15px;
+            align-items: flex-start;
+            padding-top: 60px;
+        }
+        
+        .auth-container {
+            padding: 0;
+        }
+        
+        .register-card {
+            border-radius: 12px;
+            max-width: 100%;
+        }
+        
+        .card-body {
+            padding: 1.25rem !important;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem !important;
+        }
+        
+        .form-control {
+            height: 42px;
+            padding: 8px 12px;
+        }
+        
+        .btn-primary {
+            height: 44px;
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .auth-wrapper {
+            padding: 10px;
+            padding-top: 40px;
+        }
+        
+        .card-body {
+            padding: 1rem !important;
+        }
+        
+        h2 {
+            font-size: 1.4rem;
+        }
+        
+        .form-label {
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            height: 40px;
+            font-size: 0.9rem;
+        }
+        
+        .text-muted {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* For very small devices */
+    @media (max-width: 350px) {
+        h2 {
+            font-size: 1.3rem;
+        }
+        
+        .form-control {
+            height: 38px;
+        }
+        
+        .btn-primary {
+            height: 40px;
+        }
+    }
+
+    /* Landscape orientation for mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+        .auth-wrapper {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            align-items: flex-start;
+        }
+        
+        .register-card {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
     }
 </style>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Add Bootstrap form-control class to all input fields
     document.addEventListener('DOMContentLoaded', function() {
-        const inputs = document.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), select, textarea');
-        inputs.forEach(input => {
-            input.classList.add('form-control');
-        });
-        
         // Password visibility toggle
         const toggles = document.querySelectorAll('.password-toggle');
         toggles.forEach(toggle => {
@@ -310,12 +441,37 @@
                 }
             });
         });
-        
-        // Initialize date picker with placeholder
+
+        // Date input placeholder fallback
         const dobInput = document.getElementById('id_date_of_birth');
         if (dobInput) {
-            dobInput.addEventListener('focus', function() {
-                this.showPicker();
+            // Set placeholder attribute for browsers that support it
+            dobInput.setAttribute('placeholder', 'MM/DD/YYYY');
+            
+            // Modern browsers will show this as the actual placeholder
+            if (!dobInput.value) {
+                dobInput.classList.add('empty');
+            }
+            
+            dobInput.addEventListener('change', function() {
+                if (this.value) {
+                    this.classList.remove('empty');
+                } else {
+                    this.classList.add('empty');
+                }
+            });
+        }
+
+        // Add red border to invalid fields after submission
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                const inputs = this.querySelectorAll('input');
+                inputs.forEach(input => {
+                    if (!input.checkValidity()) {
+                        input.classList.add('is-invalid');
+                    }
+                });
             });
         }
     });

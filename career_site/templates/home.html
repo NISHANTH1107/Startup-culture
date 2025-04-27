@@ -1,4 +1,4 @@
-{% extends 'base2.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block meta %}
@@ -8,13 +8,13 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-    <h1 class="display-4">Welcome to SocioPotents</h1>
+<div class="jumbotron p-4 p-md-5 rounded">
+    <h1 class="display-4 responsive-title">Welcome to SocioPotents</h1>
     <p class="lead">Your personalized career guidance platform</p>
     <hr class="my-4">
     <p>Discover your ideal career path based on your skills, interests, and personality.</p>
     {% if not user.is_authenticated %}
-        <a class="btn btn-primary btn-lg" href="{% url 'register' %}" role="button">Get Started</a>
+        <a class="btn btn-primary btn-lg mt-3" href="{% url 'register' %}" role="button">Get Started</a>
     {% endif %}
 </div>
 
@@ -23,38 +23,169 @@
         background: url("{% static 'images/login.jpg' %}") no-repeat center center fixed;
         background-size: cover;
     }
+
+    .jumbotron {
+        background-color: rgba(30, 30, 30, 0.85);
+        border: 1px solid var(--gold);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        margin-top: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .responsive-title {
+        font-size: 2.5rem;
+        color: var(--gold);
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .feature-card {
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid var(--gold);
+        background-color: rgba(30, 30, 30, 0.9);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .feature-card .card-body {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 1.5rem;
+    }
+
+    .feature-card .card-title {
+        color: var(--gold);
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .feature-card .card-text {
+        flex-grow: 1;
+        font-size: 0.95rem;
+    }
+
+    .feature-icon {
+        margin-right: 0.5rem;
+        color: var(--gold);
+    }
+
+    /* Touch-friendly tweaks for mobile */
+    @media (hover: none) {
+        .feature-card {
+            transform: none !important;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .responsive-title {
+            font-size: 2.25rem;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .responsive-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .responsive-title {
+            font-size: 1.75rem;
+        }
+        .jumbotron {
+            padding: 2rem 1.5rem;
+            margin-top: 1rem;
+        }
+        .feature-card .card-body {
+            padding: 1.25rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .responsive-title {
+            font-size: 1.5rem;
+        }
+        .jumbotron {
+            padding: 1.5rem 1rem;
+            margin-top: 0.5rem;
+        }
+        .jumbotron .lead {
+            font-size: 1rem;
+        }
+        .btn-lg {
+            padding: 0.5rem 1rem;
+        }
+        .feature-card {
+            margin-bottom: 1rem;
+        }
+        .feature-card .card-body {
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 350px) {
+        .responsive-title {
+            font-size: 1.25rem;
+        }
+        .jumbotron {
+            padding: 1rem;
+            margin-top: 0.25rem;
+        }
+        .jumbotron .btn-lg {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.95rem;
+        }
+    }
 </style>
 
-<div class="row mt-5">
-    <div class="col-md-4">
+<div class="row mt-4 g-3">
+    <div class="col-12 col-sm-6 col-md-4">
         <a href="{% url 'login' %}" class="text-decoration-none">
-            <div class="card">
+            <div class="card feature-card">
                 <div class="card-body">
-                    <h5 class="card-title">Career Assessment</h5>
+                    <h5 class="card-title">
+                        <i class="fas fa-clipboard-check feature-icon"></i>
+                        Career Assessment
+                    </h5>
                     <p class="card-text">Take our comprehensive assessment to discover careers that match your profile.</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-md-4">
+    <div class="col-12 col-sm-6 col-md-4">
         <a href="{% url 'login' %}" class="text-decoration-none">
-            <div class="card">
+            <div class="card feature-card">
                 <div class="card-body">
-                    <h5 class="card-title">Career Recommendations</h5>
+                    <h5 class="card-title">
+                        <i class="fas fa-lightbulb feature-icon"></i>
+                        Career Recommendations
+                    </h5>
                     <p class="card-text">Get personalized career recommendations based on your assessment results.</p>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-md-4">
+    <div class="col-12 col-sm-12 col-md-4">
         <a href="{% url 'login' %}" class="text-decoration-none">
-            <div class="card">
+            <div class="card feature-card">
                 <div class="card-body">
-                    <h5 class="card-title">Skill Development</h5>
+                    <h5 class="card-title">
+                        <i class="fas fa-graduation-cap feature-icon"></i>
+                        Skill Development
+                    </h5>
                     <p class="card-text">Access resources to develop skills needed for your recommended careers.</p>
                 </div>
             </div>
         </a>
     </div>
 </div>
+
 {% endblock %}

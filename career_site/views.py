@@ -31,6 +31,11 @@ from django.urls import reverse
 from career_site.forms import UserRegisterForm, StudentProfileForm, AdminProfileForm, QuestionForm
 
 def home(request):
+    if request.user.is_authenticated:
+        if request.user.is_student:
+            return redirect('dashboard')
+        elif request.user.is_admin:
+            return redirect('admin-dashboard')
     return render(request, 'home.html')
 
 @csrf_protect

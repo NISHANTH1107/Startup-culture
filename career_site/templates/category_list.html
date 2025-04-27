@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
@@ -28,4 +28,35 @@
     </div>
     {% endfor %}
 </div>
+
+<style>
+    :root {
+        --gold: #D4AF37;
+        --dark-gold: #B7950B;
+        --black: #121212;
+        --dark-gray: #1E1E1E;
+        --light-gray: #2E2E2E;
+        --gold-gradient: linear-gradient(135deg, var(--gold), var(--dark-gold));
+        --gold-opacity: rgba(212, 175, 55, 0.25);
+    }
+
+    body {
+        background-image: url("{% static 'images/db_bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+    }
+    .card {
+        background-color: var(--dark-gray);
+        border: 1px solid var(--gold);
+    }
+    .card-title {
+        color: var(--gold);
+    }
+    .card-text {
+        color: white;
+    }
+
 {% endblock %}
