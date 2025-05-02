@@ -683,10 +683,10 @@
                 {% if user.is_authenticated %}
                     {% if user.is_student %}
                         <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                        <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
+                        <!-- <a class="nav-link" href="{% url 'career_library' %}">Career Library</a> -->
                         <a class="nav-link" href="{% url 'open_assessment' %}">Open Assessment</a>
                         {% comment %} <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a> {% endcomment %}
-                        <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
+                        <!-- <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a> -->
                     {% elif user.is_admin %}
                         <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
                         <a class="nav-link" href="{% url 'manage_users' %}">Manage Users</a>
@@ -746,11 +746,11 @@
                                     <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                                 </a>
                             </li>
-                            <li class="mobile-menu-item">
+                            <!-- <li class="mobile-menu-item">
                                 <a class="mobile-menu-link" href="{% url 'career_library' %}">
                                     <i class="fas fa-book me-2"></i> Career Library
                                 </a>
-                            </li>
+                            </li> -->
                             {% comment %} <li class="mobile-menu-item">
                                 <a class="mobile-menu-link" href="{% url 'start_assessment' %}">
                                     <i class="fas fa-tasks me-2"></i> Career Assessment
@@ -763,11 +763,11 @@
                                 </a>
                             </li>
 
-                            <li class="mobile-menu-item">
+                            <!-- <li class="mobile-menu-item">
                                 <a class="mobile-menu-link" href="{% url 'master_class_list' %}">
                                     <i class="fas fa-graduation-cap me-2"></i> Skill Development
                                 </a>
-                            </li>
+                            </li> -->
                         {% elif user.is_admin %}
                             <li class="mobile-menu-item">
                                 <a class="mobile-menu-link" href="{% url 'admin-dashboard' %}">
