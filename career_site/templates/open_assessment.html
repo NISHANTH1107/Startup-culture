@@ -1,55 +1,116 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Open Assessment{% endblock %}
+{% block title %}Professional Career Assessment{% endblock %}
 
 {% block content %}
-<div class="assessment-bg">
-    <div class="container py-4">
-        <div class="row mb-4">
-            <div class="col-12">
-                <h1 class="text-gold display-5 fw-bold mb-3">External Career Assessment</h1>
-                <div class="d-flex align-items-center mb-4">
-                    <div class="gold-bar"></div>
-                    <p class="text-light lead mb-0 ms-3">Complete this assessment to gain deeper insights into your career potential</p>
+<div class="assessment-container">
+    <div class="container py-5">
+        <!-- Header Section -->
+        <header class="mb-5 assessment-header">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1 class="fw-bold mb-3">Career Excellence Assessment</h1>
+                    <div class="subtitle-container">
+                        <div class="gold-accent"></div>
+                        <p class="subtitle">Unlock your professional potential with our comprehensive evaluation</p>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="header-graphic">
+                        <div class="graphic-element"></div>
+                        <div class="graphic-accent"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
+        </header>
+
+        <!-- Main Content Area -->
         <div class="row">
-            <div class="col-md-4 mb-4 mb-md-0">
-                <div class="info-card">
-                    <div class="info-icon">
-                        <i class="fas fa-clipboard-check"></i>
+            <!-- Left Column - Assessment Info -->
+            <div class="col-lg-4 mb-4">
+                <div class="info-panel">
+                    <div class="panel-header">
+                        <div class="panel-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h2>Assessment Overview</h2>
                     </div>
-                    <h3 class="text-gold fw-bold mb-3">Assessment Details</h3>
-                    <ul class="info-list">
-                        <li><i class="fas fa-clock me-2"></i> 10-15 minutes</li>
-                        <li><i class="fas fa-question-circle me-2"></i> 25 questions</li>
-                        <li><i class="fas fa-chart-bar me-2"></i> Instant results</li>
-                        <li><i class="fas fa-file-download me-2"></i> Downloadable report</li>
-                    </ul>
-                    <p class="text-light mb-0">This assessment complements your personality profile with specific career aptitude insights.</p>
+                    
+                    <div class="divider"><span></span></div>
+                    
+                    <div class="panel-content">
+                        <ul class="feature-list">
+                            <li>
+                                <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                                <div class="feature-text">
+                                    <strong>Duration</strong>
+                                    <span>10-15 minutes to complete</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="feature-icon"><i class="fas fa-question-circle"></i></div>
+                                <div class="feature-text">
+                                    <strong>Format</strong>
+                                    <span>50 targeted questions</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                                <div class="feature-text">
+                                    <strong>Results</strong>
+                                    <span>Immediate analysis</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+                                <div class="feature-text">
+                                    <strong>Report</strong>
+                                    <span>Comprehensive PDF download</span>
+                                </div>
+                            </li>
+                        </ul>
+                        
+                        <div class="info-message">
+                            <i class="fas fa-info-circle"></i>
+                            <p>This scientifically designed assessment provides personalized insights into your career aptitudes, strengths, and growth opportunities.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional Info Card -->
+                <div class="extra-info-card">
+                    <div class="info-header">
+                        <div class="info-header-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Data Privacy</h4>
+                    </div>
+                    <p class="info-text">Your assessment data is kept confidential and used only to generate your personalized career report. We adhere to strict privacy standards to protect your information.</p>
+                    <div class="secure-badge">
+                        <i class="fas fa-lock"></i> Secure Assessment
+                    </div>
                 </div>
             </div>
             
-            <div class="col-md-8">
-                <div class="form-container">
+            <!-- Right Column - Assessment Form -->
+            <div class="col-lg-8">
+                <div class="assessment-form-container">
                     <div class="form-header">
-                        <div class="form-title">
-                            <i class="fas fa-star-half-alt me-2"></i>
-                            Career Aptitude Assessment
-                        </div>
+                        <h3><i class="fas fa-star-half-alt me-2"></i> Professional Career Assessment</h3>
+                        <span class="badge">Confidential</span>
                     </div>
-                    <div class="iframe-wrapper">
-                        <div class="loading-overlay" id="formLoading">
-                            <div class="spinner-border text-gold" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                    
+                    <div class="iframe-container">
+                        <!-- Loading State -->
+                        <div class="loading-state" id="formLoading">
+                            <div class="spinner">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
                             </div>
-                            <p class="mt-3 text-light">Loading assessment form...</p>
+                            <p>Preparing your assessment...</p>
                         </div>
                         
-                        <!-- Updated iframe with correct URL format -->
+                        <!-- Google Form -->
                         <iframe 
                             id="assessmentForm"
                             src="https://docs.google.com/forms/d/1YwxOBm_-E8bxI41hTIAm0dgOdouQJpF4xvp2KqS4qjc/viewform?embedded=true" 
@@ -62,16 +123,50 @@
                             Loading...
                         </iframe>
                         
+                        <!-- Fallback Message -->
                         <div class="fallback-message" id="fallbackMessage" style="display: none;">
-                            <div class="text-center p-4">
-                                <i class="fas fa-exclamation-circle text-warning fa-3x mb-3"></i>
-                                <h4 class="text-gold">Unable to load form</h4>
-                                <p class="text-light">Please try accessing the form directly:</p>
+                            <div class="fallback-content">
+                                <div class="icon-container">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <h4>Form Loading Issue</h4>
+                                <p>We're having trouble loading the assessment form in this view.</p>
                                 <a href="https://docs.google.com/forms/d/1YwxOBm_-E8bxI41hTIAm0dgOdouQJpF4xvp2KqS4qjc/viewform" 
-                                   target="_blank" class="btn btn-gold mt-2">
-                                    Open in new window
+                                   target="_blank" class="btn btn-primary">
+                                    Open Assessment in New Window
                                 </a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Information Cards -->
+                <div class="row mt-4 assessment-benefits">
+                    <div class="col-md-4">
+                        <div class="benefit-card">
+                            <div class="benefit-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h4>Discover Strengths</h4>
+                            <p>Identify your unique professional abilities</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="benefit-card">
+                            <div class="benefit-icon">
+                                <i class="fas fa-compass"></i>
+                            </div>
+                            <h4>Career Direction</h4>
+                            <p>Get guidance on optimal career paths</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="benefit-card">
+                            <div class="benefit-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h4>Growth Potential</h4>
+                            <p>Understand your development areas</p>
                         </div>
                     </div>
                 </div>
@@ -81,111 +176,373 @@
 </div>
 
 <style>
-    .assessment-bg {
-        background-color: var(--dark-gray);
+    :root {
+        --gold: #D4AF37;
+        --light-gold: #F4E7BA;
+        --dark-gold: #B8860B;
+        --primary-bg: #1A1A1A;
+        --secondary-bg: #2A2A2A;
+        --light-text: #F5F5F5;
+        --dark-text: #333333;
+        --accent-gray: #4A4A4A;
+        --card-bg: #222222;
+        --card-border: #333333;
+        --success: #28a745;
+    }
+    
+    .assessment-container {
+        background-color: var(--primary-bg);
         background-image: url('{% static "images/db_bg.jpg" %}');
-        background-blend-mode: overlay;
+        background-blend-mode: multiply;
         background-size: cover;
         background-position: center;
-        background-attachment: fixed;
         min-height: calc(100vh - 70px);
+        color: var(--light-text);
+        position: relative;
     }
     
-    .gold-bar {
+    .assessment-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(26, 26, 26, 0.93) 0%, rgba(26, 26, 26, 0.85) 100%);
+        z-index: 0;
+    }
+    
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Header Styling */
+    .assessment-header h1 {
+        color: var(--light-text);
+        font-size: 2.75rem;
+        position: relative;
+        letter-spacing: -0.5px;
+    }
+    
+    .subtitle-container {
+        display: flex;
+        align-items: center;
+        margin-top: 0.75rem;
+    }
+    
+    .gold-accent {
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), var(--light-gold));
+        border-radius: 10px;
+        margin-right: 15px;
+    }
+    
+    .subtitle {
+        color: var(--light-text);
+        font-size: 1.1rem;
+        font-weight: 300;
+        margin: 0;
+        opacity: 0.9;
+    }
+    
+    .header-graphic {
+        position: relative;
+        height: 200px;
+    }
+    
+    .graphic-element {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        top: 0;
+        right: 40px;
+        opacity: 0.8;
+    }
+    
+    .graphic-accent {
+        position: absolute;
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, var(--gold), var(--dark-gold));
+        border-radius: 50%;
+        top: 45px;
+        right: 85px;
+        opacity: 0.3;
+    }
+    
+    /* Info Panel Styling */
+    .info-panel {
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--card-border);
+    }
+    
+    .panel-header {
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .panel-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--gold), var(--dark-gold));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+    }
+    
+    .panel-icon i {
+        color: var(--primary-bg);
+        font-size: 1.25rem;
+    }
+    
+    .panel-header h2 {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--light-text);
+    }
+    
+    .divider {
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.1);
+        position: relative;
+    }
+    
+    .divider span {
+        position: absolute;
         height: 3px;
         width: 60px;
-        background: var(--gold);
-        margin-top: 5px;
+        background: linear-gradient(90deg, var(--gold), var(--dark-gold));
+        top: -1px;
+        left: 1.5rem;
     }
     
-    .info-card {
-        background-color: rgba(30, 30, 30, 0.9);
-        border: 1px solid var(--gold);
-        border-radius: 12px;
-        padding: 2rem;
-        height: 100%;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease;
+    .panel-content {
+        padding: 1.5rem;
     }
     
-    .info-card:hover {
-        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
-        transform: translateY(-5px);
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.5rem;
     }
     
-    .info-icon {
-        width: 60px;
-        height: 60px;
+    .feature-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .feature-list li:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .feature-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background-color: rgba(212, 175, 55, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+    }
+    
+    .feature-icon i {
+        color: var(--gold);
+        font-size: 1rem;
+    }
+    
+    .feature-text {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .feature-text strong {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--light-text);
+        margin-bottom: 0.2rem;
+    }
+    
+    .feature-text span {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .info-message {
+        background-color: rgba(212, 175, 55, 0.1);
+        border-left: 3px solid var(--gold);
+        padding: 1rem;
+        border-radius: 4px;
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .info-message i {
+        color: var(--gold);
+        font-size: 1.1rem;
+        margin-right: 0.75rem;
+        margin-top: 0.2rem;
+    }
+    
+    .info-message p {
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.85);
+    }
+    
+    /* Extra Info Card */
+    .extra-info-card {
+        background-color: rgba(26, 26, 26, 0.7);
+        border-radius: 10px;
+        padding: 1.5rem;
+        position: relative;
+        border: 1px solid var(--card-border);
+    }
+    
+    .info-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .info-header-icon {
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         background: linear-gradient(135deg, var(--gold), var(--dark-gold));
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1.5rem;
-        font-size: 1.5rem;
-        color: var(--dark-gray);
+        color: var(--primary-bg);
+        margin-right: 0.75rem;
     }
     
-    .info-list {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 1.5rem 0;
+    .info-header-icon i {
+        font-size: 1rem;
     }
     
-    .info-list li {
-        color: #fff;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    .info-header h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--light-text);
+        font-weight: 600;
     }
     
-    .info-list li:last-child {
-        border-bottom: none;
+    .info-text {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+        color: rgba(255, 255, 255, 0.85);
     }
     
-    .form-container {
-        background-color: rgba(30, 30, 30, 0.9);
-        border-radius: 12px;
+    .secure-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: rgba(40, 167, 69, 0.15);
+        color: var(--success);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .secure-badge i {
+        margin-right: 0.5rem;
+    }
+    
+    /* Assessment Form Styling */
+    .assessment-form-container {
+        background-color: var(--card-bg);
+        border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--gold);
-        height: 100%;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--card-border);
     }
     
     .form-header {
-        background: linear-gradient(90deg, rgba(183, 149, 11, 0.8), rgba(212, 175, 55, 0.8));
+        background: linear-gradient(90deg, var(--dark-gold), var(--gold));
         padding: 1rem 1.5rem;
-        color: var(--dark-gray);
-        font-weight: bold;
-        font-size: 1.2rem;
-        border-bottom: 1px solid var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
     
-    .iframe-wrapper {
-        background-color: rgba(255, 255, 255, 0.97);
-        height: calc(100% - 52px);
+    .form-header h3 {
+        margin: 0;
+        color: var(--primary-bg);
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    
+    .badge {
+        background-color: var(--primary-bg);
+        color: var(--gold);
+        font-size: 0.75rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 30px;
+        font-weight: 600;
+    }
+    
+    .iframe-container {
+        background-color: #fff;
         position: relative;
-        overflow: hidden;
+        height: 700px;
     }
     
-    iframe {
-        display: block;
-        border: none;
-        margin-top: -2px; /* This helps hide the Google header */
-    }
-
-    /* Loading overlay */
-    .loading-overlay {
+    .loading-state {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+        background-color: var(--card-bg);
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        background-color: rgba(30, 30, 30, 0.9);
+        justify-content: center;
         z-index: 10;
+    }
+    
+    .spinner {
+        margin-bottom: 1.5rem;
+    }
+    
+    .spinner-border {
+        color: var(--gold);
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .loading-state p {
+        color: var(--light-text);
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    
+    iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: none;
     }
     
     .fallback-message {
@@ -194,55 +551,154 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(30, 30, 30, 0.95);
+        background-color: var(--card-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         z-index: 10;
     }
     
-    /* Button styling for fallback */
-    .btn-gold {
-        background-color: var(--gold);
-        color: var(--dark-gray);
-        font-weight: 600;
+    .fallback-content {
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .icon-container {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background-color: rgba(255, 193, 7, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+    
+    .icon-container i {
+        color: #ffc107;
+        font-size: 1.75rem;
+    }
+    
+    .fallback-message h4 {
+        color: var(--light-text);
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .fallback-message p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1.5rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(90deg, var(--dark-gold), var(--gold));
         border: none;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        border-radius: 6px;
+        color: var(--primary-bg);
         transition: all 0.3s ease;
     }
     
-    .btn-gold:hover {
-        background-color: var(--dark-gold);
-        transform: translateY(-2px);
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        background: linear-gradient(90deg, var(--gold), var(--dark-gold));
     }
     
-    @media (max-width: 767.98px) {
-        .info-card {
-            padding: 1.5rem;
+    /* Benefit Cards */
+    .assessment-benefits {
+        margin-top: 2rem;
+    }
+    
+    .benefit-card {
+        background-color: rgba(26, 26, 26, 0.7);
+        border-radius: 8px;
+        padding: 1.25rem;
+        text-align: center;
+        height: 100%;
+        border: 1px solid var(--card-border);
+        transition: all 0.3s ease;
+    }
+    
+    .benefit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        border-color: var(--gold);
+    }
+    
+    .benefit-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--dark-gold));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+    
+    .benefit-icon i {
+        color: var(--primary-bg);
+        font-size: 1.2rem;
+    }
+    
+    .benefit-card h4 {
+        color: var(--light-text);
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .benefit-card p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        margin-bottom: 0;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+        .assessment-header h1 {
+            font-size: 2.25rem;
         }
         
-        .iframe-wrapper iframe {
+        .subtitle {
+            font-size: 1rem;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .assessment-header h1 {
+            font-size: 1.85rem;
+        }
+        
+        .iframe-container {
             height: 600px;
+        }
+        
+        .assessment-benefits .col-md-4 {
+            margin-bottom: 1rem;
+        }
+        
+        .assessment-benefits .col-md-4:last-child {
+            margin-bottom: 0;
         }
     }
     
     @media (max-width: 576px) {
-        h1.display-5 {
-            font-size: 1.8rem;
+        .assessment-header h1 {
+            font-size: 1.7rem;
         }
         
-        .lead {
-            font-size: 1rem;
+        .subtitle {
+            font-size: 0.9rem;
         }
         
-        .info-card {
-            padding: 1.25rem;
-        }
-        
-        .info-icon {
-            width: 50px;
-            height: 50px;
+        .panel-header h2 {
             font-size: 1.25rem;
-            margin-bottom: 1.25rem;
         }
         
-        .iframe-wrapper iframe {
+        .iframe-container {
             height: 500px;
         }
     }
@@ -253,21 +709,19 @@
     function hideLoading() {
         document.getElementById('formLoading').style.display = 'none';
         
-        // Check if the form loaded successfully by examining iframe content
+        // Check if the form loaded successfully
         setTimeout(function() {
             const iframe = document.getElementById('assessmentForm');
             try {
-                // This will throw an error if the form didn't load correctly
                 const iframeContent = iframe.contentWindow.document.body.innerHTML;
                 
                 // Check if error message is in the content
                 if (iframeContent.includes('The file you have requested does not exist') || 
                     iframeContent.includes('Get stuff done with Google Drive')) {
-                    document.getElementById('fallbackMessage').style.display = 'block';
+                    document.getElementById('fallbackMessage').style.display = 'flex';
                 }
             } catch (e) {
                 // Cross-origin issues might prevent accessing iframe content
-                // In this case, we'll assume the form loaded correctly
                 console.log("Could not access iframe content due to same-origin policy");
             }
         }, 2000);
@@ -278,7 +732,7 @@
         const loadingEl = document.getElementById('formLoading');
         if (loadingEl.style.display !== 'none') {
             loadingEl.style.display = 'none';
-            document.getElementById('fallbackMessage').style.display = 'block';
+            document.getElementById('fallbackMessage').style.display = 'flex';
         }
     }, 10000);
 </script>
