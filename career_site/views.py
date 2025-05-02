@@ -30,6 +30,9 @@ from django.db import transaction
 from django.urls import reverse
 from career_site.forms import UserRegisterForm, StudentProfileForm, AdminProfileForm, QuestionForm
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from .scoring_logic import process_record
+
 
 def home(request):
     if request.user.is_authenticated:
@@ -567,3 +570,23 @@ def admin_result_detail(request, assessment_id):
 def open_assessment(request):
     """Render page with Google Forms embedded."""
     return render(request, 'open_assessment.html')
+
+@csrf_exempt
+def webhook(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            # Verify token
+            if data.get('token') != os.getenv('WEBHOOK_TOKEN'):
+                return JsonResponse({'error': 'Invalid token'}, status=403)
+            
+            # Process the record
+            result = process_record(data['data'])
+            if result:
+                return JsonResponse({'status': 'success'})
+            return JsonResponse({'error': 'Processing failed'}, status=500)
+            
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Method not allowed'}, status=405)

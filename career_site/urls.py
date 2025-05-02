@@ -54,5 +54,6 @@ urlpatterns = [
     path('admin/results/<int:assessment_id>/pdf/', views.admin_result_detail, name='admin_result_detail'),
     
     path('open-assessment/', views.open_assessment, name='open_assessment'),
+    path('webhook/', views.webhook, name='webhook'),
     
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
