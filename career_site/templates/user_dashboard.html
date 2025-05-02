@@ -25,14 +25,20 @@
                             <h2 class="card-title text-gold">Career Assessment</h2>
                             <div class="mt-auto">
                                 {% if assessment_completed %}
-                                <p class="card-text">You've completed your assessment! View your personalized report.</p>
+                                {% comment %} <p class="card-text">You've completed your assessment! View your personalized report.</p>
                                 <div class="mt-auto text-center">
                                     <a href="{% url 'assessment_results' %}" class="btn btn-gold">View Report</a>
+                                </div> {% endcomment %}
+
+                                <p class="card-text">Complete your career assessment to get personalized recommendations.</p>
+                                <div class="mt-auto text-center">
+                                    <a href="{% url 'open_assessment' %}" class="btn btn-gold">Start Assessment</a>
                                 </div>
+
                                 {% else %}
                                     <p class="card-text">Complete your career assessment to get personalized recommendations.</p>
                                     <div class="mt-auto text-center">
-                                        <a href="{% url 'start_assessment' %}" class="btn btn-gold">Start Assessment</a>
+                                        <a href="{% url 'open_assessment' %}" class="btn btn-gold">Start Assessment</a>
                                     </div>
                                 {% endif %}
                             </div>

@@ -684,7 +684,8 @@
                     {% if user.is_student %}
                         <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                         <a class="nav-link" href="{% url 'career_library' %}">Career Library</a>
-                        <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a>
+                        <a class="nav-link" href="{% url 'open_assessment' %}">Open Assessment</a>
+                        {% comment %} <a class="nav-link" href="{% url 'start_assessment' %}">Career Assessment</a> {% endcomment %}
                         <a class="nav-link" href="{% url 'master_class_list' %}">Skill Development</a>
                     {% elif user.is_admin %}
                         <a class="nav-link" href="{% url 'admin-dashboard' %}">Admin Dashboard</a>
@@ -750,11 +751,18 @@
                                     <i class="fas fa-book me-2"></i> Career Library
                                 </a>
                             </li>
-                            <li class="mobile-menu-item">
+                            {% comment %} <li class="mobile-menu-item">
                                 <a class="mobile-menu-link" href="{% url 'start_assessment' %}">
                                     <i class="fas fa-tasks me-2"></i> Career Assessment
                                 </a>
+                            </li> {% endcomment %}
+
+                            <li class="mobile-menu-item">
+                                <a class="mobile-menu-link" href="{% url 'open_assessment' %}">
+                                    <i class="fas fa-tasks me-2"></i> Open Assessment
+                                </a>
                             </li>
+
                             <li class="mobile-menu-item">
                                 <a class="mobile-menu-link" href="{% url 'master_class_list' %}">
                                     <i class="fas fa-graduation-cap me-2"></i> Skill Development

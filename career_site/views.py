@@ -41,6 +41,13 @@ def home(request):
 
 @csrf_protect
 def register(request):
+    # Redirect authenticated users to their respective dashboards
+    if request.user.is_authenticated:
+        if request.user.is_student:
+            return redirect('dashboard')
+        elif request.user.is_admin:
+            return redirect('admin-dashboard')
+    
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -119,11 +126,14 @@ def admin_dashboard(request):
         return redirect('dashboard')
     return render(request, 'admin_dashboard.html')
 
-
+@login_required
+@user_passes_test(lambda u: u.is_student)
 def career_library(request):
     libraries = CareerLibrary.objects.all()
     return render(request, 'library.html', {'libraries': libraries})
 
+@login_required
+@user_passes_test(lambda u: u.is_student)
 def category_list(request, library_id):
     library = get_object_or_404(CareerLibrary, pk=library_id)
     categories = library.categories.all()
@@ -131,7 +141,9 @@ def category_list(request, library_id):
         'library': library,
         'categories': categories
     })
-
+    
+@login_required
+@user_passes_test(lambda u: u.is_student)
 def career_detail(request, subcategory_id):
     career = get_object_or_404(CareerSubCategory, pk=subcategory_id)
     institutes = career.institutes.all()
@@ -163,7 +175,8 @@ def career_detail(request, subcategory_id):
     })
     
 
-
+@login_required
+@user_passes_test(lambda u: u.is_student)
 def master_class_list(request):
     categories = MasterClassCategory.objects.all()
     # Get first 2 videos from each category for the overview
@@ -171,6 +184,8 @@ def master_class_list(request):
         category.preview_videos = category.videos.all()[:2]
     return render(request, 'list.html', {'categories': categories})
 
+@login_required
+@user_passes_test(lambda u: u.is_student)
 def master_class_detail(request, category_id):
     category = get_object_or_404(MasterClassCategory, pk=category_id)
     videos = category.videos.all()
@@ -183,8 +198,8 @@ def master_class_detail(request, category_id):
     
 
 
-
 @login_required
+@user_passes_test(lambda u: u.is_student)
 def start_assessment(request):
     if request.user.assessments.filter(completed=True).exists():
         return redirect('assessment_results')
@@ -276,6 +291,7 @@ def save_answers(request):
         })
 
 @login_required
+@user_passes_test(lambda u: u.is_student)
 def assessment_results(request):
     assessment = request.user.assessments.filter(completed=True).first()
     if not assessment:
@@ -294,7 +310,8 @@ def assessment_results(request):
         'assessment': assessment
     })
 
-
+@login_required
+@user_passes_test(lambda u: u.is_student)
 def download_results(request):
     try:
         # Get the latest assessment result for the user
@@ -470,7 +487,7 @@ def view_result_detail(request, assessment_id):
     })
     
 @login_required
-# @user_passes_test(is_admin)
+@user_passes_test(is_admin)
 def manage_users(request):
     students = []
     completed_count = 0
@@ -543,3 +560,10 @@ def admin_result_detail(request, assessment_id):
     if pisa_status.err:
         return HttpResponse('Error generating PDF')
     return response
+
+
+@login_required
+@user_passes_test(lambda u: u.is_student)
+def open_assessment(request):
+    """Render page with Google Forms embedded."""
+    return render(request, 'open_assessment.html')

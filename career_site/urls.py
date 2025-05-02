@@ -33,9 +33,10 @@ urlpatterns = [
     # Assessment URLs
     path('assessment/', views.start_assessment, name='start_assessment'),
     path('assessment/save/', views.save_answers, name='save_answers'),
-    path('assessment/results/', views.assessment_results, name='assessment_results'),
     # path('assessment/submit/', views.submit_assessment, name='submit_assessment'),
+    path('assessment/results/', views.assessment_results, name='assessment_results'),
     path('assessment/download/', views.download_results, name='download_results'),
+    
     
     # Admin Question Management URLs
     path('admin/questions/', views.manage_questions, name='manage_questions'),
@@ -51,5 +52,7 @@ urlpatterns = [
     #manage users URLs
     path('admin/users/', views.manage_users, name='manage_users'),
     path('admin/results/<int:assessment_id>/pdf/', views.admin_result_detail, name='admin_result_detail'),
+    
+    path('open-assessment/', views.open_assessment, name='open_assessment'),
     
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

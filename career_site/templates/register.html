@@ -36,7 +36,9 @@
                                 <div class="form-group mb-3">
                                     <label class="form-label">Date of Birth</label>
                                     <div class="input-wrapper">
-                                        <input type="date" name="date_of_birth" class="form-control" id="id_date_of_birth" required>
+                                        <input type="text" name="date_of_birth" class="form-control date-input" 
+                                              placeholder="dd/mm/yyyy" id="id_date_of_birth" 
+                                              onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'" required>
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +108,7 @@
         --dark-gold: #B7950B;
         --black: #121212;
         --dark-gray: #1E1E1E;
-        --light-gray: #2E2E2E;
+        --light-gray: #2E2E1E;
     }
 
     body {
@@ -262,6 +264,12 @@
         right: 0;
         top: 0;
         width: 100%;
+    }
+
+    /* This ensures the placeholder is visible on all browsers */
+    input[type="text"].date-input::placeholder {
+        color: rgba(0, 0, 0, 0.7) !important;
+        opacity: 1;
     }
 
     .text-muted {
@@ -442,24 +450,28 @@
             });
         });
 
-        // Date input placeholder fallback
+        // Date input handling
         const dobInput = document.getElementById('id_date_of_birth');
         if (dobInput) {
-            // Set placeholder attribute for browsers that support it
-            dobInput.setAttribute('placeholder', 'MM/DD/YYYY');
+            // Make sure input starts as text type
+            dobInput.type = 'text';
             
-            // Modern browsers will show this as the actual placeholder
-            if (!dobInput.value) {
-                dobInput.classList.add('empty');
-            }
+            // When input gets focus, change to date type
+            dobInput.addEventListener('focus', function() {
+                this.type = 'date';
+            });
             
-            dobInput.addEventListener('change', function() {
-                if (this.value) {
-                    this.classList.remove('empty');
-                } else {
-                    this.classList.add('empty');
+            // When input loses focus and is empty, change back to text type
+            dobInput.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.type = 'text';
                 }
             });
+            
+            // If there's a value (e.g., on form error), keep it as date type
+            if (dobInput.value) {
+                dobInput.type = 'date';
+            }
         }
 
         // Add red border to invalid fields after submission
