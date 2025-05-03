@@ -527,140 +527,420 @@ def get_career_suggestions(scores, grade):
                 return ("With your balanced personality profile, you would adapt well to various fields. Consider versatile college majors like Business Administration, Communications, Information Technology, or Interdisciplinary Studies that provide broad skill sets and multiple career paths. Your adaptability will be an asset in these fields.")
 # Create PDF report
 def create_pdf_report(name, grade, scores, profile_results, test_date=None):
-    from fpdf import FPDF
+    """
+    Creates a well-formatted personality assessment PDF report with proper alignment
+    and a white and gold color theme. Includes sections for trait profiles, college majors,
+    and career path recommendations.
     
-    pdf = FPDF()
+    Parameters:
+    - name: Student name
+    - grade: Student grade
+    - scores: Dictionary of personality trait scores
+    - profile_results: Dictionary with profile information including recommendations
+    - test_date: Date of assessment (defaults to current date)
+    
+    Returns:
+    - FPDF object ready to be saved
+    """
+    from fpdf import FPDF
+    import matplotlib.pyplot as plt
+    import os
+    from datetime import datetime
+    
+    # Color Scheme - Gold theme
+    PRIMARY_COLOR = (212, 175, 55)    # Gold
+    SECONDARY_COLOR = (184, 134, 11)  # Dark Gold
+    ACCENT_COLOR = (245, 245, 220)    # Light Gold/Beige
+    HIGHLIGHT_COLOR = (218, 165, 32)  # Golden Rod
+    WHITE = (255, 255, 255)
+    LIGHT_GRAY = (245, 245, 245)
+    DARK_TEXT = (50, 50, 50)
+    
+    # For matplotlib (0-1 range)
+    GOLD = tuple(c/255 for c in PRIMARY_COLOR)
+    DARK_GOLD = tuple(c/255 for c in SECONDARY_COLOR)
+    LIGHT_GOLD = tuple(c/255 for c in ACCENT_COLOR)
+    
+    class ReportPDF(FPDF):
+        def header(self):
+            # Logo might go here if needed
+            pass
+            
+        def footer(self):
+            # Footer with page numbers
+            self.set_y(-15)
+            self.set_font('Arial', 'I', 8)
+            self.set_text_color(128, 128, 128)
+            self.cell(0, 10, f'Page {self.page_no()}/{{nb}}', 0, 0, 'C')
+    
+    # Initialize PDF with proper margins
+    pdf = ReportPDF()
+    pdf.set_auto_page_break(True, margin=15)
+    pdf.alias_nb_pages()
     pdf.add_page()
+    pdf.set_margins(15, 15, 15)
     
     # Set the test date to current date if not provided
     if not test_date:
         test_date = datetime.now().strftime("%B %d, %Y")
     
-    # Header
-    pdf.set_font('Arial', 'B', 16)
-    pdf.cell(0, 10, 'Personality Assessment Results', 0, 1, 'C')
-    pdf.set_font('Arial', '', 12)
-    pdf.cell(0, 10, f'Date: {test_date}', 0, 1, 'C')
-    pdf.ln(5)
+    # ===================================
+    # Header Section
+    # ===================================
+    pdf.set_font('Arial', 'B', 18)
+    pdf.set_fill_color(*PRIMARY_COLOR)
+    pdf.set_text_color(*WHITE)
+    pdf.cell(0, 15, 'PERSONALITY ASSESSMENT REPORT', 0, 1, 'C', 1)
     
-    # Student information
+    # Test date
+    pdf.set_fill_color(*ACCENT_COLOR)
+    pdf.set_text_color(*DARK_TEXT)
+    pdf.set_font('Arial', '', 12)
+    pdf.cell(0, 8, f'Assessment Date: {test_date}', 0, 1, 'C', 1)
+    pdf.ln(5)  # Extra space after header
+
+    # ===================================
+    # Student Information Section
+    # ===================================
+    pdf.set_fill_color(*WHITE)
+    pdf.set_draw_color(*SECONDARY_COLOR)
+    pdf.set_line_width(0.5)
+    pdf.set_text_color(*DARK_TEXT)
+    
+    # Draw a nice box
+    pdf.rect(15, pdf.get_y(), 180, 30, 'DF')
+    
+    # Student info
     pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, 'Student Information', 0, 1)
+    pdf.cell(0, 10, '  Student Information', 0, 1)
     pdf.set_font('Arial', '', 12)
-    pdf.cell(0, 10, f'Name: {name}', 0, 1)
-    pdf.cell(0, 10, f'Grade: {grade}', 0, 1)
-    pdf.ln(5)
-    
-    # Big Five Scores
+    pdf.cell(90, 8, f'  Name: {name}', 0, 0)
+    pdf.cell(90, 8, f'Grade: {grade}', 0, 1)
+    pdf.cell(0, 8, f'  Date of Birth: {profile_results.get("dob", "N/A")}', 0, 1)
+    pdf.ln(10)  # Extra space after student info
+
+    # ===================================
+    # Personality Traits Assessment Chart
+    # ===================================
+    # Section header with background
+    pdf.set_fill_color(*ACCENT_COLOR)
+    pdf.set_text_color(*DARK_TEXT)
     pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, 'Big Five Personality Traits Assessment', 0, 1)
-    pdf.set_font('Arial', '', 12)
+    pdf.cell(0, 10, 'Personality Traits Assessment', 0, 1, 'C', 1)
     
-    # Add scores table
+    # Create and save bar chart
     trait_names = {
-        'O': 'Openness to Experience',
+        'O': 'Openness',
         'C': 'Conscientiousness',
         'E': 'Extraversion',
         'A': 'Agreeableness',
         'N': 'Neuroticism'
     }
     
-    # Define raw score ranges for scaling
-    max_scores = {
-        'O': 40,
-        'C': 40, 
-        'E': 40,
-        'A': 40,
-        'N': 40
+    max_scores = {'O': 40, 'C': 40, 'E': 40, 'A': 40, 'N': 40}
+    percentages = {trait: (scores[trait]/max_scores[trait])*100 for trait in scores}
+    
+    plt.figure(figsize=(8, 4))
+    plt.subplots_adjust(left=0.05, right=0.95, top=0.85, bottom=0.15)
+    traits = list(trait_names.values())
+    values = list(percentages.values())
+    
+    bars = plt.bar(traits, values, color=GOLD, edgecolor=DARK_GOLD, linewidth=1)
+    
+    # Add percentage labels on top of bars
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                f'{int(height)}%',
+                ha='center', va='bottom', color=DARK_GOLD, fontweight='bold')
+    
+    plt.ylim(0, 105)  # Give a little extra room for labels
+    plt.ylabel('Score (%)', fontsize=10)
+    plt.title('Personality Traits Scores', color=DARK_GOLD, fontsize=12, fontweight='bold')
+    
+    # Add level indicators
+    plt.axhline(y=33, color='gray', linestyle='--', linewidth=0.5)
+    plt.axhline(y=66, color='gray', linestyle='--', linewidth=0.5)
+    plt.text(0.2, 15, 'Low', color='gray', fontsize=8)
+    plt.text(0.2, 50, 'Medium', color='gray', fontsize=8)
+    plt.text(0.2, 85, 'High', color='gray', fontsize=8)
+    plt.grid(axis='y', alpha=0.3)
+    plt.xticks(fontsize=9)
+    plt.yticks(fontsize=9)
+    
+    chart_path = 'personality_chart.png'
+    plt.savefig(chart_path, dpi=150, bbox_inches='tight', transparent=True)
+    plt.close()
+    
+    # Add chart to PDF with proper spacing and border
+    chart_y = pdf.get_y() + 5  # Add a little extra space
+    pdf.set_draw_color(*SECONDARY_COLOR)
+    pdf.rect(15, chart_y, 180, 60, 'D')  # Draw box first
+    pdf.image(chart_path, x=20, y=chart_y+2, w=170)  # Then place image inside
+    pdf.set_y(chart_y + 65)  # Move cursor past the chart area
+    
+    # ===================================
+    # Your Personality Profile
+    # ===================================
+    pdf.ln(5)  # Extra space before trait descriptions
+    pdf.set_fill_color(*ACCENT_COLOR)
+    pdf.set_text_color(*DARK_TEXT)
+    pdf.set_font('Arial', 'B', 14)
+    pdf.cell(0, 10, 'Your Personality Profile', 0, 1, 'C', 1)
+    
+    # Trait level descriptions
+    trait_descriptions = {
+        'O': {
+            'Low': "Prefers established routines and practical thinking",
+            'Medium': "Balances tradition with new ideas",
+            'High': "Creative, curious, and open to new experiences"
+        },
+        'C': {
+            'Low': "Spontaneous and flexible approach to tasks",
+            'Medium': "Reasonably organized with some flexibility",
+            'High': "Organized, disciplined, and goal-oriented"
+        },
+        'E': {
+            'Low': "Reserved, thoughtful, and value alone time",
+            'Medium': "Comfortable in social settings with need for quiet time",
+            'High': "Outgoing, energetic, and socially confident"
+        },
+        'A': {
+            'Low': "Independent, direct, and competitive",
+            'Medium': "Balance between cooperative and self-focused",
+            'High': "Cooperative, compassionate, and empathetic"
+        },
+        'N': {
+            'Low': "Emotionally stable and resilient to stress",
+            'Medium': "Generally calm with occasional stress sensitivity",
+            'High': "Emotionally sensitive and responsive to stress"
+        }
     }
     
-    pdf.ln(2)
-    for trait in ['O', 'C', 'E', 'A', 'N']:
-        trait_name = trait_names[trait]
-        raw_score = scores[trait]
+    # Track Y position
+    start_y = pdf.get_y() + 5
+    
+    # Create trait boxes with good alignment
+    traits_list = ['O', 'C', 'E', 'A', 'N']
+    for i, trait in enumerate(traits_list):
         level = profile_results['levels'][trait]
+        description = trait_descriptions[trait][level]
         
-        # Calculate percentage score (0-100) for display
-        max_score = max_scores[trait]
-        percentage_score = int((raw_score / max_score) * 100)
+        # Calculate position for horizontal layout
+        if i % 2 == 0:  # Left side
+            x_pos = 15
+        else:  # Right side
+            x_pos = 110
         
-        # Trait name and score
-        pdf.set_font('Arial', 'B', 12)
-        pdf.cell(80, 10, f"{trait_name}: ", 0, 0)
-        pdf.set_font('Arial', '', 12)
-        pdf.cell(30, 10, f"{raw_score}/{max_score}", 0, 0)  # Show raw score out of max
-        pdf.cell(30, 10, f"({level})", 0, 1)
+        # Calculate position for vertical layout
+        y_pos = start_y + (i // 2) * 30
         
-        # Description
-        pdf.set_font('Arial', 'I', 10)
-        description = profile_results['trait_info'][trait]['description']
+        # Box
+        pdf.set_xy(x_pos, y_pos)
         
-        # Handle multi-line descriptions
-        pdf.multi_cell(0, 5, description)
-        pdf.ln(3)
+        # Color indicator based on level
+        color = {
+            'Low': (255, 200, 200),
+            'Medium': (255, 230, 190),
+            'High': (200, 255, 200)
+        }[level]
         
-    # Stream/Major recommendations based on this trait
-    pdf.set_font('Arial', '', 10)
-    if grade == "10":
-        pdf.cell(0, 5, f"Recommended 11th standard subject groups:", 0, 1)
-    else:
-        pdf.cell(0, 5, f"Recommended college majors:", 0, 1)
+        # Create a box with trait name and level
+        pdf.set_fill_color(*color)
+        pdf.set_font('Arial', 'B', 11)
+        pdf.cell(85, 6, f" {trait_names[trait]}: {level}", 1, 1, 'L', 1)
         
-    recommendations = profile_results['trait_info'][trait]['recommendations']
-    pdf.multi_cell(0, 5, recommendations)
-    pdf.ln(5)
+        # Add description below
+        pdf.set_xy(x_pos, pdf.get_y())
+        pdf.set_fill_color(255, 255, 255)
+        pdf.set_font('Arial', '', 9)
+        pdf.multi_cell(85, 5, f" {description}", 1, 'L', 1)
     
-    # Profile Match
-    pdf.ln(5)
+    # Update Y position to after the trait descriptions (3 rows)
+    pdf.set_y(start_y + (3) * 30)
+    
+    # ===================================
+    # College Major Recommendations
+    # ===================================
+    pdf.ln(10)  # Extra space
+    pdf.set_fill_color(*PRIMARY_COLOR)
+    pdf.set_text_color(*WHITE)
     pdf.set_font('Arial', 'B', 14)
-    if grade == "10":
-        pdf.cell(0, 10, '11th Standard Subject Group Recommendation', 0, 1)
-    else:
-        pdf.cell(0, 10, 'College Major Recommendation', 0, 1)
+    pdf.cell(0, 10, 'Recommended College Majors', 0, 1, 'C', 1)
+    pdf.ln(5)  # Space after header
     
-    # Profile match details
-    profile = profile_results['profile']
+    # Get major recommendations from profile results
+    college_majors = profile_results.get('recommendations', {}).get('majors', [])
+    if not college_majors:  # Fallback if no recommendations
+        college_majors = ["Liberal Arts", "Business Administration", "Psychology", "Computer Science", "Engineering"]
+    
+    # Create a box for majors
+    pdf.set_fill_color(*LIGHT_GRAY)
+    pdf.set_text_color(*DARK_TEXT)
+    pdf.set_draw_color(*SECONDARY_COLOR)
+    
+    # Box for recommendations
+    start_y = pdf.get_y()
+    box_height = 7 + len(college_majors) * 7
+    pdf.rect(15, start_y, 180, box_height, 'D')
+    
+    # Header for the box
+    pdf.set_fill_color(*ACCENT_COLOR)
+    pdf.set_font('Arial', 'BI', 12)
+    pdf.cell(0, 7, "Based on your personality profile:", 0, 1, 'L', 1)
+    
+    # Create a two-column layout for majors
+    pdf.set_fill_color(*WHITE)
+    pdf.set_font('Arial', '', 11)
+    
+    # Left column
+    left_col = college_majors[:len(college_majors)//2 + len(college_majors)%2]
+    right_col = college_majors[len(college_majors)//2 + len(college_majors)%2:]
+    
+    max_items = max(len(left_col), len(right_col))
+    
+    for i in range(max_items):
+        # Left column items
+        if i < len(left_col):
+            pdf.set_x(20)  # Indent
+            pdf.cell(85, 7, f"- {left_col[i]}", 0, 0)
+        else:
+            pdf.cell(85, 7, "", 0, 0)
+            
+        # Right column items
+        if i < len(right_col):
+            pdf.cell(85, 7, f"- {right_col[i]}", 0, 1)
+        else:
+            pdf.cell(85, 7, "", 0, 1)
+    
+    pdf.ln(5)  # Space after majors
+
+    # ===================================
+    # Career Path Recommendations
+    # ===================================
+    pdf.set_fill_color(*PRIMARY_COLOR)
+    pdf.set_text_color(*WHITE)
+    pdf.set_font('Arial', 'B', 14)
+    pdf.cell(0, 10, 'Recommended Career Paths', 0, 1, 'C', 1)
+    pdf.ln(5)  # Space after header
+    
+    # Get career recommendations from profile results
+    career_paths = profile_results.get('recommendations', {}).get('careers', [])
+    if not career_paths:  # Fallback if no recommendations
+        career_paths = ["Management", "Research", "Education", "Consulting", "Entrepreneurship"]
+    
+    # Create a box for careers
+    pdf.set_fill_color(*LIGHT_GRAY)
+    pdf.set_text_color(*DARK_TEXT)
+    pdf.set_draw_color(*SECONDARY_COLOR)
+    
+    # Box for recommendations
+    start_y = pdf.get_y()
+    box_height = 7 + len(career_paths) * 7
+    pdf.rect(15, start_y, 180, box_height, 'D')
+    
+    # Header for the box
+    pdf.set_fill_color(*ACCENT_COLOR)
+    pdf.set_font('Arial', 'BI', 12)
+    pdf.cell(0, 7, "Career paths that align with your traits:", 0, 1, 'L', 1)
+    
+    # Create a two-column layout for careers
+    pdf.set_fill_color(*WHITE)
+    pdf.set_font('Arial', '', 11)
+    
+    # Left column
+    left_col = career_paths[:len(career_paths)//2 + len(career_paths)%2]
+    right_col = career_paths[len(career_paths)//2 + len(career_paths)%2:]
+    
+    max_items = max(len(left_col), len(right_col))
+    
+    for i in range(max_items):
+        # Left column items
+        if i < len(left_col):
+            pdf.set_x(20)  # Indent
+            pdf.cell(85, 7, f"- {left_col[i]}", 0, 0)
+        else:
+            pdf.cell(85, 7, "", 0, 0)
+            
+        # Right column items
+        if i < len(right_col):
+            pdf.cell(85, 7, f"- {right_col[i]}", 0, 1)
+        else:
+            pdf.cell(85, 7, "", 0, 1)
+    
+    pdf.ln(5)  # Space after careers
+
+    # ===================================
+    # Confidence Score Section
+    # ===================================
+    pdf.set_fill_color(*ACCENT_COLOR)
+    pdf.set_text_color(*DARK_TEXT)
+    pdf.set_font('Arial', 'B', 14)
+    pdf.cell(0, 10, 'Assessment Confidence', 0, 1, 'C', 1)
+    pdf.ln(5)  # Space after header
+    
+    # Create confidence donut chart
+    confidence = int(profile_results['profile']['confidence'].replace('%', ''))
+    remaining = 100 - confidence
+    
+    plt.figure(figsize=(4, 4))
+    sizes = [confidence, remaining]
+    colors = [GOLD, (0.95, 0.95, 0.95)]
+    explode = (0.05, 0)  # Slightly emphasize the confidence slice
+    
+    plt.pie(sizes, explode=explode, colors=colors, startangle=90, 
+            wedgeprops=dict(width=0.4, edgecolor='w'))
+    
+    # Add center text
+    plt.text(0, 0, f'{confidence}%', ha='center', va='center', 
+            fontsize=20, color=DARK_GOLD, weight='bold')
+    plt.text(0, -0.5, 'Confidence', ha='center', va='center',
+            fontsize=10, color=DARK_GOLD)
+    
+    donut_path = 'confidence_chart.png'
+    plt.savefig(donut_path, dpi=150, bbox_inches='tight', transparent=True)
+    plt.close()
+    
+    # Create a box for confidence section
+    start_y = pdf.get_y()
+    pdf.rect(15, start_y, 180, 50, 'D')
+    
+    # Left column - Confidence image
+    pdf.image(donut_path, x=25, y=start_y+5, w=40)
+    
+    # Right column - Confidence explanation
+    pdf.set_xy(80, start_y+10)
     pdf.set_font('Arial', 'B', 12)
-    pdf.cell(0, 8, f"Primary Recommendation: {profile['primary']}", 0, 1)
-    pdf.cell(0, 8, f"Secondary Recommendation: {profile['secondary']}", 0, 1)
-    pdf.cell(0, 8, f"Confidence Level: {profile['confidence']}", 0, 1)
+    pdf.cell(0, 6, 'What This Means:', 0, 1)
     
-    # Top alternative matches (if available)
-    if 'all_matches' in profile_results and len(profile_results['all_matches']) > 1:
-        pdf.ln(5)
-        pdf.set_font('Arial', 'B', 12)
-        pdf.cell(0, 8, "Alternative Paths to Consider:", 0, 1)
-        pdf.set_font('Arial', '', 10)
-        
-        for i, match in enumerate(profile_results['all_matches'][1:3]):  # Show 2nd and 3rd matches
-            alt_profile = match['profile']
-            pdf.cell(0, 6, f"{i+1}. {alt_profile['primary']} ({match['percentage']}% match)", 0, 1)
+    pdf.set_xy(80, pdf.get_y())
+    pdf.set_font('Arial', '', 10)
+    pdf.multi_cell(100, 5, 
+                  "This score indicates how well these recommendations match your " +
+                  "personality profile based on the consistency of your responses " +
+                  "and the clarity of your trait patterns.",
+                  0, 'L')
     
-    # Profile description
-    pdf.set_font('Arial', '', 11)
-    pdf.ln(5)
-    pdf.multi_cell(0, 5, profile['description'])
+    # Set Y position after confidence section
+    pdf.set_y(start_y + 60)
     
-    # Career suggestions
-    pdf.ln(10)
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, 'Potential Career Paths', 0, 1)
-    pdf.set_font('Arial', '', 11)
-    career_suggestions = get_career_suggestions(scores, grade)
-    pdf.multi_cell(0, 5, career_suggestions)
-    
-    # Additional information
-    pdf.ln(10)
-    pdf.set_font('Arial', 'I', 10)
-    if grade == "10":
-        pdf.multi_cell(0, 5, "This assessment is designed to help guide educational stream choices as you enter Grade 11. It is based on your personality traits and potential academic interests. The recommendations should be considered alongside your academic performance, personal interests, and future goals.")
-    else:  # grade 12
-        pdf.multi_cell(0, 5, "This assessment is designed to help guide college major and career path choices as you prepare for higher education. It is based on your personality traits and potential career interests. The recommendations should be considered alongside your academic strengths, personal interests, and future aspirations.")
-    
-    # Disclaimer
+    # ===================================
+    # Footer with disclaimer
+    # ===================================
     pdf.ln(5)
     pdf.set_font('Arial', 'I', 8)
-    pdf.multi_cell(0, 4, "Disclaimer: This assessment is meant to be a guiding tool and not a definitive career decision maker. Always consider consulting with career counselors, teachers, and parents before making academic or career decisions.")
+    pdf.set_text_color(100, 100, 100)
+    pdf.multi_cell(0, 4, 
+                  "Disclaimer: This personality assessment is meant as a guide and should not " +
+                  "be the sole factor in making educational or career decisions. We recommend " +
+                  "consulting with a career counselor for personalized guidance.",
+                  0, 'C')
+    
+    # Clean up temporary files
+    if os.path.exists(chart_path):
+        os.remove(chart_path)
+    if os.path.exists(donut_path):
+        os.remove(donut_path)
     
     return pdf
 
